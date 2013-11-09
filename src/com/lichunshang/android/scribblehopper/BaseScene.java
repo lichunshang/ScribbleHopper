@@ -5,6 +5,7 @@ import org.andengine.engine.camera.BoundCamera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
+
 public abstract class BaseScene extends Scene{
 	
     //---------------------------------------------

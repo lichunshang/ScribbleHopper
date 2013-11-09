@@ -35,11 +35,11 @@ public class ResourcesManager{
 	// TEXTRUEs & TEXTURE REGIONS
 	//-----------------------------------------
 	
-	//splash
+	//----------------- Spalsh Scene -----------------
 	public ITextureRegion splashRegion;
 	public BitmapTextureAtlas splashTextureAtlas;
 	
-	//menu
+	//----------------- Menu Scene ------------------
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
 	
 	public ITextureRegion menuBackgroundRegion;
@@ -48,10 +48,12 @@ public class ResourcesManager{
 	
 	public Font font;
 	
-	//game
+	//----------------- Game Scene ------------------
 	public BuildableBitmapTextureAtlas gameTextureAtlas;
 
-	public ITextureRegion gameBackgroundRegion;
+	public ITextureRegion gameBackgroundTextureRegion;
+	public ITiledTextureRegion gamePlayerTextureRegion;
+	public ITiledTextureRegion gameRegularPlatformTextureRegion;
 	
     //---------------------------------------------
     // CLASS LOGIC
@@ -102,7 +104,9 @@ public class ResourcesManager{
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
 		gameTextureAtlas =  new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
 		
-		gameBackgroundRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "background.png");
+		gamePlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 8, 1);
+		gameRegularPlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 8, 1);
+		gameBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "background.png");
 		
 		try{
 			this.gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));

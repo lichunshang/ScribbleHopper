@@ -4,6 +4,7 @@ import org.andengine.engine.camera.Camera;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
 
+
 public class SplashScene extends BaseScene{
 	
 	private Sprite splash;
