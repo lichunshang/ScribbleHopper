@@ -16,6 +16,15 @@ public class GameScene extends BaseScene {
 	private SpriteBackground background;
 	private PhysicsWorld physicsWorld;
 	private Player player;
+	private PlatformPool platformPool;
+	private float platformSpeed;
+	
+	// ==============================================
+	// GAME LOOP
+	// ==============================================
+	public void onUpdate(){
+		//TODO
+	}
 	
 	public void createScene(){
 		createBackground();
@@ -23,6 +32,7 @@ public class GameScene extends BaseScene {
 		createPhysics();
 		
 		player = new Player(camera.getWidth() / 2, camera.getHeight() / 2, this, physicsWorld);
+		platformSpeed = 3f;
 	}
 	
 	private void createHUD(){
@@ -35,7 +45,13 @@ public class GameScene extends BaseScene {
 	}
 	
 	private void createPhysics(){
-		physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, -1 * ProjectConstants.Physics.GRAVITY), false);
+		physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, -1 * ProjectConstants.Physics.GRAVITY), false){
+			@Override
+			public void onUpdate(final float pSecondsElapsed) {
+				super.onUpdate(pSecondsElapsed);
+				GameScene.this.onUpdate();
+			}
+		};
 		//physicsWorld.setContactListener(pListener)
 		registerUpdateHandler(physicsWorld);
 	}
@@ -55,5 +71,17 @@ public class GameScene extends BaseScene {
 	
 	public void disposeScene(){
 		//TODO
+	}
+	
+	public float getPlatformSpeed(){
+		return platformSpeed;
+	}
+	
+	public PhysicsWorld getPhysicsWorld(){
+		return physicsWorld;
+	}
+	
+	public PlatformPool getPlatformPool(){
+		return platformPool;
 	}
 }

@@ -1,19 +1,24 @@
 package com.lichunshang.android.scribblehopper;
 
+import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.util.adt.pool.GenericPool;
 import org.andengine.util.adt.pool.MultiPool;
 
 
 public class PlatformPool extends MultiPool<BasePlatform>{
 	
-	public BaseScene scene;
+	public GameScene gameScene;
+	public PhysicsWorld physicsWorld;
 	
-	public PlatformPool(BaseScene scene){
+	public PlatformPool(GameScene gameScene){
 		super();
+		this.gameScene = gameScene;
+		this.physicsWorld = gameScene.getPhysicsWorld();
+		
 		this.registerPool(BasePlatform.PlatformType.REGULAR.ordinal(), new RegularPlatformPool());
 	}
 	
-	public BasePlatform getPlatform(BasePlatform.PlatformType type){
+	public BasePlatform initPlatform(BasePlatform.PlatformType type){
 		return this.obtainPoolItem(type.ordinal());
 	}
 	
@@ -33,17 +38,17 @@ public class PlatformPool extends MultiPool<BasePlatform>{
 		@Override
 		protected BasePlatform onAllocatePoolItem(){
 			//TODO
-			return null;
+			return new RegularPlatform(gameScene);
 		}
 		
 		@Override
 		protected void onHandleObtainItem(final BasePlatform platform){
-			//TODO
+			platform.reset(gameScene.getPlatformSpeed());
 		}
 		
 		@Override
 		protected void onHandleRecycleItem(final BasePlatform platform){
-			//TODO
+			platform.disable();
 		}
 	}
 }

@@ -3,31 +3,60 @@ package com.lichunshang.android.scribblehopper;
 import java.util.Random;
 
 import org.andengine.entity.primitive.Rectangle;
+import org.andengine.extension.physics.box2d.PhysicsConnector;
+import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 
 public abstract class BasePlatform{
 	
-	protected BaseScene scene;
+	protected GameScene scene;
 	protected Rectangle sprite;
 	protected PhysicsWorld physicsWorld;
 	protected Body physicsBody;
 	protected Random random;
+	protected PlatformPool pool;
 	
 	public static enum PlatformType{
 		REGULAR,
 		BOUNCE,
 	}
 	
-	public BasePlatform(BaseScene scene, PhysicsWorld physicsWorld){
+	public BasePlatform(GameScene scene){
 		this.scene = scene;
-		this.physicsWorld = physicsWorld;
+		this.physicsWorld = scene.getPhysicsWorld();
 		this.random = new Random();
+		this.pool = scene.getPlatformPool();
 		
-		createPlatform();
+		createPlatform(); //to create a sprite
+		
+		float posX = generatePosX();
+		this.sprite.setPosition(posX, 0 - sprite.getHeight() / 2);
+		
 		createPhysics();
+	}
+	
+	public void createPhysics(){
+		FixtureDef fixtureDef = PhysicsFactory.createFixtureDef(ProjectConstants.Plaform.Regular.DENSITY, ProjectConstants.Plaform.Regular.ELASTICITY, ProjectConstants.Plaform.Regular.FRICTION);
+		physicsBody = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.KinematicBody, fixtureDef);
+		setBodyUserData();
+		physicsBody.setLinearVelocity(0, 0);
+		
+		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, physicsBody, true, false){
+			@Override
+			public void onUpdate(float pSecondsElapsed){
+				super.onUpdate(pSecondsElapsed);
+				if (sprite.getY() > (scene.camera.getHeight() + sprite.getHeight() / 2)){
+					pool.recyclePlatform(BasePlatform.this);
+				}
+				BasePlatform.this.onUpdate();
+				
+			}
+		});
 	}
 	
 	public float generatePosX(){
@@ -39,11 +68,36 @@ public abstract class BasePlatform{
 		return posX;
 	}
 	
-	public abstract void createPlatform();
+	public Rectangle getSprite(){
+		return sprite;
+	}
 	
-	public abstract void createPhysics();
+	public Body getPhyiscsBody(){
+		return physicsBody;
+	}
+	
+	public void reset(float speed){
+		this.sprite.setIgnoreUpdate(false);
+		this.sprite.setVisible(true);
+		setSpeed(speed);
+		this.physicsBody.setTransform(generatePosX() / ProjectConstants.Physics.PIXEL_TO_METER_RATIO, 0, 0);
+	}
+	
+	public void disable(){
+		setSpeed(0);
+		this.sprite.setIgnoreUpdate(true);
+		this.sprite.setVisible(false);
+	}
+	
+	public void setSpeed(float speed){
+		this.physicsBody.setLinearVelocity(0, speed);
+	}
+	
+	public abstract void createPlatform();
 	
 	public abstract PlatformType getType();
 	
-	public abstract void reset(float speed);
+	public abstract void onUpdate();
+	
+	public abstract void setBodyUserData();
 }

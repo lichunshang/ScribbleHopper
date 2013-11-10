@@ -1,7 +1,7 @@
 package com.lichunshang.android.scribblehopper;
 
 import org.andengine.engine.Engine;
-import org.andengine.engine.camera.BoundCamera;
+import org.andengine.engine.camera.Camera;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
@@ -16,7 +16,7 @@ public abstract class BaseScene extends Scene{
 	protected GameActivity activity;
 	protected ResourcesManager resourcesManager;
 	protected VertexBufferObjectManager vertexBufferObjectManager;
-	protected BoundCamera camera;
+	protected Camera camera;
 	
 	public BaseScene(){
 		this.resourcesManager = ResourcesManager.getInstance();
@@ -25,6 +25,26 @@ public abstract class BaseScene extends Scene{
 		this.vertexBufferObjectManager = this.resourcesManager.vertexBufferObjectManager;
 		this.camera = this.resourcesManager.camera;
 		createScene();
+	}
+	
+	public Engine getEngine(){
+		return this.engine;
+	}
+	
+	public GameActivity getGameActivity(){
+		return this.activity;
+	}
+	
+	public ResourcesManager getResourcesManager(){
+		return this.resourcesManager;
+	}
+	
+	public VertexBufferObjectManager getVertexBufferObjectManager(){
+		return this.vertexBufferObjectManager;
+	}
+	
+	public Camera getCamera(){
+		return this.camera;
 	}
 	
 	//---------------------------------------------

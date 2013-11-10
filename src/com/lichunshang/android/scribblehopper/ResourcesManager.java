@@ -1,7 +1,7 @@
 package com.lichunshang.android.scribblehopper;
 
 import org.andengine.engine.Engine;
-import org.andengine.engine.camera.BoundCamera;
+import org.andengine.engine.camera.Camera;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
 import org.andengine.opengl.texture.ITexture;
@@ -28,7 +28,7 @@ public class ResourcesManager{
 	
 	public Engine engine;
 	public GameActivity activity;
-	public BoundCamera camera;
+	public Camera camera;
 	public VertexBufferObjectManager vertexBufferObjectManager;
 	
 	//-----------------------------------------
@@ -160,7 +160,7 @@ public class ResourcesManager{
 	 * setting all needed parameters, so we can latter access them from different classes (e.g. scenes)
 	 */
 	
-	public static void prepareManager(Engine engine, GameActivity activity, BoundCamera camera, VertexBufferObjectManager vertexBufferObjectManager){
+	public static void prepareManager(Engine engine, GameActivity activity, Camera camera, VertexBufferObjectManager vertexBufferObjectManager){
 		getInstance().engine = engine;
 		getInstance().activity = activity;
 		getInstance().camera = camera;
