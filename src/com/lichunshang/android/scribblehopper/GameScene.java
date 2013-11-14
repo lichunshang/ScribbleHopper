@@ -4,35 +4,62 @@ import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
+import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
+import org.andengine.ui.activity.BaseGameActivity;
+
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 
 import com.badlogic.gdx.math.Vector2;
 
 public class GameScene extends BaseScene {
 	
+	private PhysicsWorld physicsWorld;
+	
+	private SensorListener sensorListener;
+	
 	private HUD gameHUD;
 	private Text scoreText;
 	private SpriteBackground background;
-	private PhysicsWorld physicsWorld;
 	private Player player;
 	private PlatformPool platformPool;
-	private float platformSpeed;
+	private float platformSpeed = Const.Plaform.INITIAL_SPEED;
+	private BasePlatform lastSpawnedPlatform;
 	
 	// ==============================================
-	// GAME LOOP
+	// GAME LOOP METHOD
 	// ==============================================
 	public void onUpdate(){
-		//TODO
+		
+		if (lastSpawnedPlatform.getSprite().getY() > 300){
+			BasePlatform newPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
+			lastSpawnedPlatform = newPlatform;
+		}
+		
+		player.move(sensorListener.getAccelerometerX() * -1);
 	}
 	
 	public void createScene(){
+		
+		platformSpeed = 3f;
+		
 		createBackground();
 		createHUD();
 		createPhysics();
 		
+		//sensor
+		sensorListener = new SensorListener();
+		SensorManager sensorManager = (SensorManager) activity.getSystemService(BaseGameActivity.SENSOR_SERVICE);
+		sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+		
+		//game objects
 		player = new Player(camera.getWidth() / 2, camera.getHeight() / 2, this, physicsWorld);
-		platformSpeed = 3f;
+		platformPool = new PlatformPool(this);
+		lastSpawnedPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
+		
+
 	}
 	
 	private void createHUD(){
@@ -45,7 +72,7 @@ public class GameScene extends BaseScene {
 	}
 	
 	private void createPhysics(){
-		physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, -1 * ProjectConstants.Physics.GRAVITY), false){
+		physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, -1 * Const.Physics.GRAVITY), false){
 			@Override
 			public void onUpdate(final float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
@@ -54,6 +81,9 @@ public class GameScene extends BaseScene {
 		};
 		//physicsWorld.setContactListener(pListener)
 		registerUpdateHandler(physicsWorld);
+		
+		DebugRenderer debug = new DebugRenderer(physicsWorld, getVertexBufferObjectManager());
+		this.attachChild(debug);
 	}
 	
 	private void createBackground(){
@@ -65,16 +95,24 @@ public class GameScene extends BaseScene {
 		SceneManager.getInstance().loadMenuScene();
 	}
 	
-	public SceneManager.SceneType getSceneType(){
-		return SceneManager.SceneType.SCENE_GAME;
-	}
-	
 	public void disposeScene(){
 		//TODO
 	}
 	
+	// -----------------------------------------------
+	// Getter and Setters
+	// -----------------------------------------------
+
+	public SceneManager.SceneType getSceneType(){
+		return SceneManager.SceneType.SCENE_GAME;
+	}
+	
 	public float getPlatformSpeed(){
 		return platformSpeed;
+	}
+	
+	public float getAccelerometerValue(){
+		return sensorListener.getAccelerometerX() * -1;
 	}
 	
 	public PhysicsWorld getPhysicsWorld(){
@@ -84,4 +122,9 @@ public class GameScene extends BaseScene {
 	public PlatformPool getPlatformPool(){
 		return platformPool;
 	}
+	
+	public Player getPlayer(){
+		return player;
+	}
+	
 }

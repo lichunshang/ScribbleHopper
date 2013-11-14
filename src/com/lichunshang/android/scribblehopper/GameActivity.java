@@ -12,6 +12,7 @@ import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.WakeLockOptions;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.andengine.entity.scene.Scene;
+import org.andengine.entity.util.FPSLogger;
 import org.andengine.ui.activity.BaseGameActivity;
 
 import android.view.KeyEvent;
@@ -47,6 +48,7 @@ public class GameActivity extends BaseGameActivity {
 	
 	@Override
 	public void onCreateScene(OnCreateSceneCallback  pOnCreateResourcesCallback) throws IOException{
+		mEngine.registerUpdateHandler(new FPSLogger());
 		SceneManager.getInstance().createSplashScene(pOnCreateResourcesCallback);
 	}
 	

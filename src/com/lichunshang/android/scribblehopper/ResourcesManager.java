@@ -35,7 +35,7 @@ public class ResourcesManager{
 	// TEXTRUEs & TEXTURE REGIONS
 	//-----------------------------------------
 	
-	//----------------- Spalsh Scene -----------------
+	//----------------- Splash Scene -----------------
 	public ITextureRegion splashRegion;
 	public BitmapTextureAtlas splashTextureAtlas;
 	
@@ -91,8 +91,7 @@ public class ResourcesManager{
 	private void loadMenuFonts(){
 		FontFactory.setAssetBasePath("font/");
 		final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		
-	    font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
+	    font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "MaryKate.ttf", 50, true, Color.WHITE, 0, Color.BLACK);
 	    font.load();
 	}
 	
@@ -102,10 +101,9 @@ public class ResourcesManager{
 	
 	private void loadGameGraphic(){
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
-		gameTextureAtlas =  new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
+		gameTextureAtlas =  new BuildableBitmapTextureAtlas(activity.getTextureManager(), 4096, 4096, TextureOptions.BILINEAR);
 		
-		gamePlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 8, 1);
-		gameRegularPlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 8, 1);
+		gamePlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 5, 5);
 		gameBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "background.png");
 		
 		try{

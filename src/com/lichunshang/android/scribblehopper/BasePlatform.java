@@ -4,12 +4,9 @@ import java.util.Random;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
-import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 
 public abstract class BasePlatform{
@@ -20,6 +17,7 @@ public abstract class BasePlatform{
 	protected Body physicsBody;
 	protected Random random;
 	protected PlatformPool pool;
+	protected boolean recycled;
 	
 	public static enum PlatformType{
 		REGULAR,
@@ -36,22 +34,24 @@ public abstract class BasePlatform{
 		
 		float posX = generatePosX();
 		this.sprite.setPosition(posX, 0 - sprite.getHeight() / 2);
+		this.recycled = false;
+		scene.attachChild(sprite);
 		
+		createPhysicsBody();
 		createPhysics();
 	}
 	
 	public void createPhysics(){
-		FixtureDef fixtureDef = PhysicsFactory.createFixtureDef(ProjectConstants.Plaform.Regular.DENSITY, ProjectConstants.Plaform.Regular.ELASTICITY, ProjectConstants.Plaform.Regular.FRICTION);
-		physicsBody = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.KinematicBody, fixtureDef);
-		setBodyUserData();
-		physicsBody.setLinearVelocity(0, 0);
+		physicsBody.setUserData(this);
+		setSpeed(scene.getPlatformSpeed());
 		
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, physicsBody, true, false){
 			@Override
 			public void onUpdate(float pSecondsElapsed){
 				super.onUpdate(pSecondsElapsed);
-				if (sprite.getY() > (scene.camera.getHeight() + sprite.getHeight() / 2)){
+				if (!recycled && sprite.getY() > (scene.camera.getHeight() + sprite.getHeight() / 2)){
 					pool.recyclePlatform(BasePlatform.this);
+					recycled = true;
 				}
 				BasePlatform.this.onUpdate();
 				
@@ -60,8 +60,8 @@ public abstract class BasePlatform{
 	}
 	
 	public float generatePosX(){
-		final float LEFT_BOUND = ProjectConstants.GameScene.LEFT_RIGHT_MARGIN + sprite.getWidth() / 2;
-		final float RIGHT_BOUND = scene.camera.getWidth() - ProjectConstants.GameScene.LEFT_RIGHT_MARGIN - sprite.getWidth() / 2;
+		final float LEFT_BOUND = Const.GameScene.LEFT_RIGHT_MARGIN + sprite.getWidth() / 2;
+		final float RIGHT_BOUND = scene.camera.getWidth() - Const.GameScene.LEFT_RIGHT_MARGIN - sprite.getWidth() / 2;
 		
 		float posX = random.nextFloat() * (RIGHT_BOUND - LEFT_BOUND) + LEFT_BOUND;
 		
@@ -77,10 +77,11 @@ public abstract class BasePlatform{
 	}
 	
 	public void reset(float speed){
+		recycled = false;
 		this.sprite.setIgnoreUpdate(false);
 		this.sprite.setVisible(true);
 		setSpeed(speed);
-		this.physicsBody.setTransform(generatePosX() / ProjectConstants.Physics.PIXEL_TO_METER_RATIO, 0, 0);
+		this.physicsBody.setTransform(generatePosX() / Const.Physics.PIXEL_TO_METER_RATIO, 0, 0);
 	}
 	
 	public void disable(){
@@ -99,5 +100,5 @@ public abstract class BasePlatform{
 	
 	public abstract void onUpdate();
 	
-	public abstract void setBodyUserData();
+	public abstract void createPhysicsBody();
 }
