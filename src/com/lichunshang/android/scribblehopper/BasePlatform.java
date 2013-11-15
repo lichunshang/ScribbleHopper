@@ -15,7 +15,7 @@ public abstract class BasePlatform{
 	protected Rectangle sprite;
 	protected PhysicsWorld physicsWorld;
 	protected Body physicsBody;
-	protected Random random;
+	protected Random random = new Random();
 	protected PlatformPool pool;
 	protected boolean recycled;
 	
@@ -27,7 +27,6 @@ public abstract class BasePlatform{
 	public BasePlatform(GameScene scene){
 		this.scene = scene;
 		this.physicsWorld = scene.getPhysicsWorld();
-		this.random = new Random();
 		this.pool = scene.getPlatformPool();
 		
 		createPlatform(); //to create a sprite

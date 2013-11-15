@@ -1,5 +1,7 @@
 package com.lichunshang.android.scribblehopper;
 
+import java.util.Random;
+
 import org.andengine.engine.camera.hud.HUD;
 import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.Sprite;
@@ -16,29 +18,33 @@ import com.badlogic.gdx.math.Vector2;
 
 public class GameScene extends BaseScene {
 	
-	private PhysicsWorld physicsWorld;
-	
 	private SensorListener sensorListener;
+	private Random random = new Random();
+	
+	private PhysicsWorld physicsWorld;
 	
 	private HUD gameHUD;
 	private Text scoreText;
 	private SpriteBackground background;
 	private Player player;
+	
 	private PlatformPool platformPool;
 	private float platformSpeed = Const.Plaform.INITIAL_SPEED;
 	private BasePlatform lastSpawnedPlatform;
+	private float nextPlatformDistance = Const.Plaform.INITIAL_SPAWN_DISTANCE;
 	
 	// ==============================================
 	// GAME LOOP METHOD
 	// ==============================================
 	public void onUpdate(){
 		
-		if (lastSpawnedPlatform.getSprite().getY() > 300){
+		if (lastSpawnedPlatform.getSprite().getY() > nextPlatformDistance){
+			nextPlatformDistance = random.nextFloat() * (Const.Plaform.MAX_SPAWN_DISTANCE - Const.Plaform.MIN_SPAWN_DISTANCE) + Const.Plaform.MIN_SPAWN_DISTANCE;
 			BasePlatform newPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
 			lastSpawnedPlatform = newPlatform;
 		}
 		
-		player.move(sensorListener.getAccelerometerX() * -1);
+		player.moveWithAppliedForce(getAccelerometerValue());
 	}
 	
 	public void createScene(){
@@ -72,14 +78,14 @@ public class GameScene extends BaseScene {
 	}
 	
 	private void createPhysics(){
-		physicsWorld = new FixedStepPhysicsWorld(60, new Vector2(0, -1 * Const.Physics.GRAVITY), false){
+		physicsWorld = new FixedStepPhysicsWorld(Const.Physics.REFRESH_RATE, new Vector2(0, -1 * Const.Physics.GRAVITY), false){
 			@Override
 			public void onUpdate(final float pSecondsElapsed) {
 				super.onUpdate(pSecondsElapsed);
 				GameScene.this.onUpdate();
 			}
 		};
-		//physicsWorld.setContactListener(pListener)
+		physicsWorld.setContactListener(new GameContactListener(this));
 		registerUpdateHandler(physicsWorld);
 		
 		DebugRenderer debug = new DebugRenderer(physicsWorld, getVertexBufferObjectManager());
