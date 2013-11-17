@@ -52,8 +52,8 @@ public abstract class BasePlatform{
 					pool.recyclePlatform(BasePlatform.this);
 					recycled = true;
 				}
+				setSpeed(scene.getPlatformSpeed());
 				BasePlatform.this.onUpdate();
-				
 			}
 		});
 	}
@@ -75,11 +75,11 @@ public abstract class BasePlatform{
 		return physicsBody;
 	}
 	
-	public void reset(float speed){
+	public void reset(){
 		recycled = false;
 		this.sprite.setIgnoreUpdate(false);
 		this.sprite.setVisible(true);
-		setSpeed(speed);
+		setSpeed(scene.getPlatformSpeed());
 		this.physicsBody.setTransform(generatePosX() / Const.Physics.PIXEL_TO_METER_RATIO, 0, 0);
 	}
 	
@@ -91,6 +91,10 @@ public abstract class BasePlatform{
 	
 	public void setSpeed(float speed){
 		this.physicsBody.setLinearVelocity(0, speed);
+	}
+	
+	public void setPosition(float posX, float posY){
+		this.physicsBody.setTransform(posX / Const.Physics.PIXEL_TO_METER_RATIO, posY / Const.Physics.PIXEL_TO_METER_RATIO, 0);
 	}
 	
 	public abstract void createPlatform();

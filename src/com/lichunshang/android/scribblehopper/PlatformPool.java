@@ -43,7 +43,7 @@ public class PlatformPool extends MultiPool<BasePlatform>{
 		
 		@Override
 		protected void onHandleObtainItem(final BasePlatform platform){
-			platform.reset(gameScene.getPlatformSpeed());
+			platform.reset();
 		}
 		
 		@Override

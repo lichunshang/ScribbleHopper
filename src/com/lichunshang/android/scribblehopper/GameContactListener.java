@@ -1,5 +1,7 @@
 package com.lichunshang.android.scribblehopper;
 
+import org.andengine.entity.sprite.Sprite;
+
 import android.util.Log;
 
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -17,12 +19,9 @@ public class GameContactListener implements ContactListener{
 
 	@Override
     public void beginContact (Contact contact){
-//		Log.w("ABC", "hello1");
-//    	if (checkContact(BasePlatform.class, Player.class, contact)){
-//    		
-//
-//    	}
-		gameScene.getPlayer().animateLand();
+    	if (this.checkContact(BasePlatform.class, Player.class, contact)){
+    		gameScene.getPlayer().animateLand();
+    	}
     }
 
 	@Override
@@ -32,7 +31,6 @@ public class GameContactListener implements ContactListener{
 
 	@Override
     public void preSolve(Contact contact, Manifold oldManifold){
-    	
     }
 
 	@Override
@@ -40,27 +38,25 @@ public class GameContactListener implements ContactListener{
     	
     }
 	
-	private boolean checkContact(Class classA, Class classB, Contact contact){
-		Log.w("ABC", "abc1");
-		final Object objectA = contact.getFixtureA().getUserData();
-		final Object objectB = contact.getFixtureB().getUserData();
-		Log.w("ABC", "abc2");
+	public boolean checkContact(Class ClassA, Class ClassB, Contact contact){
+		final Object objectA = contact.getFixtureA().getBody().getUserData();
+		final Object objectB = contact.getFixtureB().getBody().getUserData();
 
-		if ((classA.isInstance(objectA) && classA.isInstance(objectB)) || (classA.isInstance(objectB) && classA.isInstance(objectA)))
+		if ((ClassA.isInstance(objectA) && ClassB.isInstance(objectB)) || (ClassA.isInstance(objectB) && ClassB.isInstance(objectA)))
 			return true;
 		return false;
 	}
 	
-//	private Player getPlayerObject(Contact contact){
-//		final Object objectA = contact.getFixtureA().getUserData();
-//		final Object objectB = contact.getFixtureB().getUserData();
-//		
-//		if (objectA instanceof Player){
-//			return (Player) objectA;
-//		}
-//		if (objectB instanceof Player){
-//			return (Player) objectB;
-//		}
-//		return null;
-//	}
+	private BasePlatform getPlatformObject(Contact contact){
+		final Object objectA = contact.getFixtureA().getBody().getUserData();
+		final Object objectB = contact.getFixtureB().getBody().getUserData();
+		
+		if (objectA instanceof BasePlatform){
+			return (BasePlatform) objectA;
+		}
+		if (objectB instanceof BasePlatform){
+			return (BasePlatform) objectB;
+		}
+		return null;
+	}
 }

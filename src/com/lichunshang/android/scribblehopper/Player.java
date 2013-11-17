@@ -8,6 +8,7 @@ import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 
+import android.graphics.Camera;
 import android.util.Log;
 
 import com.badlogic.gdx.math.Vector2;
@@ -43,11 +44,12 @@ public class Player{
 		
 		Vector2 [] vertices = {
 				new Vector2(0f / Const.Physics.PIXEL_TO_METER_RATIO, -10f / Const.Physics.PIXEL_TO_METER_RATIO),
-				new Vector2(-3f / Const.Physics.PIXEL_TO_METER_RATIO, -62.5f / Const.Physics.PIXEL_TO_METER_RATIO),
-				new Vector2(3f / Const.Physics.PIXEL_TO_METER_RATIO, -62.5f / Const.Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(-1f / Const.Physics.PIXEL_TO_METER_RATIO, -62.5f / Const.Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(1f / Const.Physics.PIXEL_TO_METER_RATIO, -62.5f / Const.Physics.PIXEL_TO_METER_RATIO),
 		};
 		
 		physicsBody = PhysicsFactory.createPolygonBody(physicsWorld, sprite, vertices, BodyType.DynamicBody, fixtureDef);
+		physicsBody.setUserData(this);
 		
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, physicsBody, true, false){
 			@Override
@@ -78,7 +80,7 @@ public class Player{
 				this.physicsBody.applyForce(new Vector2(accelerometerVal * Const.Player.DEACCELERATE_MULTIPLY_FACTOR, 0),  new Vector2(0, 0));
 		}
 		else{// same  sign
-			if (Math.abs(physicsBody.getLinearVelocity().x) >  Const.Player.MAX_SPEED_ALLOWED_WHEN_ACCELERATE){
+			if (Math.abs(physicsBody.getLinearVelocity().x) >  Const.Player.MAX_SPEED_ALLOWED_WHEN_ACCELERATE){ //limit maximum speed
 				physicsBody.setLinearVelocity(physicsBody.getLinearVelocity().x, physicsBody.getLinearVelocity().y);
 			}
 			else{
@@ -91,24 +93,21 @@ public class Player{
 	public void onUpdate(){
 		
 		float velocityX = physicsBody.getLinearVelocity().x;
+		float velocityY = physicsBody.getLinearVelocity().y;
 		
 		if (canSwitchAnimation){
 			if (Math.abs(velocityX) > Const.Player.IDLE_SWITCH_VELOCITY){
 				
 				sprite.setFlippedHorizontal(velocityX < 0); 
-				
 				if (Math.abs(velocityX) < Const.Player.WALK_SWITCH_VELOCITY && animationState != AnimationState.WALK){
-					animationState = AnimationState.WALK;
 					animateWalk();
 				}
 				else if (Math.abs(velocityX) > Const.Player.WALK_SWITCH_VELOCITY && animationState == AnimationState.WALK){
-					animationState = AnimationState.RUN;
 					animateRun();
 				}
 			}
 			else {
 				if (animationState != AnimationState.IDLE){
-					animationState = AnimationState.IDLE;
 					animateIdle();
 				}
 			}
@@ -125,36 +124,34 @@ public class Player{
 	public void animateIdle(){
 		stopAnimation();
 		sprite.animate(Const.Player.IDLE_ANIME_SPEED, Const.Player.IDLE_INDEX_START, Const.Player.IDLE_INDEX_END, true);
-		pauseAnimationSwitch(Const.Player.ANIME_DISABLE_TIME);
+		animationState = AnimationState.IDLE;
+		pauseAnimationSwitch(Const.Player.ANIME_DISABLE_TIME_SHORT);
 	}
 	
 	public void animateRun(){
 		stopAnimation();
 		sprite.animate(Const.Player.RUN_ANIME_SPEED, Const.Player.RUN_INDEX_START, Const.Player.RUN_INDEX_END, true);
-		pauseAnimationSwitch(Const.Player.ANIME_DISABLE_TIME);
+		animationState = AnimationState.RUN;
+		pauseAnimationSwitch(Const.Player.ANIME_DISABLE_TIME_LONG);
 	}
 	
 	public void animateWalk(){
 		stopAnimation();
 		sprite.animate(Const.Player.WALK_ANIME_SPEED, Const.Player.WALK_INDEX_START, Const.Player.WALK_INDEX_END, true);
-		pauseAnimationSwitch(Const.Player.ANIME_DISABLE_TIME);
+		animationState = AnimationState.WALK;
+		pauseAnimationSwitch(Const.Player.ANIME_DISABLE_TIME_SHORT);
 	}
 	
 	public void animateLand(){
 		stopAnimation();
-		sprite.animate(Const.Player.LAND_ANIME_SPEED, Const.Player.LAND_INDEX_START, Const.Player.LAND_INDEX_END, false);
-		canSwitchAnimation = false;
+
+		animationState = AnimationState.LAND;
 		int pauseTime = 0;
 		for (int i = 0; i < Const.Player.LAND_ANIME_SPEED.length; i++){pauseTime += Const.Player.LAND_ANIME_SPEED[i];}
+		
+		sprite.animate(Const.Player.LAND_ANIME_SPEED, Const.Player.LAND_INDEX_START, Const.Player.LAND_INDEX_END, false);
 		physicsBody.setLinearVelocity(0, physicsBody.getLinearVelocity().y);
-		scene.getEngine().registerUpdateHandler(new TimerHandler(pauseTime / 1000f, new ITimerCallback() {
-			@Override
-			public void onTimePassed(TimerHandler pTimerHandler) {
-				scene.getEngine().unregisterUpdateHandler(pTimerHandler);
-				canSwitchAnimation = true;
-				onUpdate();
-			}
-		}));
+		pauseAnimationSwitch(pauseTime);
 	}
 	
 	public void stopAnimation(){
@@ -170,6 +167,14 @@ public class Player{
 				canSwitchAnimation = true;
 			}
 		}));
+	}
+	
+	// ------------------------------------------
+	// GETTER and SETTERS
+	// ------------------------------------------
+	
+	public AnimatedSprite getSprite(){
+		return sprite;
 	}
 	
 }

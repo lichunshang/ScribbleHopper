@@ -14,7 +14,7 @@ public class RegularPlatform extends BasePlatform{
 	
 	@Override
 	public void createPlatform(){
-		this.sprite = new Rectangle(0, 0, 300, 30, scene.vertexBufferObjectManager);
+		this.sprite = new Rectangle(0, 0, 330, 40, scene.vertexBufferObjectManager);
 		this.sprite.setColor(0,0,0);
 	}
 	
