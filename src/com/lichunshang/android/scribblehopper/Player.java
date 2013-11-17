@@ -59,20 +59,7 @@ public class Player{
 			}
 		});
 	}
-	
-	public void moveWithLinearVelocity(float accelerometerVal){
-		
-		float runOffset = 0;
-		
-		if (animationState == AnimationState.RUN){
-			runOffset = Const.Player.RUN_ANIME_OFFSET;
-			if (accelerometerVal < 0)
-				runOffset *= -1;
-		}
-		
-		this.physicsBody.setLinearVelocity(accelerometerVal * Const.Player.ACCELEROMETER_MULTIPLY_FACTOR + runOffset, physicsBody.getLinearVelocity().y);
-	}
-	
+
 	public void moveWithAppliedForce(float accelerometerVal){
 		
 		//check if the acceleration and velocity are the same sign
