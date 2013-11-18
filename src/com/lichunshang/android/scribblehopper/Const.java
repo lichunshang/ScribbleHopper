@@ -65,7 +65,7 @@ public interface Const{
 		
 		//time in milliseconds to disable animation to prevent staggering
 		public static final int ANIME_DISABLE_TIME_SHORT = 25;
-		public static final int ANIME_DISABLE_TIME_LONG = 71;
+		public static final int ANIME_DISABLE_TIME_LONG = 100;
 	}
 	
 	//general physics settings
@@ -103,8 +103,7 @@ public interface Const{
 		}
 
 		public interface Unstable extends Regular{
-			//public static final float COLLAPSE_TIME = 200f;
-			public static final float COLLAPSE_TIME = 1500f;
+			public static final float COLLAPSE_TIME = 200f;
 		}
 		
 		public interface Spike extends Regular{
