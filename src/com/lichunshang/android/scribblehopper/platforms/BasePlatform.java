@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper;
+package com.lichunshang.android.scribblehopper.platforms;
 
 import java.util.Random;
 
@@ -7,6 +7,8 @@ import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 
 import com.badlogic.gdx.physics.box2d.Body;
+import com.lichunshang.android.scribblehopper.Const;
+import com.lichunshang.android.scribblehopper.scenes.GameScene;
 
 
 public abstract class BasePlatform{
@@ -22,6 +24,10 @@ public abstract class BasePlatform{
 	public static enum PlatformType{
 		REGULAR,
 		BOUNCE,
+		CONVEYOR_LEFT,
+		CONVEYOR_RIGHT,
+		UNSTABLE,
+		SPIKE,
 	}
 	
 	public BasePlatform(GameScene scene){
@@ -36,11 +42,11 @@ public abstract class BasePlatform{
 		this.recycled = false;
 		scene.attachChild(sprite);
 		
-		createPhysicsBody();
 		createPhysics();
 	}
 	
 	public void createPhysics(){
+		createPhysicsBody();
 		physicsBody.setUserData(this);
 		setSpeed(scene.getPlatformSpeed());
 		
@@ -48,9 +54,8 @@ public abstract class BasePlatform{
 			@Override
 			public void onUpdate(float pSecondsElapsed){
 				super.onUpdate(pSecondsElapsed);
-				if (!recycled && sprite.getY() > (scene.camera.getHeight() + sprite.getHeight() / 2)){
-					pool.recyclePlatform(BasePlatform.this);
-					recycled = true;
+				if (!recycled && sprite.getY() > (scene.getCamera().getHeight() + sprite.getHeight() / 2)){
+					recyclePlatform();
 				}
 				setSpeed(scene.getPlatformSpeed());
 				BasePlatform.this.onUpdate();
@@ -60,7 +65,7 @@ public abstract class BasePlatform{
 	
 	public float generatePosX(){
 		final float LEFT_BOUND = Const.GameScene.LEFT_RIGHT_MARGIN + sprite.getWidth() / 2;
-		final float RIGHT_BOUND = scene.camera.getWidth() - Const.GameScene.LEFT_RIGHT_MARGIN - sprite.getWidth() / 2;
+		final float RIGHT_BOUND = scene.getCamera().getWidth() - Const.GameScene.LEFT_RIGHT_MARGIN - sprite.getWidth() / 2;
 		
 		float posX = random.nextFloat() * (RIGHT_BOUND - LEFT_BOUND) + LEFT_BOUND;
 		
@@ -95,6 +100,11 @@ public abstract class BasePlatform{
 	
 	public void setPosition(float posX, float posY){
 		this.physicsBody.setTransform(posX / Const.Physics.PIXEL_TO_METER_RATIO, posY / Const.Physics.PIXEL_TO_METER_RATIO, 0);
+	}
+	
+	public void recyclePlatform(){
+		pool.recyclePlatform(BasePlatform.this);
+		recycled = true;
 	}
 	
 	public abstract void createPlatform();

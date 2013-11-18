@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper;
+package com.lichunshang.android.scribblehopper.scenes;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -8,6 +8,8 @@ import org.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
+
+import com.lichunshang.android.scribblehopper.SceneManager;
 
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener{

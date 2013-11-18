@@ -1,8 +1,10 @@
-package com.lichunshang.android.scribblehopper;
+package com.lichunshang.android.scribblehopper.scenes;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
+
+import com.lichunshang.android.scribblehopper.SceneManager;
 
 
 public class SplashScene extends BaseScene{

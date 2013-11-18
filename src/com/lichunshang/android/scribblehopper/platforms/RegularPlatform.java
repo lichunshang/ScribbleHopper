@@ -1,10 +1,12 @@
-package com.lichunshang.android.scribblehopper;
+package com.lichunshang.android.scribblehopper.platforms;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.lichunshang.android.scribblehopper.Const;
+import com.lichunshang.android.scribblehopper.scenes.GameScene;
 
 public class RegularPlatform extends BasePlatform{
 	
@@ -14,8 +16,8 @@ public class RegularPlatform extends BasePlatform{
 	
 	@Override
 	public void createPlatform(){
-		this.sprite = new Rectangle(0, 0, 330, 40, scene.vertexBufferObjectManager);
-		this.sprite.setColor(0,0,0);
+		this.sprite = new Rectangle(0, 0, 330, 40, scene.getVertexBufferObjectManager());
+		this.sprite.setColor(0, 0, 0);
 	}
 	
 	@Override

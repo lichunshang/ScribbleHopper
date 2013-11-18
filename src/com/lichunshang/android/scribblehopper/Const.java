@@ -1,31 +1,49 @@
 package com.lichunshang.android.scribblehopper;
 
+import com.badlogic.gdx.math.Vector2;
 
 public interface Const{
 	
 	//general game scene settings
-	public class GameScene{
+	public interface GameScene{
 		public static final float LEFT_RIGHT_MARGIN = 20; //margin size in pixel
 		public static final float BORDER_DENSITY = 0;
-		public static final float BORDER_ELASTICITY = 0.4f;
+		public static final float BORDER_ELASTICITY = 0.5f;
 		public static final float BORDER_FRICTION = 0;
 	}
 	
 	//general player settings
-	public class Player{
+	public interface Player{
 		
-		public static final float MAX_SPEED_ALLOWED_WHEN_ACCELERATE = 25f;
-		public static final float ACCELERATE_MULTIPLY_FACTOR = 7.5f;
-		public static final float DEACCELERATE_MULTIPLY_FACTOR = 13.5f;
-		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 3f;
+		//control properties
+		public static final float ACCELERATE_MULTIPLY_FACTOR = 6f;
+		public static final float DEACCELERATE_MULTIPLY_FACTOR = 13f;
+		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 4.5f;
 		
+		//physics properties
 		public static final float DENSITY = 0;
 		public static final float ELASTICITY = 0;
 		public static final float FRICTION = 0;
 		
+		//vertices in pixels
+		public static final Vector2[] bodyVerticesPixels = {
+			new Vector2(1, 10f),
+			new Vector2(-1, 10f),
+			new Vector2(-1, -62.5f),
+			new Vector2(1, -62.5f),
+		};
+		
+		//vertices in Meter-Kilogram-Seconds units (Box2D default units)
+		public static final Vector2[] bodyVerticesMKS = {
+			new Vector2(bodyVerticesPixels[0].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[0].y / Physics.PIXEL_TO_METER_RATIO),
+			new Vector2(bodyVerticesPixels[1].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[1].y / Physics.PIXEL_TO_METER_RATIO),
+			new Vector2(bodyVerticesPixels[2].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+			new Vector2(bodyVerticesPixels[3].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+		};
+		
 		//the speed where animation switches
 		public static final float IDLE_SWITCH_VELOCITY = 1f;
-		public static final float WALK_SWITCH_VELOCITY = 8.3f;
+		public static final float WALK_SWITCH_VELOCITY = 6.5f;
 		
 		//Animation sprite tile index
 		public static final int IDLE_INDEX_START = 0;
@@ -39,36 +57,57 @@ public interface Const{
 		
 		//Animation speed in milliseconds
 		public static final long[] IDLE_ANIME_SPEED = {160, 160, 160, 160};
-		public static final long[] LAND_ANIME_SPEED = {40, 40, 40, 40};
+		public static final long[] LAND_ANIME_SPEED = {50, 50, 50, 50};
 		public static final long[] RUN_ANIME_SPEED = {70, 70, 70, 70, 70};
-		public static final long[] WALK_ANIME_SPEED = {90, 90, 90, 90, 90, 90} ;
+		public static final long[] WALK_ANIME_SPEED = {90, 90, 90, 90, 90, 90};
 		
-		//run animation effect offset, used to reduce staggering
-		public static final float RUN_ANIME_OFFSET = 1.5f;
+		public static final float LAND_SPEED_REDUCE_FACTOR = 0.70f;
+		
 		//time in milliseconds to disable animation to prevent staggering
 		public static final int ANIME_DISABLE_TIME_SHORT = 25;
 		public static final int ANIME_DISABLE_TIME_LONG = 71;
 	}
 	
 	//general physics settings
-	public class Physics{
+	public interface Physics{
 		public static final int REFRESH_RATE = 60;
 		public static final float GRAVITY = 40;
 		public static final float PIXEL_TO_METER_RATIO = 32;
 	}
 	
-	public class Plaform{
+	public interface Plaform{
 		
 		public static final float INITIAL_SPAWN_DISTANCE = 350f;
-		public static final float MIN_SPAWN_DISTANCE = 250f;
+		public static final float MIN_SPAWN_DISTANCE = 200f;
 		public static final float MAX_SPAWN_DISTANCE = 420f;
 		public static final float INITIAL_SPEED = 4.5f;
 		
-		public class Regular{
+		public interface Regular{
 			public static final float DENSITY = 0;
 			public static final float ELASTICITY = 0;
 			public static final float FRICTION = 0;
 		}
-	}
+		
+		public interface Bounce extends Regular{
+			public static final float ELASTICITY = 0.7f;
+			public static final float PLAYER_VELOCITY_NO_BOUNCE = 3.5f; //no player bounce under certain y velocity
+			public static final float PLAYER_VELOCITY_NO_LAND = 3.5f; //no land animation under certain y velocity
+		}
+		
+		public interface ConveyorLeft extends Regular{
+			public static final float DISPLACEMENT_RATE = 4f;
+		}
+		
+		public interface ConveyorRight extends Regular{
+			public static final float DISPLACEMENT_RATE = 4f;
+		}
 
+		public interface Unstable extends Regular{
+			//public static final float COLLAPSE_TIME = 200f;
+			public static final float COLLAPSE_TIME = 1500f;
+		}
+		
+		public interface Spike extends Regular{
+		}
+	}
 }

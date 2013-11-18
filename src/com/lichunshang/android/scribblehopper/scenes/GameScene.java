@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper;
+package com.lichunshang.android.scribblehopper.scenes;
 
 import java.util.Random;
 
@@ -17,9 +17,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.lichunshang.android.scribblehopper.Const;
+import com.lichunshang.android.scribblehopper.Player;
+import com.lichunshang.android.scribblehopper.SceneManager;
+import com.lichunshang.android.scribblehopper.SensorListener;
+import com.lichunshang.android.scribblehopper.platforms.BasePlatform;
+import com.lichunshang.android.scribblehopper.platforms.PlatformPool;
 
 public class GameScene extends BaseScene {
 	
@@ -52,12 +57,10 @@ public class GameScene extends BaseScene {
 	public void onUpdate(){
 		
 		if (lastSpawnedPlatform.getSprite().getY() > nextPlatformDistance){
-			nextPlatformDistance = random.nextFloat() * (Const.Plaform.MAX_SPAWN_DISTANCE - Const.Plaform.MIN_SPAWN_DISTANCE) + Const.Plaform.MIN_SPAWN_DISTANCE;
-			BasePlatform newPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
+			nextPlatformDistance = getNextPlatformDistance();
+			BasePlatform newPlatform = platformPool.initPlatform(getNextPlatformType());
 			lastSpawnedPlatform = newPlatform;
 		}
-		
-		player.moveWithAppliedForce(getAccelerometerValue());
 	}
 	
 	private void createGameElements(){
@@ -111,11 +114,39 @@ public class GameScene extends BaseScene {
 	}
 	
 	public void onBackKeyPressed(){
+		
 		SceneManager.getInstance().loadMenuScene();
 	}
 	
 	public void disposeScene(){
-		//TODO
+		camera.setHUD(null);
+	}
+	
+	
+	// ----------------------------------------------
+	// GAME MECHANICS
+	// ----------------------------------------------
+	public BasePlatform.PlatformType getNextPlatformType(){
+		int randomNum = random.nextInt(5);
+		if (randomNum == 0){
+			return BasePlatform.PlatformType.REGULAR;
+		}
+		else if (randomNum == 1){
+			return BasePlatform.PlatformType.UNSTABLE;
+		}
+		else if (randomNum == 2){
+			return BasePlatform.PlatformType.CONVEYOR_LEFT;
+		}
+		else if (randomNum == 3){
+			return BasePlatform.PlatformType.CONVEYOR_RIGHT;
+		}
+		else {
+			return BasePlatform.PlatformType.BOUNCE;
+		}
+	}
+	
+	public float getNextPlatformDistance(){
+		return random.nextFloat() * (Const.Plaform.MAX_SPAWN_DISTANCE - Const.Plaform.MIN_SPAWN_DISTANCE) + Const.Plaform.MIN_SPAWN_DISTANCE;
 	}
 	
 	// -----------------------------------------------
