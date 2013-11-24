@@ -6,19 +6,24 @@ public interface Const{
 	
 	//general game scene settings
 	public interface GameScene{
+		public static final int TEXT_UPDATE_DURATION = 300;
 		public static final float LEFT_RIGHT_MARGIN = 20; //margin size in pixel
 		public static final float BORDER_DENSITY = 0;
 		public static final float BORDER_ELASTICITY = 0.5f;
 		public static final float BORDER_FRICTION = 0;
+		public static final float TOP_BORDER_ELASTICITY = 0.1f;
+		public static final int TOP_BORDER_HEALTH_DECREMENT = 4;
 	}
 	
 	//general player settings
 	public interface Player{
 		
+		public static final int MAX_HEALTH = 10;
+		
 		//control properties
 		public static final float ACCELERATE_MULTIPLY_FACTOR = 6f;
 		public static final float DEACCELERATE_MULTIPLY_FACTOR = 13f;
-		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 4.5f;
+		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 6.5f;
 		
 		//physics properties
 		public static final float DENSITY = 0;
@@ -27,8 +32,8 @@ public interface Const{
 		
 		//vertices in pixels
 		public static final Vector2[] bodyVerticesPixels = {
-			new Vector2(1, 10f),
-			new Vector2(-1, 10f),
+			new Vector2(1, 63f),
+			new Vector2(-1, 63f),
 			new Vector2(-1, -62.5f),
 			new Vector2(1, -62.5f),
 		};
@@ -65,22 +70,26 @@ public interface Const{
 		
 		//time in milliseconds to disable animation to prevent staggering
 		public static final int ANIME_DISABLE_TIME_SHORT = 25;
-		public static final int ANIME_DISABLE_TIME_LONG = 100;
+		public static final int ANIME_DISABLE_TIME_LONG = 300;
 	}
 	
 	//general physics settings
 	public interface Physics{
 		public static final int REFRESH_RATE = 60;
-		public static final float GRAVITY = 40;
+		public static final float GRAVITY = 45;
 		public static final float PIXEL_TO_METER_RATIO = 32;
 	}
 	
 	public interface Plaform{
 		
 		public static final float INITIAL_SPAWN_DISTANCE = 350f;
-		public static final float MIN_SPAWN_DISTANCE = 200f;
-		public static final float MAX_SPAWN_DISTANCE = 420f;
-		public static final float INITIAL_SPEED = 4.5f;
+		public static final float MIN_SPAWN_DISTANCE = 170f;
+		public static final float MAX_SPAWN_DISTANCE = 450f;
+		public static final float INITIAL_SPEED = 5f;
+		public static final int HEALTH_INCREMENT = 1;
+		
+		//since the coordinates of collisions used in comparison might be slightly off
+		public static final float COLLISION_CHECK_TOLERANCE = 0.15f;
 		
 		public interface Regular{
 			public static final float DENSITY = 0;
@@ -89,9 +98,9 @@ public interface Const{
 		}
 		
 		public interface Bounce extends Regular{
-			public static final float ELASTICITY = 0.7f;
+			public static final float ELASTICITY = 0.70f;
 			public static final float PLAYER_VELOCITY_NO_BOUNCE = 3.5f; //no player bounce under certain y velocity
-			public static final float PLAYER_VELOCITY_NO_LAND = 3.5f; //no land animation under certain y velocity
+			public static final float PLAYER_VELOCITY_NO_LAND = 4.5f; //no land animation under certain y velocity
 		}
 		
 		public interface ConveyorLeft extends Regular{
@@ -107,6 +116,7 @@ public interface Const{
 		}
 		
 		public interface Spike extends Regular{
+			public static final int HEALTH_DECREMENT = 4;
 		}
 	}
 }

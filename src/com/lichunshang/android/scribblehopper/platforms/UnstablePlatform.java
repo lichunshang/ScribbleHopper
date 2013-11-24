@@ -17,6 +17,11 @@ public class UnstablePlatform extends BasePlatform{
 	}
 	
 	@Override
+	public void onUpdate(){
+
+	}
+	
+	@Override
 	public void createPlatform(){
 		this.sprite = new Rectangle(0, 0, 330, 40, scene.getVertexBufferObjectManager());
 		this.sprite.setColor(0, 0.5f, 0);
@@ -34,14 +39,8 @@ public class UnstablePlatform extends BasePlatform{
 	}
 	
 	@Override
-	public void onUpdate(){
-
-	}
-	
-	@Override
-	public void reset(){
-		physicsBody.getFixtureList().get(0).setSensor(false);
-		super.reset();
+	public float getBodyTopYMKS(){
+		return physicsBody.getPosition().y + sprite.getHeight() / 2f / Const.Physics.PIXEL_TO_METER_RATIO;
 	}
 	
 	public void startCollpseTimer(){
@@ -55,7 +54,7 @@ public class UnstablePlatform extends BasePlatform{
 	}
 	
 	public void collapse(){
-		physicsBody.getFixtureList().get(0).setSensor(true);
+		setPhysicsBodySensor(true);
 		//TODO play animation then set invisible
 		sprite.setVisible(false);
 	}

@@ -10,10 +10,13 @@ import com.lichunshang.android.scribblehopper.scenes.GameScene;
 
 public class ConveyorRightPlatform extends BasePlatform{
 	
-	public static final float DISPLACEMENT_RATE = Const.Plaform.ConveyorRight.DISPLACEMENT_RATE;
-	
 	public ConveyorRightPlatform(GameScene scene){
 		super(scene);
+	}
+	
+	@Override
+	public void onUpdate(){
+
 	}
 	
 	@Override
@@ -34,7 +37,8 @@ public class ConveyorRightPlatform extends BasePlatform{
 	}
 	
 	@Override
-	public void onUpdate(){
-
+	public float getBodyTopYMKS(){
+		return physicsBody.getPosition().y + sprite.getHeight() / 2f / Const.Physics.PIXEL_TO_METER_RATIO;
 	}
+
 }

@@ -45,7 +45,7 @@ public abstract class BasePlatform{
 		createPhysics();
 	}
 	
-	public void createPhysics(){
+	private void createPhysics(){
 		createPhysicsBody();
 		physicsBody.setUserData(this);
 		setSpeed(scene.getPlatformSpeed());
@@ -63,7 +63,7 @@ public abstract class BasePlatform{
 		});
 	}
 	
-	public float generatePosX(){
+	private float generatePosX(){
 		final float LEFT_BOUND = Const.GameScene.LEFT_RIGHT_MARGIN + sprite.getWidth() / 2;
 		final float RIGHT_BOUND = scene.getCamera().getWidth() - Const.GameScene.LEFT_RIGHT_MARGIN - sprite.getWidth() / 2;
 		
@@ -82,6 +82,7 @@ public abstract class BasePlatform{
 	
 	public void reset(){
 		recycled = false;
+		setPhysicsBodySensor(false);
 		this.sprite.setIgnoreUpdate(false);
 		this.sprite.setVisible(true);
 		setSpeed(scene.getPlatformSpeed());
@@ -106,6 +107,17 @@ public abstract class BasePlatform{
 		pool.recyclePlatform(BasePlatform.this);
 		recycled = true;
 	}
+	
+	public void setPhysicsBodySensor(boolean isSensor){
+		physicsBody.getFixtureList().get(0).setSensor(isSensor);
+	}
+	
+	/**
+	 * Assumes that the body is exactly in the center, override this method
+	 * if this assumption is not true for a platform
+	 * @return the platforms's body top position
+	 */
+	public abstract float getBodyTopYMKS();
 	
 	public abstract void createPlatform();
 	

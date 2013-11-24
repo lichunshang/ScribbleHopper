@@ -15,6 +15,11 @@ public class RegularPlatform extends BasePlatform{
 	}
 	
 	@Override
+	public void onUpdate(){
+
+	}
+	
+	@Override
 	public void createPlatform(){
 		this.sprite = new Rectangle(0, 0, 330, 40, scene.getVertexBufferObjectManager());
 		this.sprite.setColor(0, 0, 0);
@@ -32,7 +37,7 @@ public class RegularPlatform extends BasePlatform{
 	}
 	
 	@Override
-	public void onUpdate(){
-
+	public float getBodyTopYMKS(){
+		return physicsBody.getPosition().y + sprite.getHeight() / 2f / Const.Physics.PIXEL_TO_METER_RATIO;
 	}
 }

@@ -10,7 +10,6 @@ import com.lichunshang.android.scribblehopper.scenes.GameScene;
 
 public class BouncePlatform extends BasePlatform{
 	
-	public static final float ELASTICITY = Const.Plaform.Bounce.ELASTICITY;
 	private static float DEFAULT_RESTITUION;
 	
 	public BouncePlatform(GameScene scene){
@@ -25,6 +24,11 @@ public class BouncePlatform extends BasePlatform{
 	}
 	
 	@Override
+	public void onUpdate(){
+
+	}
+	
+	@Override
 	public void createPhysicsBody(){
 		FixtureDef fixtureDef = PhysicsFactory.createFixtureDef(Const.Plaform.Bounce.DENSITY, Const.Plaform.Bounce.ELASTICITY, Const.Plaform.Bounce.FRICTION);
 		physicsBody = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.KinematicBody, fixtureDef);
@@ -36,8 +40,8 @@ public class BouncePlatform extends BasePlatform{
 	}
 	
 	@Override
-	public void onUpdate(){
-
+	public float getBodyTopYMKS(){
+		return physicsBody.getPosition().y + sprite.getHeight() / 2f / Const.Physics.PIXEL_TO_METER_RATIO;
 	}
 	
 	public void disabledElasticity(){

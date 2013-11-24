@@ -91,7 +91,7 @@ public class ResourcesManager{
 	private void loadMenuFonts(){
 		FontFactory.setAssetBasePath("font/");
 		final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-	    font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "MaryKate.ttf", 50, true, Color.WHITE, 0, Color.BLACK);
+	    font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "MaryKate.ttf", 50, true, Color.BLACK, 0, Color.BLACK);
 	    font.load();
 	}
 	

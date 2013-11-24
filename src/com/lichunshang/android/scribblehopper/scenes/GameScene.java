@@ -17,6 +17,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.lichunshang.android.scribblehopper.Const;
@@ -35,6 +36,8 @@ public class GameScene extends BaseScene {
 	
 	private HUD gameHUD;
 	private Text scoreText;
+	private Text healthText;
+	
 	private SpriteBackground background;
 	private Player player;
 	
@@ -56,11 +59,18 @@ public class GameScene extends BaseScene {
 	// ==============================================
 	public void onUpdate(){
 		
+		if (!player.isAlive()){
+			
+		}
+		
 		if (lastSpawnedPlatform.getSprite().getY() > nextPlatformDistance){
 			nextPlatformDistance = getNextPlatformDistance();
 			BasePlatform newPlatform = platformPool.initPlatform(getNextPlatformType());
 			lastSpawnedPlatform = newPlatform;
 		}
+		
+		//scoreText.setText(Integer.toString(player.getHealth()));
+		healthText.setText(Integer.toString(player.getHealth()));
 	}
 	
 	private void createGameElements(){
@@ -69,21 +79,32 @@ public class GameScene extends BaseScene {
 		lastSpawnedPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
 		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, lastSpawnedPlatform.getSprite().getY());
 		
-		
 		//create left and right border so the player does not get out
-		Rectangle leftBorder = new Rectangle(-5, camera.getHeight() / 2, 10, camera.getHeight(), vertexBufferObjectManager);
-		Rectangle rightBorder = new Rectangle(5 + camera.getWidth(), camera.getHeight() / 2, 10, camera.getHeight(), vertexBufferObjectManager);
+		Rectangle leftBorder = new Rectangle(-1, camera.getHeight() / 2, 2, camera.getHeight(), vertexBufferObjectManager);
+		Rectangle rightBorder = new Rectangle(1 + camera.getWidth(), camera.getHeight() / 2, 2, camera.getHeight(), vertexBufferObjectManager);
 		FixtureDef borderFixtureDef = PhysicsFactory.createFixtureDef(Const.GameScene.BORDER_DENSITY, Const.GameScene.BORDER_ELASTICITY, Const.GameScene.BORDER_FRICTION);
 		PhysicsFactory.createBoxBody(physicsWorld, leftBorder, BodyType.StaticBody, borderFixtureDef);
 		PhysicsFactory.createBoxBody(physicsWorld, rightBorder, BodyType.StaticBody, borderFixtureDef);
+		
+		//top spike sensor to detect reduce damage
+		Rectangle topBorder = new Rectangle(camera.getWidth() / 2, camera.getHeight() - 5, camera.getWidth(), 10, vertexBufferObjectManager);
+		FixtureDef topBorderFixtureDef = PhysicsFactory.createFixtureDef(Const.GameScene.BORDER_DENSITY, Const.GameScene.TOP_BORDER_ELASTICITY, Const.GameScene.BORDER_FRICTION);
+		Body topBorderPhysicsBody = PhysicsFactory.createBoxBody(physicsWorld, topBorder, BodyType.StaticBody, topBorderFixtureDef);
+		topBorderPhysicsBody.setUserData(new TopBorder()); 
 	}
 	
 	private void createHUD(){
 		gameHUD = new HUD();
-		scoreText = new Text(20, 0, resourcesManager.font, "00000000", vertexBufferObjectManager);
+		scoreText = new Text(20, 0, resourcesManager.font, "0123456789", vertexBufferObjectManager);
 		scoreText.setAnchorCenter(0, 0);
 		scoreText.setText("0");
+		
+		healthText = new Text(500, 0, resourcesManager.font, "0123456789", vertexBufferObjectManager);
+		healthText.setAnchorCenter(0, 0);
+		healthText.setText("0");
+		
 		gameHUD.attachChild(scoreText);
+		gameHUD.attachChild(healthText);
 		camera.setHUD(gameHUD);
 	}
 	
@@ -114,7 +135,6 @@ public class GameScene extends BaseScene {
 	}
 	
 	public void onBackKeyPressed(){
-		
 		SceneManager.getInstance().loadMenuScene();
 	}
 	
@@ -127,7 +147,7 @@ public class GameScene extends BaseScene {
 	// GAME MECHANICS
 	// ----------------------------------------------
 	public BasePlatform.PlatformType getNextPlatformType(){
-		int randomNum = random.nextInt(5);
+		int randomNum = random.nextInt(6);
 		if (randomNum == 0){
 			return BasePlatform.PlatformType.REGULAR;
 		}
@@ -140,8 +160,11 @@ public class GameScene extends BaseScene {
 		else if (randomNum == 3){
 			return BasePlatform.PlatformType.CONVEYOR_RIGHT;
 		}
-		else {
+		else if (randomNum == 4){
 			return BasePlatform.PlatformType.BOUNCE;
+		}
+		else {
+			return BasePlatform.PlatformType.SPIKE;
 		}
 	}
 	
@@ -176,5 +199,11 @@ public class GameScene extends BaseScene {
 	public Player getPlayer(){
 		return player;
 	}
+	
+	// -----------------------------------------------
+	// GameScene only classes
+	// -----------------------------------------------
+
+	public class TopBorder{}
 	
 }

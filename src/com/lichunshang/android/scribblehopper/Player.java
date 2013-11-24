@@ -12,9 +12,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.lichunshang.android.scribblehopper.platforms.BasePlatform;
-import com.lichunshang.android.scribblehopper.platforms.BasePlatform.PlatformType;
-import com.lichunshang.android.scribblehopper.platforms.ConveyorLeftPlatform;
-import com.lichunshang.android.scribblehopper.platforms.ConveyorRightPlatform;
 import com.lichunshang.android.scribblehopper.scenes.GameScene;
 
 public class Player{
@@ -28,7 +25,10 @@ public class Player{
 	private AnimationState animationState = AnimationState.IDLE;
 	private boolean canSwitchAnimation = true;
 	
-	private BasePlatform.PlatformType currentPlatformType = PlatformType.REGULAR;
+	private BasePlatform currentPlatform = null;
+	private BasePlatform lastStayedPlatform = null;
+	
+	private int health = Const.Player.MAX_HEALTH;
 	
 	public Player(float posX, float posY, GameScene scene, PhysicsWorld physicsWorld){
 		
@@ -44,29 +44,27 @@ public class Player{
 	// ------------------------------------------------
 	// PLAYER UPDATE LOOP
 	// ------------------------------------------------
-	public void onUpdate(){
+	private void onUpdate(){
 		float velocityX = physicsBody.getLinearVelocity().x;
 		move(scene.getAccelerometerValue());
 		
 		updatePlatformEffect();
 		
-		if (canSwitchAnimation){
 			if (Math.abs(velocityX) > Const.Player.IDLE_SWITCH_VELOCITY){
 				
 				sprite.setFlippedHorizontal(velocityX < 0); 
-				if (Math.abs(velocityX) < Const.Player.WALK_SWITCH_VELOCITY && animationState != AnimationState.WALK){
+				if (canSwitchAnimation && Math.abs(velocityX) < Const.Player.WALK_SWITCH_VELOCITY && animationState != AnimationState.WALK){
 					animateWalk();
 				}
-				else if (Math.abs(velocityX) > Const.Player.WALK_SWITCH_VELOCITY && animationState != AnimationState.RUN){
+				else if (canSwitchAnimation && Math.abs(velocityX) > Const.Player.WALK_SWITCH_VELOCITY && animationState != AnimationState.RUN){
 					animateRun();
 				}
 			}
 			else {
-				if (animationState != AnimationState.IDLE){
+				if (canSwitchAnimation && animationState != AnimationState.IDLE){
 					animateIdle();
 				}
 			}
-		}
 	}
 	
 	private void createPhysics(){
@@ -85,7 +83,7 @@ public class Player{
 		});
 	}
 
-	public void move(float accelerometerVal){
+	private void move(float accelerometerVal){
 		
 		//check if the acceleration and velocity are the same sign
 		if ((accelerometerVal < 0) != (physicsBody.getLinearVelocity().x < 0)){ // different sign
@@ -99,6 +97,19 @@ public class Player{
 			else{
 				this.physicsBody.applyForce(new Vector2(accelerometerVal * Const.Player.ACCELERATE_MULTIPLY_FACTOR, 0),  new Vector2(0, 0));
 			}
+		}
+	}
+	
+	// ------------------------------------------
+	// Platform Effects
+	// ------------------------------------------
+	
+	private void updatePlatformEffect(){
+		if (getCurrentPlatformType() == BasePlatform.PlatformType.CONVEYOR_LEFT){
+			physicsBody.setTransform((sprite.getX() - Const.Plaform.ConveyorLeft.DISPLACEMENT_RATE) / Const.Physics.PIXEL_TO_METER_RATIO, physicsBody.getPosition().y, 0);
+		}
+		else if (getCurrentPlatformType() == BasePlatform.PlatformType.CONVEYOR_RIGHT){
+			physicsBody.setTransform((sprite.getX() + Const.Plaform.ConveyorRight.DISPLACEMENT_RATE) / Const.Physics.PIXEL_TO_METER_RATIO, physicsBody.getPosition().y, 0);
 		}
 	}
 	
@@ -127,7 +138,7 @@ public class Player{
 		stopAnimation();
 		sprite.animate(Const.Player.WALK_ANIME_SPEED, Const.Player.WALK_INDEX_START, Const.Player.WALK_INDEX_END, true);
 		animationState = AnimationState.WALK;
-		pauseAnimationSwitch(Const.Player.ANIME_DISABLE_TIME_SHORT);
+		pauseAnimationSwitch(Const.Player.ANIME_DISABLE_TIME_LONG);
 	}
 	
 	public void animateLand(){
@@ -145,7 +156,7 @@ public class Player{
 		sprite.stopAnimation();
 	}
 	
-	public void pauseAnimationSwitch(int milliseconds){
+	private void pauseAnimationSwitch(int milliseconds){
 		canSwitchAnimation = false;
 		scene.getEngine().registerUpdateHandler(new TimerHandler(milliseconds / 1000f, new ITimerCallback() {
 			@Override
@@ -157,35 +168,62 @@ public class Player{
 	}
 	
 	// ------------------------------------------
-	// Platform Effects
-	// ------------------------------------------
-	
-	public void setCurrentPlatform(BasePlatform.PlatformType type){
-		currentPlatformType = type; 
-	}
-	
-	public void updatePlatformEffect(){
-		if (currentPlatformType == BasePlatform.PlatformType.CONVEYOR_LEFT){
-			physicsBody.setTransform((sprite.getX() + ConveyorLeftPlatform.DISPLACEMENT_RATE) / Const.Physics.PIXEL_TO_METER_RATIO, physicsBody.getPosition().y, 0);
-		}
-		else if (currentPlatformType == BasePlatform.PlatformType.CONVEYOR_RIGHT){
-			physicsBody.setTransform((sprite.getX() + ConveyorRightPlatform.DISPLACEMENT_RATE) / Const.Physics.PIXEL_TO_METER_RATIO, physicsBody.getPosition().y, 0);
-		}
-	}
-	
-	// ------------------------------------------
 	// GETTER and SETTERS
 	// ------------------------------------------
+	
+	public int getHealth(){
+		return health;
+	}
+	
+	public void increaseHealth(int inrement){
+		health += inrement;
+		if (health > Const.Player.MAX_HEALTH){
+			health = Const.Player.MAX_HEALTH;
+		}
+	}
+	
+	public void decreaseHealth(int decrement){
+		health -= decrement;
+		if (health < 0){
+			health = 0;
+		}
+	}
+	
+	public boolean isAlive(){
+		return health > 0;
+	}
 	
 	public AnimatedSprite getSprite(){
 		return sprite;
 	}
 	
 	public float getBodyBottomYMKS(){
-		return physicsBody.getPosition().y + Const.Player.bodyVerticesMKS[3].y;
+		return physicsBody.getPosition().y + Const.Player.bodyVerticesMKS[Const.Player.bodyVerticesMKS.length - 1].y;
 	}
 	
 	public Body getPhysicsBody(){
 		return physicsBody;
+	}
+	
+	public void setCurrentPlatform(BasePlatform platform){
+		if (currentPlatform != null)
+			lastStayedPlatform = currentPlatform;
+		currentPlatform = platform;
+	}
+	
+	public BasePlatform getCurrentPlaform(){
+		return currentPlatform;
+	}
+	
+	public BasePlatform.PlatformType getCurrentPlatformType(){
+		if (currentPlatform == null){
+			return null;
+		}
+		return currentPlatform.getType();
+	}
+	
+	//should be called after the current platform has just been set
+	public boolean isDifferentPlatform(){
+		return currentPlatform != lastStayedPlatform;
 	}
 }

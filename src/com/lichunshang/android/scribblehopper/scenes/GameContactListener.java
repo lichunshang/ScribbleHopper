@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.Player;
 import com.lichunshang.android.scribblehopper.platforms.BasePlatform;
+import com.lichunshang.android.scribblehopper.platforms.BasePlatform.PlatformType;
 import com.lichunshang.android.scribblehopper.platforms.BouncePlatform;
 import com.lichunshang.android.scribblehopper.platforms.UnstablePlatform;
 
@@ -25,7 +26,7 @@ public class GameContactListener implements ContactListener{
 			Player player = gameScene.getPlayer();
 			BasePlatform platform = getPlatformObject(contact);
 			
-			if (player.getBodyBottomYMKS() <= platform.getPhyiscsBody().getPosition().y){
+			if (player.getBodyBottomYMKS() < (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
 				contact.setEnabled(false);
 			}
 		}
@@ -34,18 +35,27 @@ public class GameContactListener implements ContactListener{
 	@Override
     public void beginContact (Contact contact){
 		
-    	if (this.checkContact(BasePlatform.class, Player.class, contact)){
+		if (checkContact(GameScene.TopBorder.class, Player.class, contact)){
+			Player player = gameScene.getPlayer();
+			if (player.getCurrentPlaform() != null){
+				player.getCurrentPlaform().setPhysicsBodySensor(true);
+			}
+			player.decreaseHealth(Const.GameScene.TOP_BORDER_HEALTH_DECREMENT);
+		}
+		
+    	if (checkContact(BasePlatform.class, Player.class, contact)){
     		BasePlatform platform = getPlatformObject(contact);
+    		BasePlatform.PlatformType platformType = platform.getType();
     		Player player = gameScene.getPlayer();
     		
-    		if (player.getBodyBottomYMKS() >= platform.getPhyiscsBody().getPosition().y){
+    		if (player.getBodyBottomYMKS() >= (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
 	    		
 	    		if (platform.getType() == BasePlatform.PlatformType.REGULAR){
-	    			player.setCurrentPlatform(BasePlatform.PlatformType.REGULAR);
+	    			player.setCurrentPlatform(platform);
 		    		player.animateLand();
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.BOUNCE){
-	    			player.setCurrentPlatform(BasePlatform.PlatformType.BOUNCE);
+	    			player.setCurrentPlatform(platform);
 	    			if (Math.abs(player.getPhysicsBody().getLinearVelocity().y) < Const.Plaform.Bounce.PLAYER_VELOCITY_NO_BOUNCE){
 	    				((BouncePlatform) platform).disabledElasticity();
 	    			}
@@ -54,21 +64,26 @@ public class GameContactListener implements ContactListener{
 	    			}
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.CONVEYOR_LEFT){
-	    			player.setCurrentPlatform(BasePlatform.PlatformType.CONVEYOR_LEFT);
+	    			player.setCurrentPlatform(platform);
 		    		player.animateLand();
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.CONVEYOR_RIGHT){
-	    			player.setCurrentPlatform(BasePlatform.PlatformType.CONVEYOR_RIGHT);
+	    			player.setCurrentPlatform(platform);
 		    		player.animateLand();
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.UNSTABLE){
-	    			player.setCurrentPlatform(BasePlatform.PlatformType.UNSTABLE);
+	    			player.setCurrentPlatform(platform);
 		    		player.animateLand();
 		    		((UnstablePlatform) platform).startCollpseTimer();
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.SPIKE){
-	    			player.setCurrentPlatform(BasePlatform.PlatformType.UNSTABLE);
+	    			player.setCurrentPlatform(platform);
+	    			player.decreaseHealth(Const.Plaform.Spike.HEALTH_DECREMENT);
 		    		player.animateLand();
+	    		}
+	    		
+	    		if (platformType != PlatformType.SPIKE && player.isDifferentPlatform()){
+	    			player.increaseHealth(Const.Plaform.HEALTH_INCREMENT);
 	    		}
     		}
     		else{
@@ -97,7 +112,7 @@ public class GameContactListener implements ContactListener{
     	
     }
 	
-	public boolean checkContact(Class ClassA, Class ClassB, Contact contact){
+	private boolean checkContact(Class ClassA, Class ClassB, Contact contact){
 		final Object objectA = contact.getFixtureA().getBody().getUserData();
 		final Object objectB = contact.getFixtureB().getBody().getUserData();
 
