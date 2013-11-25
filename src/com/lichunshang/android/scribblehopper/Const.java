@@ -13,12 +13,15 @@ public interface Const{
 		public static final float BORDER_FRICTION = 0;
 		public static final float TOP_BORDER_ELASTICITY = 0.1f;
 		public static final int TOP_BORDER_HEALTH_DECREMENT = 4;
+		public static final float SPEED_TO_SCORE_RATIO = 0.01f;
 	}
 	
 	//general player settings
 	public interface Player{
 		
 		public static final int MAX_HEALTH = 10;
+		public static final int NUM_FLASH_WHEN_HURT = 8;
+		public static final float FLASH_PERIOD_WHEN_HURT = 90;
 		
 		//control properties
 		public static final float ACCELERATE_MULTIPLY_FACTOR = 6f;
@@ -32,8 +35,8 @@ public interface Const{
 		
 		//vertices in pixels
 		public static final Vector2[] bodyVerticesPixels = {
-			new Vector2(1, 63f),
-			new Vector2(-1, 63f),
+			new Vector2(1, 60f),
+			new Vector2(-1, 60f),
 			new Vector2(-1, -62.5f),
 			new Vector2(1, -62.5f),
 		};

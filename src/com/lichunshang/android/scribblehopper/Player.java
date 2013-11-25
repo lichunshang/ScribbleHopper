@@ -2,6 +2,10 @@ package com.lichunshang.android.scribblehopper;
 
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.entity.modifier.FadeInModifier;
+import org.andengine.entity.modifier.FadeOutModifier;
+import org.andengine.entity.modifier.LoopEntityModifier;
+import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
@@ -29,12 +33,15 @@ public class Player{
 	private BasePlatform lastStayedPlatform = null;
 	
 	private int health = Const.Player.MAX_HEALTH;
+	private TimerHandler flashTimer = null;
+	private LoopEntityModifier FlashModifier;
 	
 	public Player(float posX, float posY, GameScene scene, PhysicsWorld physicsWorld){
 		
 		this.scene = scene;
 		this.physicsWorld = physicsWorld;
 		this.sprite = new AnimatedSprite(posX, posY, this.scene.getResourcesManager().gamePlayerTextureRegion, this.scene.getVertexBufferObjectManager());
+		FlashModifier = new LoopEntityModifier(new SequenceEntityModifier(new FadeInModifier(Const.Player.FLASH_PERIOD_WHEN_HURT / 1000f), new FadeOutModifier(Const.Player.FLASH_PERIOD_WHEN_HURT / 1000f)));
 		
 		scene.attachChild(this.sprite);
 		createPhysics();
@@ -187,10 +194,26 @@ public class Player{
 		if (health < 0){
 			health = 0;
 		}
+		if (flashTimer == null){
+			sprite.registerEntityModifier(FlashModifier);
+			flashTimer = new TimerHandler(Const.Player.FLASH_PERIOD_WHEN_HURT * Const.Player.NUM_FLASH_WHEN_HURT / 1000f, new ITimerCallback() {
+				@Override
+				public void onTimePassed(TimerHandler pTimerHandler) {
+					sprite.setAlpha(1);
+					sprite.unregisterEntityModifier(FlashModifier);
+					flashTimer = null;
+					scene.getEngine().unregisterUpdateHandler(pTimerHandler);
+				}
+			});
+			scene.getEngine().registerUpdateHandler(flashTimer);
+		}
+		else{
+			flashTimer.reset();
+		}
 	}
 	
 	public boolean isAlive(){
-		return health > 0;
+		return health > 0 && (sprite.getY() > -sprite.getHeight() / 2);
 	}
 	
 	public AnimatedSprite getSprite(){

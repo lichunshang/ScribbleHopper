@@ -33,13 +33,14 @@ public class GameScene extends BaseScene {
 	private Random random = new Random();
 	
 	private PhysicsWorld physicsWorld;
+	private SpriteBackground background;
 	
 	private HUD gameHUD;
 	private Text scoreText;
 	private Text healthText;
-	
-	private SpriteBackground background;
+
 	private Player player;
+	private float score = 0;
 	
 	private PlatformPool platformPool;
 	private float platformSpeed = Const.Plaform.INITIAL_SPEED;
@@ -59,18 +60,25 @@ public class GameScene extends BaseScene {
 	// ==============================================
 	public void onUpdate(){
 		
+		//check if the player is alive
 		if (!player.isAlive()){
 			
 		}
+		else{
+			score += platformSpeed * Const.GameScene.SPEED_TO_SCORE_RATIO;
+		}
 		
+		//spawn new platforms
 		if (lastSpawnedPlatform.getSprite().getY() > nextPlatformDistance){
 			nextPlatformDistance = getNextPlatformDistance();
 			BasePlatform newPlatform = platformPool.initPlatform(getNextPlatformType());
 			lastSpawnedPlatform = newPlatform;
 		}
 		
-		//scoreText.setText(Integer.toString(player.getHealth()));
-		healthText.setText(Integer.toString(player.getHealth()));
+		
+		//update game text
+		scoreText.setText(Integer.toString((int) score));
+		//healthText.setText(Integer.toString(player.getHealth()));
 	}
 	
 	private void createGameElements(){
@@ -201,7 +209,7 @@ public class GameScene extends BaseScene {
 	}
 	
 	// -----------------------------------------------
-	// GameScene only classes
+	// GameScene classes
 	// -----------------------------------------------
 
 	public class TopBorder{}
