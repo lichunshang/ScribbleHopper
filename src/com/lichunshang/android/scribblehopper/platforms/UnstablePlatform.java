@@ -44,18 +44,17 @@ public class UnstablePlatform extends BasePlatform{
 	}
 	
 	public void startCollpseTimer(){
-		scene.getEngine().registerUpdateHandler(new TimerHandler(Const.Plaform.Unstable.COLLAPSE_TIME / 1000f, new ITimerCallback() {
+		scene.registerUpdateHandler(new TimerHandler(Const.Plaform.Unstable.COLLAPSE_TIME / 1000f, new ITimerCallback() {
 			@Override
 			public void onTimePassed(TimerHandler pTimerHandler) {
-				scene.getEngine().unregisterUpdateHandler(pTimerHandler);
+				scene.unregisterUpdateHandler(pTimerHandler);
 				collapse();
 			}
 		}));
 	}
 	
 	public void collapse(){
-		setPhysicsBodySensor(true);
 		//TODO play animation then set invisible
-		sprite.setVisible(false);
+		recyclePlatform();
 	}
 }

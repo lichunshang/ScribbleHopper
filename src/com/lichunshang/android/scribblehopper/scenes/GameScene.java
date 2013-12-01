@@ -3,11 +3,14 @@ package com.lichunshang.android.scribblehopper.scenes;
 import java.util.Random;
 
 import org.andengine.engine.camera.hud.HUD;
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
+import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.background.SpriteBackground;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
-import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -21,13 +24,16 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.lichunshang.android.scribblehopper.Const;
-import com.lichunshang.android.scribblehopper.Player;
 import com.lichunshang.android.scribblehopper.SceneManager;
 import com.lichunshang.android.scribblehopper.SensorListener;
+import com.lichunshang.android.scribblehopper.game.GameContactListener;
+import com.lichunshang.android.scribblehopper.game.Player;
 import com.lichunshang.android.scribblehopper.platforms.BasePlatform;
 import com.lichunshang.android.scribblehopper.platforms.PlatformPool;
 
 public class GameScene extends BaseScene {
+	
+	private boolean handleBackKeyPressed = false;
 	
 	private SensorListener sensorListener;
 	private Random random = new Random();
@@ -45,14 +51,20 @@ public class GameScene extends BaseScene {
 	private PlatformPool platformPool;
 	private float platformSpeed = Const.Plaform.INITIAL_SPEED;
 	private BasePlatform lastSpawnedPlatform;
+	private boolean canSpawnPlafrom = true;
 	private float nextPlatformDistance = Const.Plaform.INITIAL_SPAWN_DISTANCE;
 	
+	private BaseSubScene currentSubScene = null;
+	private PlayerDieScene playerDieScene;
+	private Entity plaformLayer, backgroundLayer, playerLayer;
+	
 	public void createScene(){
-		createBackground();
+		createLayers();
 		createHUD();
 		createPhysics();
 		initializeSensors();
 		createGameElements();
+		createSubScenes();
 	}
 	
 	// ==============================================
@@ -60,32 +72,39 @@ public class GameScene extends BaseScene {
 	// ==============================================
 	public void onUpdate(){
 		
-		//check if the player is alive
-		if (!player.isAlive()){
-			
+		if (handleBackKeyPressed){
+			onBackKeyPressedSynced();
 		}
-		else{
+		
+		//check if the player is alive
+		if (!player.isAlive() && currentSubScene == null){
+			player.setPhysicsBodySensor(true);
+			player.animateDie();
+			currentSubScene = playerDieScene;
+			playerDieScene.attachScene();
+			playerDieScene.setScoreText((int) score);
+		}
+		if (player.isAlive()){
 			score += platformSpeed * Const.GameScene.SPEED_TO_SCORE_RATIO;
 		}
 		
 		//spawn new platforms
-		if (lastSpawnedPlatform.getSprite().getY() > nextPlatformDistance){
+		if (canSpawnPlafrom && lastSpawnedPlatform.getSprite().getY() > nextPlatformDistance){
 			nextPlatformDistance = getNextPlatformDistance();
-			BasePlatform newPlatform = platformPool.initPlatform(getNextPlatformType());
-			lastSpawnedPlatform = newPlatform;
+			lastSpawnedPlatform = platformPool.initPlatform(getNextPlatformType());
 		}
 		
 		
 		//update game text
 		scoreText.setText(Integer.toString((int) score));
-		//healthText.setText(Integer.toString(player.getHealth()));
+		healthText.setText(Integer.toString(player.getHealth()));
 	}
 	
 	private void createGameElements(){
 		player = new Player(camera.getWidth() / 2, camera.getHeight() / 2, this, physicsWorld);
 		platformPool = new PlatformPool(this);
 		lastSpawnedPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
-		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, lastSpawnedPlatform.getSprite().getY());
+		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, camera.getHeight() / 4);
 		
 		//create left and right border so the player does not get out
 		Rectangle leftBorder = new Rectangle(-1, camera.getHeight() / 2, 2, camera.getHeight(), vertexBufferObjectManager);
@@ -127,8 +146,8 @@ public class GameScene extends BaseScene {
 		physicsWorld.setContactListener(new GameContactListener(this));
 		registerUpdateHandler(physicsWorld);
 		
-		DebugRenderer debug = new DebugRenderer(physicsWorld, getVertexBufferObjectManager());
-		this.attachChild(debug);
+//		DebugRenderer debug = new DebugRenderer(physicsWorld, getVertexBufferObjectManager());
+//		this.attachChild(debug);
 	}
 	
 	private void initializeSensors(){
@@ -137,19 +156,76 @@ public class GameScene extends BaseScene {
 		sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
 	}
 	
-	private void createBackground(){
+	private void createLayers(){
 		background = new SpriteBackground(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.gameBackgroundTextureRegion, vertexBufferObjectManager));
 		setBackground(background);
+		
+		backgroundLayer = new Entity();
+		playerLayer = new Entity();
+		plaformLayer = new Entity();
+		attachChild(backgroundLayer);
+		attachChild(playerLayer);
+		attachChild(plaformLayer);
+	}
+	
+	private void createSubScenes(){
+		playerDieScene = new PlayerDieScene(this);
 	}
 	
 	public void onBackKeyPressed(){
-		SceneManager.getInstance().loadMenuScene();
+		handleBackKeyPressed = true;
+	}
+	
+	public void onBackKeyPressedSynced(){
+		handleBackKeyPressed = false;
+		if (currentSubScene == playerDieScene){
+			playerDieScene.onBackKeyPressed();
+		}
+		else{
+			SceneManager.getInstance().loadMenuScene();
+		}
 	}
 	
 	public void disposeScene(){
 		camera.setHUD(null);
 	}
 	
+	public void attachPlaform(Entity PlaformSprite){
+		plaformLayer.attachChild(PlaformSprite);
+	}
+	
+	public void attachPlayer(AnimatedSprite player){
+		playerLayer.attachChild(player);
+	}
+	
+	public void resetScene(){
+
+		for (BasePlatform platform: platformPool.allAllocatedPlatforms){
+			platform.getSprite().setVisible(false);
+			platform.setPhysicsBodySensor(true);
+		}
+		lastSpawnedPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
+		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, camera.getHeight() / 4);
+		
+		player.reset();
+		camera.setHUD(gameHUD);
+		canSpawnPlafrom = false;
+		score = 0;
+		this.registerUpdateHandler(new TimerHandler(Const.COMMON_DELAY_SHORT / 1000f, new ITimerCallback() {
+			@Override
+			public void onTimePassed(TimerHandler pTimerHandler) {
+				engine.unregisterUpdateHandler(pTimerHandler);
+				currentSubScene = null;
+			}
+		}));
+		this.registerUpdateHandler(new TimerHandler(Const.COMMON_DELAY_LONG / 1000f, new ITimerCallback() {
+			@Override
+			public void onTimePassed(TimerHandler pTimerHandler) {
+				engine.unregisterUpdateHandler(pTimerHandler);
+				canSpawnPlafrom = true;
+			}
+		}));
+	}
 	
 	// ----------------------------------------------
 	// GAME MECHANICS
@@ -206,6 +282,14 @@ public class GameScene extends BaseScene {
 	
 	public Player getPlayer(){
 		return player;
+	}
+	
+	public int getScore(){
+		return (int) score;
+	}
+	
+	public HUD getHUD(){
+		return gameHUD;
 	}
 	
 	// -----------------------------------------------

@@ -4,6 +4,9 @@ import com.badlogic.gdx.math.Vector2;
 
 public interface Const{
 	
+	public static final int COMMON_DELAY_SHORT = 100;
+	public static final int COMMON_DELAY_LONG = 400;
+	
 	//general game scene settings
 	public interface GameScene{
 		public static final int TEXT_UPDATE_DURATION = 300;
@@ -20,6 +23,7 @@ public interface Const{
 	public interface Player{
 		
 		public static final int MAX_HEALTH = 10;
+		public static final int DIE_360_ROTATE_DURATION = 800;
 		public static final int NUM_FLASH_WHEN_HURT = 8;
 		public static final float FLASH_PERIOD_WHEN_HURT = 90;
 		
@@ -69,7 +73,7 @@ public interface Const{
 		public static final long[] RUN_ANIME_SPEED = {70, 70, 70, 70, 70};
 		public static final long[] WALK_ANIME_SPEED = {90, 90, 90, 90, 90, 90};
 		
-		public static final float LAND_SPEED_REDUCE_FACTOR = 0.70f;
+		public static final float LAND_SPEED_REDUCE_FACTOR = 1f;
 		
 		//time in milliseconds to disable animation to prevent staggering
 		public static final int ANIME_DISABLE_TIME_SHORT = 25;

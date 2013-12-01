@@ -1,15 +1,15 @@
-package com.lichunshang.android.scribblehopper.scenes;
+package com.lichunshang.android.scribblehopper.game;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.lichunshang.android.scribblehopper.Const;
-import com.lichunshang.android.scribblehopper.Player;
 import com.lichunshang.android.scribblehopper.platforms.BasePlatform;
 import com.lichunshang.android.scribblehopper.platforms.BasePlatform.PlatformType;
 import com.lichunshang.android.scribblehopper.platforms.BouncePlatform;
 import com.lichunshang.android.scribblehopper.platforms.UnstablePlatform;
+import com.lichunshang.android.scribblehopper.scenes.GameScene;
 
 public class GameContactListener implements ContactListener{
 	
@@ -26,7 +26,7 @@ public class GameContactListener implements ContactListener{
 			Player player = gameScene.getPlayer();
 			BasePlatform platform = getPlatformObject(contact);
 			
-			if (player.getBodyBottomYMKS() < (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
+			if (!platform.isRecycled() && player.getBodyBottomYMKS() < (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
 				contact.setEnabled(false);
 			}
 		}
@@ -48,7 +48,7 @@ public class GameContactListener implements ContactListener{
     		BasePlatform.PlatformType platformType = platform.getType();
     		Player player = gameScene.getPlayer();
     		
-    		if (player.getBodyBottomYMKS() >= (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
+    		if (!platform.isRecycled() && player.getBodyBottomYMKS() >= (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
 	    		
 	    		if (platform.getType() == BasePlatform.PlatformType.REGULAR){
 	    			player.setCurrentPlatform(platform);
@@ -101,7 +101,7 @@ public class GameContactListener implements ContactListener{
 			
 			player.setCurrentPlatform(null);
 			
-			if (platform.getType() == BasePlatform.PlatformType.BOUNCE){
+			if (!platform.isRecycled() && platform.getType() == BasePlatform.PlatformType.BOUNCE){
 				((BouncePlatform) platform).resetElasticity();
 			}
 		}

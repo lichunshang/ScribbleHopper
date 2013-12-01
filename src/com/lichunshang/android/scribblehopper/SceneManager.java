@@ -36,6 +36,8 @@ public class SceneManager{
 		SCENE_MENU,
 		SCENE_GAME,
 		SCENE_LOADING,
+		SCENE_PLAYER_DIE,
+		SCENE_PAUSE,
 	}
 	
 	//---------------------------------------------

@@ -1,10 +1,11 @@
-package com.lichunshang.android.scribblehopper;
+package com.lichunshang.android.scribblehopper.game;
 
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.modifier.FadeInModifier;
 import org.andengine.entity.modifier.FadeOutModifier;
 import org.andengine.entity.modifier.LoopEntityModifier;
+import org.andengine.entity.modifier.RotationModifier;
 import org.andengine.entity.modifier.SequenceEntityModifier;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
@@ -15,10 +16,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.platforms.BasePlatform;
 import com.lichunshang.android.scribblehopper.scenes.GameScene;
 
 public class Player{
+	
+	private boolean active = true;
 	
 	private AnimatedSprite sprite;
 	private GameScene scene;
@@ -35,6 +39,7 @@ public class Player{
 	private int health = Const.Player.MAX_HEALTH;
 	private TimerHandler flashTimer = null;
 	private LoopEntityModifier FlashModifier;
+	private LoopEntityModifier dieRotateModifier;
 	
 	public Player(float posX, float posY, GameScene scene, PhysicsWorld physicsWorld){
 		
@@ -42,8 +47,8 @@ public class Player{
 		this.physicsWorld = physicsWorld;
 		this.sprite = new AnimatedSprite(posX, posY, this.scene.getResourcesManager().gamePlayerTextureRegion, this.scene.getVertexBufferObjectManager());
 		FlashModifier = new LoopEntityModifier(new SequenceEntityModifier(new FadeInModifier(Const.Player.FLASH_PERIOD_WHEN_HURT / 1000f), new FadeOutModifier(Const.Player.FLASH_PERIOD_WHEN_HURT / 1000f)));
-		
-		scene.attachChild(this.sprite);
+		dieRotateModifier = new LoopEntityModifier(new RotationModifier(Const.Player.DIE_360_ROTATE_DURATION / 1000f, 0, 360));
+		scene.attachPlayer(this.sprite);
 		createPhysics();
 		animateIdle();
 	}
@@ -85,7 +90,12 @@ public class Player{
 			@Override
 			public void onUpdate(float pSecondsElapsed){
 				super.onUpdate(pSecondsElapsed);
-				Player.this.onUpdate();
+				if (active){
+					Player.this.onUpdate();
+				}
+				if (sprite.getX() < - sprite.getHeight() / 2 && !active){
+					disable();
+				}
 			}
 		});
 	}
@@ -159,19 +169,44 @@ public class Player{
 		physicsBody.setLinearVelocity(physicsBody.getLinearVelocity().x * Const.Player.LAND_SPEED_REDUCE_FACTOR, physicsBody.getLinearVelocity().y);
 	}
 	
+	public void animateDie(){
+		sprite.registerEntityModifier(dieRotateModifier);
+	}
+	
 	public void stopAnimation(){
 		sprite.stopAnimation();
 	}
 	
 	private void pauseAnimationSwitch(int milliseconds){
 		canSwitchAnimation = false;
-		scene.getEngine().registerUpdateHandler(new TimerHandler(milliseconds / 1000f, new ITimerCallback() {
+		scene.registerUpdateHandler(new TimerHandler(milliseconds / 1000f, new ITimerCallback() {
 			@Override
 			public void onTimePassed(TimerHandler pTimerHandler) {
-				scene.getEngine().unregisterUpdateHandler(pTimerHandler);
+				scene.unregisterUpdateHandler(pTimerHandler);
 				canSwitchAnimation = true;
 			}
 		}));
+	}
+	
+	public void disable(){
+		active = false;
+		physicsBody.setLinearVelocity(0, 0);
+		physicsBody.setActive(false);
+		sprite.setIgnoreUpdate(true);
+		sprite.setVisible(false);
+	}
+	
+	public void reset(){
+		active = true;
+		physicsBody.setActive(true);
+		sprite.setIgnoreUpdate(false);
+		sprite.setVisible(true);
+		physicsBody.setTransform(scene.getCamera().getWidth() / 2f / Const.Physics.PIXEL_TO_METER_RATIO, scene.getCamera().getHeight() / 2f / Const.Physics.PIXEL_TO_METER_RATIO, 0);
+		physicsBody.setLinearVelocity(0, 0);
+		setPhysicsBodySensor(false);
+		sprite.clearEntityModifiers();
+		sprite.setRotation(0);
+		health = Const.Player.MAX_HEALTH;
 	}
 	
 	// ------------------------------------------
@@ -202,10 +237,10 @@ public class Player{
 					sprite.setAlpha(1);
 					sprite.unregisterEntityModifier(FlashModifier);
 					flashTimer = null;
-					scene.getEngine().unregisterUpdateHandler(pTimerHandler);
+					scene.unregisterUpdateHandler(pTimerHandler);
 				}
 			});
-			scene.getEngine().registerUpdateHandler(flashTimer);
+			scene.registerUpdateHandler(flashTimer);
 		}
 		else{
 			flashTimer.reset();
@@ -248,5 +283,9 @@ public class Player{
 	//should be called after the current platform has just been set
 	public boolean isDifferentPlatform(){
 		return currentPlatform != lastStayedPlatform;
+	}
+	
+	public void setPhysicsBodySensor(boolean isSensor){
+		physicsBody.getFixtureList().get(0).setSensor(isSensor);
 	}
 }

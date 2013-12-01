@@ -1,6 +1,7 @@
 package com.lichunshang.android.scribblehopper.platforms;
 
-import org.andengine.extension.physics.box2d.PhysicsWorld;
+import java.util.LinkedList;
+
 import org.andengine.util.adt.pool.GenericPool;
 import org.andengine.util.adt.pool.MultiPool;
 
@@ -9,13 +10,13 @@ import com.lichunshang.android.scribblehopper.scenes.GameScene;
 
 public class PlatformPool extends MultiPool<BasePlatform>{
 	
-	public GameScene gameScene;
-	public PhysicsWorld physicsWorld;
+	private GameScene gameScene;
+	public LinkedList<BasePlatform> allAllocatedPlatforms;
 	
 	public PlatformPool(GameScene gameScene){
 		super();
 		this.gameScene = gameScene;
-		this.physicsWorld = gameScene.getPhysicsWorld();
+		allAllocatedPlatforms = new LinkedList<BasePlatform>();
 		
 		this.registerPool(BasePlatform.PlatformType.REGULAR.ordinal(), new RegularPlatformPool());
 		this.registerPool(BasePlatform.PlatformType.BOUNCE.ordinal(), new BouncePlatformPool());
@@ -39,42 +40,42 @@ public class PlatformPool extends MultiPool<BasePlatform>{
 	
 	public class RegularPlatformPool extends AbstractPlaformPool{
 		@Override
-		protected BasePlatform onAllocatePoolItem(){
+		protected BasePlatform getNewPlaform(){
 			return new RegularPlatform(gameScene);
 		}
 	}
 	
 	public class BouncePlatformPool extends AbstractPlaformPool{
 		@Override
-		protected BasePlatform onAllocatePoolItem(){
+		protected BasePlatform getNewPlaform(){
 			return new BouncePlatform(gameScene);
 		}
 	}
 	
 	public class ConveyorLeftPlatformPool extends AbstractPlaformPool{
 		@Override
-		protected BasePlatform onAllocatePoolItem(){
+		protected BasePlatform getNewPlaform(){
 			return new ConveyorLeftPlatform(gameScene);
 		}
 	}
 	
 	public class ConveyorRightPlatformPool extends AbstractPlaformPool{
 		@Override
-		protected BasePlatform onAllocatePoolItem(){
+		protected BasePlatform getNewPlaform(){
 			return new ConveyorRightPlatform(gameScene);
 		}
 	}
 	
 	public class UnstablePlatformPool extends AbstractPlaformPool{
 		@Override
-		protected BasePlatform onAllocatePoolItem(){
+		protected BasePlatform getNewPlaform(){
 			return new UnstablePlatform(gameScene);
 		}
 	}
 	
 	public class SpikePlatformPool extends AbstractPlaformPool{
 		@Override
-		protected BasePlatform onAllocatePoolItem(){
+		protected BasePlatform getNewPlaform(){
 			return new SpikePlatform(gameScene);
 		}
 	}
@@ -87,8 +88,14 @@ public class PlatformPool extends MultiPool<BasePlatform>{
 			super();
 		}
 		
+		protected abstract BasePlatform getNewPlaform();
+		
 		@Override
-		protected abstract BasePlatform onAllocatePoolItem();
+		protected BasePlatform onAllocatePoolItem(){
+			BasePlatform platform = getNewPlaform();
+			allAllocatedPlatforms.add(platform);
+			return platform;
+		};
 		
 		@Override
 		protected void onHandleObtainItem(final BasePlatform platform){

@@ -2,6 +2,8 @@ package com.lichunshang.android.scribblehopper.platforms;
 
 import java.util.Random;
 
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -40,7 +42,7 @@ public abstract class BasePlatform{
 		float posX = generatePosX();
 		this.sprite.setPosition(posX, 0 - sprite.getHeight() / 2);
 		this.recycled = false;
-		scene.attachChild(sprite);
+		scene.attachPlaform(sprite);
 		
 		createPhysics();
 	}
@@ -83,16 +85,23 @@ public abstract class BasePlatform{
 	public void reset(){
 		recycled = false;
 		setPhysicsBodySensor(false);
-		this.sprite.setIgnoreUpdate(false);
-		this.sprite.setVisible(true);
-		setSpeed(scene.getPlatformSpeed());
 		this.physicsBody.setTransform(generatePosX() / Const.Physics.PIXEL_TO_METER_RATIO, 0, 0);
+		this.sprite.setIgnoreUpdate(false);
+		setSpeed(scene.getPlatformSpeed());
+		
+		scene.registerUpdateHandler(new TimerHandler(Const.COMMON_DELAY_SHORT / 1000f, new ITimerCallback() {
+			@Override
+			public void onTimePassed(TimerHandler pTimerHandler) {
+				scene.unregisterUpdateHandler(pTimerHandler);
+				BasePlatform.this.sprite.setVisible(true);
+			}
+		}));
 	}
 	
 	public void disable(){
-		setSpeed(0);
 		this.sprite.setIgnoreUpdate(true);
 		this.sprite.setVisible(false);
+		setPhysicsBodySensor(true);
 	}
 	
 	public void setSpeed(float speed){
@@ -110,6 +119,10 @@ public abstract class BasePlatform{
 	
 	public void setPhysicsBodySensor(boolean isSensor){
 		physicsBody.getFixtureList().get(0).setSensor(isSensor);
+	}
+	
+	public boolean isRecycled(){
+		return recycled;
 	}
 	
 	/**
