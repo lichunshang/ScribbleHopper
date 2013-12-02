@@ -2,7 +2,6 @@ package com.lichunshang.android.scribblehopper.scenes;
 
 import java.util.Random;
 
-import org.andengine.engine.camera.hud.HUD;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
@@ -33,30 +32,26 @@ import com.lichunshang.android.scribblehopper.platforms.PlatformPool;
 
 public class GameScene extends BaseScene {
 	
-	private boolean handleBackKeyPressed = false;
-	
 	private SensorListener sensorListener;
 	private Random random = new Random();
-	
 	private PhysicsWorld physicsWorld;
-	private SpriteBackground background;
 	
-	private HUD gameHUD;
-	private Text scoreText;
-	private Text healthText;
-
+	private SpriteBackground background;
+	private Text scoreText, healthText;
 	private Player player;
 	private float score = 0;
 	
 	private PlatformPool platformPool;
 	private float platformSpeed = Const.Plaform.INITIAL_SPEED;
 	private BasePlatform lastSpawnedPlatform;
-	private boolean canSpawnPlafrom = true;
-	private float nextPlatformDistance = Const.Plaform.INITIAL_SPAWN_DISTANCE;
+	private TimerHandler platformSpawnTimer, textUpdateTimer;
 	
 	private BaseSubScene currentSubScene = null;
 	private PlayerDieScene playerDieScene;
-	private Entity plaformLayer, backgroundLayer, playerLayer;
+	private GamePauseScene pauseScene;
+	private boolean paused = false;
+	
+	private Entity plaformLayer, backgroundLayer, playerLayer, HUDLayer;
 	
 	public void createScene(){
 		createLayers();
@@ -64,6 +59,7 @@ public class GameScene extends BaseScene {
 		createPhysics();
 		initializeSensors();
 		createGameElements();
+		createUpdateHandlers();
 		createSubScenes();
 	}
 	
@@ -71,10 +67,6 @@ public class GameScene extends BaseScene {
 	// GAME LOOP METHOD
 	// ==============================================
 	public void onUpdate(){
-		
-		if (handleBackKeyPressed){
-			onBackKeyPressedSynced();
-		}
 		
 		//check if the player is alive
 		if (!player.isAlive() && currentSubScene == null){
@@ -87,24 +79,13 @@ public class GameScene extends BaseScene {
 		if (player.isAlive()){
 			score += platformSpeed * Const.GameScene.SPEED_TO_SCORE_RATIO;
 		}
-		
-		//spawn new platforms
-		if (canSpawnPlafrom && lastSpawnedPlatform.getSprite().getY() > nextPlatformDistance){
-			nextPlatformDistance = getNextPlatformDistance();
-			lastSpawnedPlatform = platformPool.initPlatform(getNextPlatformType());
-		}
-		
-		
-		//update game text
-		scoreText.setText(Integer.toString((int) score));
-		healthText.setText(Integer.toString(player.getHealth()));
 	}
 	
 	private void createGameElements(){
-		player = new Player(camera.getWidth() / 2, camera.getHeight() / 2, this, physicsWorld);
+		player = new Player(camera.getWidth() / 2, camera.getHeight() / 3, this, physicsWorld);
 		platformPool = new PlatformPool(this);
 		lastSpawnedPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
-		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, camera.getHeight() / 4);
+		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, 0);
 		
 		//create left and right border so the player does not get out
 		Rectangle leftBorder = new Rectangle(-1, camera.getHeight() / 2, 2, camera.getHeight(), vertexBufferObjectManager);
@@ -121,7 +102,6 @@ public class GameScene extends BaseScene {
 	}
 	
 	private void createHUD(){
-		gameHUD = new HUD();
 		scoreText = new Text(20, 0, resourcesManager.font, "0123456789", vertexBufferObjectManager);
 		scoreText.setAnchorCenter(0, 0);
 		scoreText.setText("0");
@@ -130,9 +110,8 @@ public class GameScene extends BaseScene {
 		healthText.setAnchorCenter(0, 0);
 		healthText.setText("0");
 		
-		gameHUD.attachChild(scoreText);
-		gameHUD.attachChild(healthText);
-		camera.setHUD(gameHUD);
+		HUDLayer.attachChild(scoreText);
+		HUDLayer.attachChild(healthText);
 	}
 	
 	private void createPhysics(){
@@ -150,6 +129,25 @@ public class GameScene extends BaseScene {
 //		this.attachChild(debug);
 	}
 	
+	private void createUpdateHandlers(){
+		platformSpawnTimer = new TimerHandler(Const.Plaform.INITIAL_SPAWN_TIME / 1000f, true, new ITimerCallback() {
+			@Override
+			public void onTimePassed(TimerHandler pTimerHandler) {
+				onPlatformSpawnTimerPass();
+			}
+		});
+		
+		textUpdateTimer = new TimerHandler(Const.GameScene.SCORE_UPDATE_PERIOD / 1000f, true, new ITimerCallback() {
+			@Override
+			public void onTimePassed(TimerHandler pTimerHandler) {
+				updateText();
+			}
+		});
+		
+		registerUpdateHandler(platformSpawnTimer);
+		registerUpdateHandler(textUpdateTimer);
+	}
+	
 	private void initializeSensors(){
 		sensorListener = new SensorListener();
 		SensorManager sensorManager = (SensorManager) activity.getSystemService(BaseGameActivity.SENSOR_SERVICE);
@@ -163,26 +161,39 @@ public class GameScene extends BaseScene {
 		backgroundLayer = new Entity();
 		playerLayer = new Entity();
 		plaformLayer = new Entity();
+		HUDLayer = new Entity();
 		attachChild(backgroundLayer);
 		attachChild(playerLayer);
 		attachChild(plaformLayer);
+		attachChild(HUDLayer);
 	}
 	
 	private void createSubScenes(){
 		playerDieScene = new PlayerDieScene(this);
+		pauseScene = new GamePauseScene(this);
 	}
 	
 	public void onBackKeyPressed(){
-		handleBackKeyPressed = true;
-	}
-	
-	public void onBackKeyPressedSynced(){
-		handleBackKeyPressed = false;
 		if (currentSubScene == playerDieScene){
-			playerDieScene.onBackKeyPressed();
+			engine.runOnUpdateThread(new Runnable() {
+				@Override
+				public void run() {
+					playerDieScene.onBackKeyPressed();
+				}
+			});
+		}
+		else if (paused){
+			engine.runOnUpdateThread(new Runnable() {
+				@Override
+				public void run() {
+					pauseScene.onBackKeyPressed();
+					paused = false;
+				}
+			});
 		}
 		else{
-			SceneManager.getInstance().loadMenuScene();
+			pauseScene.attachScene();
+			paused = true;
 		}
 	}
 	
@@ -200,29 +211,18 @@ public class GameScene extends BaseScene {
 	
 	public void resetScene(){
 
-		for (BasePlatform platform: platformPool.allAllocatedPlatforms){
-			platform.getSprite().setVisible(false);
-			platform.setPhysicsBodySensor(true);
-		}
+		platformPool.recycleAllActivePlaform();
 		lastSpawnedPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
-		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, camera.getHeight() / 4);
+		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, 0);
+		platformSpawnTimer.reset();
 		
 		player.reset();
-		camera.setHUD(gameHUD);
-		canSpawnPlafrom = false;
 		score = 0;
 		this.registerUpdateHandler(new TimerHandler(Const.COMMON_DELAY_SHORT / 1000f, new ITimerCallback() {
 			@Override
 			public void onTimePassed(TimerHandler pTimerHandler) {
 				engine.unregisterUpdateHandler(pTimerHandler);
 				currentSubScene = null;
-			}
-		}));
-		this.registerUpdateHandler(new TimerHandler(Const.COMMON_DELAY_LONG / 1000f, new ITimerCallback() {
-			@Override
-			public void onTimePassed(TimerHandler pTimerHandler) {
-				engine.unregisterUpdateHandler(pTimerHandler);
-				canSpawnPlafrom = true;
 			}
 		}));
 	}
@@ -252,8 +252,19 @@ public class GameScene extends BaseScene {
 		}
 	}
 	
-	public float getNextPlatformDistance(){
-		return random.nextFloat() * (Const.Plaform.MAX_SPAWN_DISTANCE - Const.Plaform.MIN_SPAWN_DISTANCE) + Const.Plaform.MIN_SPAWN_DISTANCE;
+	public void onPlatformSpawnTimerPass(){
+		platformSpawnTimer.setTimerSeconds(getNextPlatformSpawnTime() / 1000f);
+		platformSpawnTimer.reset();
+		lastSpawnedPlatform = platformPool.initPlatform(getNextPlatformType());
+	}
+	
+	public float getNextPlatformSpawnTime(){
+		return random.nextFloat() * (Const.Plaform.MAX_SPAWN_TIME - Const.Plaform.MIN_SPAWN_TIME) + Const.Plaform.MIN_SPAWN_TIME;
+	}
+	
+	public void updateText(){
+		scoreText.setText(Integer.toString((int) score));
+		healthText.setText(Integer.toString(player.getHealth()));
 	}
 	
 	// -----------------------------------------------
@@ -287,15 +298,10 @@ public class GameScene extends BaseScene {
 	public int getScore(){
 		return (int) score;
 	}
-	
-	public HUD getHUD(){
-		return gameHUD;
-	}
-	
+
 	// -----------------------------------------------
 	// GameScene classes
 	// -----------------------------------------------
 
 	public class TopBorder{}
-	
 }

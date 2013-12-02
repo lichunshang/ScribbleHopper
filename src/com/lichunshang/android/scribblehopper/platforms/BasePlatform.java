@@ -84,6 +84,7 @@ public abstract class BasePlatform{
 	
 	public void reset(){
 		recycled = false;
+		physicsBody.setActive(true);
 		setPhysicsBodySensor(false);
 		this.physicsBody.setTransform(generatePosX() / Const.Physics.PIXEL_TO_METER_RATIO, 0, 0);
 		this.sprite.setIgnoreUpdate(false);
@@ -99,6 +100,7 @@ public abstract class BasePlatform{
 	}
 	
 	public void disable(){
+		physicsBody.setActive(false);
 		this.sprite.setIgnoreUpdate(true);
 		this.sprite.setVisible(false);
 		setPhysicsBodySensor(true);

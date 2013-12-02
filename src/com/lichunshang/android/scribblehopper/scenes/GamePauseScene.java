@@ -1,3 +1,4 @@
+
 package com.lichunshang.android.scribblehopper.scenes;
 
 import org.andengine.entity.primitive.Rectangle;
@@ -5,12 +6,13 @@ import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.util.adt.align.HorizontalAlign;
 
-public class PlayerDieScene extends BaseSubScene{
+
+public class GamePauseScene extends BaseSubScene{
 	
 	private Rectangle backgroundSprite;
-	private Text scoreText;
+	private Text pauseText;
 	
-	public PlayerDieScene(GameScene gameScene){
+	public GamePauseScene(GameScene gameScene){
 		super(gameScene);
 	}
 
@@ -21,21 +23,22 @@ public class PlayerDieScene extends BaseSubScene{
 		backgroundSprite.setColor(0.5f, 0.5f, 0.5f);
 		backgroundSprite.setAlpha(0.65f);
 		attachChild(backgroundSprite);
-		scoreText = new Text(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.font, "Score: 0123456879", new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
-		attachChild(scoreText);
+		pauseText = new Text(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.font, "Paused", new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
+		attachChild(pauseText);
 	}
 
 	@Override
 	public void attachScene() {
 		parentScene.attachChild(this);
 		attached = true;
+		((GameScene) parentScene).setIgnoreUpdate(true);
 	}
 
 	@Override
 	public void detachScene() {
 		parentScene.detachChild(this);
-		((GameScene) parentScene).resetScene();
 		attached = false;
+		((GameScene) parentScene).setIgnoreUpdate(false);
 	}
 
 	@Override
@@ -43,7 +46,4 @@ public class PlayerDieScene extends BaseSubScene{
 		detachScene();
 	}
 	
-	public void setScoreText(int score){
-		scoreText.setText("Score: " + Integer.toString(score));
-	}
 }

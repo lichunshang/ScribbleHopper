@@ -17,6 +17,7 @@ public interface Const{
 		public static final float TOP_BORDER_ELASTICITY = 0.1f;
 		public static final int TOP_BORDER_HEALTH_DECREMENT = 4;
 		public static final float SPEED_TO_SCORE_RATIO = 0.01f;
+		public static final int SCORE_UPDATE_PERIOD = 100;
 	}
 	
 	//general player settings
@@ -89,9 +90,9 @@ public interface Const{
 	
 	public interface Plaform{
 		
-		public static final float INITIAL_SPAWN_DISTANCE = 350f;
-		public static final float MIN_SPAWN_DISTANCE = 170f;
-		public static final float MAX_SPAWN_DISTANCE = 450f;
+		public static final float MIN_SPAWN_TIME = 1000f;
+		public static final float MAX_SPAWN_TIME = 2000f;
+		public static final float INITIAL_SPAWN_TIME = (MIN_SPAWN_TIME + MAX_SPAWN_TIME) / 2;
 		public static final float INITIAL_SPEED = 5f;
 		public static final int HEALTH_INCREMENT = 1;
 		

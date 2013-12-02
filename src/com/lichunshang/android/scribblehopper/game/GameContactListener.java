@@ -48,7 +48,8 @@ public class GameContactListener implements ContactListener{
     		BasePlatform.PlatformType platformType = platform.getType();
     		Player player = gameScene.getPlayer();
     		
-    		if (!platform.isRecycled() && player.getBodyBottomYMKS() >= (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
+    		if (!platform.isRecycled() && player.getPhysicsBody().getLinearVelocity().y < platform.getPhyiscsBody().getLinearVelocity().y && 
+    				player.getBodyBottomYMKS() >= (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
 	    		
 	    		if (platform.getType() == BasePlatform.PlatformType.REGULAR){
 	    			player.setCurrentPlatform(platform);

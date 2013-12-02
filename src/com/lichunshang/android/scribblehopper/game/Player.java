@@ -201,7 +201,7 @@ public class Player{
 		physicsBody.setActive(true);
 		sprite.setIgnoreUpdate(false);
 		sprite.setVisible(true);
-		physicsBody.setTransform(scene.getCamera().getWidth() / 2f / Const.Physics.PIXEL_TO_METER_RATIO, scene.getCamera().getHeight() / 2f / Const.Physics.PIXEL_TO_METER_RATIO, 0);
+		physicsBody.setTransform(scene.getCamera().getWidth() / 2f / Const.Physics.PIXEL_TO_METER_RATIO, scene.getCamera().getHeight() / 3f / Const.Physics.PIXEL_TO_METER_RATIO, 0);
 		physicsBody.setLinearVelocity(0, 0);
 		setPhysicsBodySensor(false);
 		sprite.clearEntityModifiers();

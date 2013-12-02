@@ -1,5 +1,6 @@
 package com.lichunshang.android.scribblehopper.platforms;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.andengine.util.adt.pool.GenericPool;
@@ -11,12 +12,12 @@ import com.lichunshang.android.scribblehopper.scenes.GameScene;
 public class PlatformPool extends MultiPool<BasePlatform>{
 	
 	private GameScene gameScene;
-	public LinkedList<BasePlatform> allAllocatedPlatforms;
+	private LinkedList<BasePlatform> activePlaforms;
 	
 	public PlatformPool(GameScene gameScene){
 		super();
 		this.gameScene = gameScene;
-		allAllocatedPlatforms = new LinkedList<BasePlatform>();
+		activePlaforms = new LinkedList<BasePlatform>();
 		
 		this.registerPool(BasePlatform.PlatformType.REGULAR.ordinal(), new RegularPlatformPool());
 		this.registerPool(BasePlatform.PlatformType.BOUNCE.ordinal(), new BouncePlatformPool());
@@ -27,11 +28,32 @@ public class PlatformPool extends MultiPool<BasePlatform>{
 	}
 	
 	public BasePlatform initPlatform(BasePlatform.PlatformType type){
-		return this.obtainPoolItem(type.ordinal());
+		BasePlatform platform = this.obtainPoolItem(type.ordinal());
+		activePlaforms.add(platform);
+		return platform;
 	}
 	
 	public void recyclePlatform(BasePlatform platform){
+		//this is to accommodate the recycleAllActivePlaform method. When the platform 
+		//is removed from the queue in recycleAllActivePlaform, it won't be removed again
+		int counter = 0;
+		Iterator<BasePlatform> iterator = activePlaforms.iterator();
+		while (iterator.hasNext()){
+			counter++;
+			if (iterator.next() == platform){
+				iterator.remove();
+				break;
+			}
+		}
 		this.recyclePoolItem(platform.getType().ordinal(), platform);
+	}
+	
+	public void recycleAllActivePlaform(){
+		
+		while (!activePlaforms.isEmpty()){
+			BasePlatform platform = activePlaforms.poll();
+			platform.recyclePlatform();
+		}
 	}
 
 	// -------------------------------------------
@@ -92,9 +114,7 @@ public class PlatformPool extends MultiPool<BasePlatform>{
 		
 		@Override
 		protected BasePlatform onAllocatePoolItem(){
-			BasePlatform platform = getNewPlaform();
-			allAllocatedPlatforms.add(platform);
-			return platform;
+			return getNewPlaform();
 		};
 		
 		@Override
