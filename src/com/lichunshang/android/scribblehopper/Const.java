@@ -29,9 +29,9 @@ public interface Const{
 		public static final float FLASH_PERIOD_WHEN_HURT = 90;
 		
 		//control properties
-		public static final float ACCELERATE_MULTIPLY_FACTOR = 6f;
-		public static final float DEACCELERATE_MULTIPLY_FACTOR = 13f;
-		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 6.5f;
+		public static final float ACCELERATE_MULTIPLY_FACTOR = 8f;
+		public static final float DEACCELERATE_MULTIPLY_FACTOR = 18f;
+		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 6f;
 		
 		//physics properties
 		public static final float DENSITY = 0;
@@ -70,7 +70,7 @@ public interface Const{
 		
 		//Animation speed in milliseconds
 		public static final long[] IDLE_ANIME_SPEED = {160, 160, 160, 160};
-		public static final long[] LAND_ANIME_SPEED = {50, 50, 50, 50};
+		public static final long[] LAND_ANIME_SPEED = {35, 35, 35, 35};
 		public static final long[] RUN_ANIME_SPEED = {70, 70, 70, 70, 70};
 		public static final long[] WALK_ANIME_SPEED = {90, 90, 90, 90, 90, 90};
 		
