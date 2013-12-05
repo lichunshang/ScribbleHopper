@@ -1,6 +1,8 @@
 package com.lichunshang.android.scribblehopper.scenes;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.IMenuItem;
@@ -9,6 +11,7 @@ import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.util.GLState;
 
+import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.SceneManager;
 
 
@@ -18,9 +21,12 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	private final int MENU_PLAY = 0;
 	private final int MENU_OPTIONS = 1;
 	
+	private MainMenuLoadingScene mainMenuLoadingScene;
+	
 	public void createScene(){
 		createBackground();
-		createMenuChildScene();
+		createLoadingScene();
+		
 	}
 	
 	public void onBackKeyPressed(){
@@ -46,9 +52,23 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		});
 	}
 	
+	private void createLoadingScene(){
+		mainMenuLoadingScene = new MainMenuLoadingScene(this);
+		mainMenuLoadingScene.attachScene();
+		//resourcesManager.loadGameResource();
+		
+		registerUpdateHandler(new TimerHandler(Const.MenuScene.LOADING_PERIOD / 1000f, new ITimerCallback() {
+			@Override
+			public void onTimePassed(TimerHandler pTimerHandler) {
+				unregisterUpdateHandler(pTimerHandler);
+				mainMenuLoadingScene.detachScene();
+				createMenuChildScene();
+			}
+		}));
+	}
+	
 	private void createMenuChildScene(){
 		menuChildScene = new MenuScene(camera);
-		//menuChildScene.setPosition(0, 0);
 		
 		final IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, resourcesManager.playRegion, vertexBufferObjectManager), 1.2f, 1);
 		final IMenuItem optionsMenuItem  = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_OPTIONS, resourcesManager.optionsRegion, vertexBufferObjectManager), 1.2f, 1);

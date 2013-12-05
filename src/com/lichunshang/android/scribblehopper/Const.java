@@ -7,6 +7,11 @@ public interface Const{
 	public static final int COMMON_DELAY_SHORT = 100;
 	public static final int COMMON_DELAY_LONG = 400;
 	
+	public interface MenuScene{
+		public static final int LOADING_TEXT_ANIME_PERIOD = 500;
+		public static final int LOADING_PERIOD = 10000;
+	}
+	
 	//general game scene settings
 	public interface GameScene{
 		public static final int TEXT_UPDATE_DURATION = 300;
