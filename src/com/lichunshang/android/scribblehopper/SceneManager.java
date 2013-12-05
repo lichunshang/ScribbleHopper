@@ -51,6 +51,9 @@ public class SceneManager{
 	}
 	
 	public void setScene(SceneType sceneType){
+		if (getCurrentScene() != null){
+			getCurrentScene().setIgnoreUpdate(true);
+		}
 		if (sceneType == SceneType.SCENE_MENU){
 			setScene(menuScene);
 		}
@@ -63,6 +66,23 @@ public class SceneManager{
 		else if (sceneType == SceneType.SCENE_LOADING){
 			setScene(loadingScene);
 		}
+		getCurrentScene().setIgnoreUpdate(false);
+	}
+	
+	public BaseScene getScene(SceneType sceneType){
+		if (sceneType == SceneType.SCENE_MENU){
+			return menuScene;
+		}
+		else if (sceneType == SceneType.SCENE_GAME){
+			return gameScene;
+		}
+		else if (sceneType == SceneType.SCENE_SPLASH){
+			return splashScene;
+		}
+		else if (sceneType == SceneType.SCENE_LOADING){
+			return loadingScene;
+		}
+		return null;
 	}
 	
 	public static SceneManager getInstance(){
@@ -97,38 +117,18 @@ public class SceneManager{
 	public void createMenuScene(){
 		ResourcesManager.getInstance().loadMenuResources();
 		menuScene = new MainMenuScene();
-		loadingScene = new LoadingScene();
-		setScene(menuScene);
-		disposeSplashScene();
+	}
+	
+	public void createGameScene(){
+		ResourcesManager.getInstance().loadGameResource();
+		gameScene = new GameScene();
 	}
 	
 	public void loadGameScene(){
-		setScene(loadingScene);
-		ResourcesManager.getInstance().unloadMenuTextures();
-		engine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
-			
-			@Override
-			public void onTimePassed(TimerHandler pTimerHandler) {
-				engine.registerUpdateHandler(pTimerHandler);
-				ResourcesManager.getInstance().loadGameResource();
-				gameScene = new GameScene();
-				setScene(gameScene);
-			}
-		}));
+		setScene(gameScene);
 	}
 	
 	public void loadMenuScene(){
-		setScene(loadingScene);
-		gameScene.disposeScene();
-		ResourcesManager.getInstance().unloadGameTextures();
-		engine.registerUpdateHandler(new TimerHandler(0.1f, new ITimerCallback() {
-			
-			@Override
-			public void onTimePassed(TimerHandler pTimerHandler) {
-				engine.unregisterUpdateHandler(pTimerHandler);
-				ResourcesManager.getInstance().loadMenuTextures();
-				setScene(menuScene);
-			}
-		}));
+		setScene(menuScene);
 	}
 }

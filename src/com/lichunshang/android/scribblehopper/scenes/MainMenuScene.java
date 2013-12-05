@@ -55,7 +55,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	private void createLoadingScene(){
 		mainMenuLoadingScene = new MainMenuLoadingScene(this);
 		mainMenuLoadingScene.attachScene();
-		//resourcesManager.loadGameResource();
+		SceneManager.getInstance().createGameScene();
 		
 		registerUpdateHandler(new TimerHandler(Const.MenuScene.LOADING_PERIOD / 1000f, new ITimerCallback() {
 			@Override
@@ -93,6 +93,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		
 		if (menuItemId == MENU_PLAY){
 			SceneManager.getInstance().loadGameScene();
+			((GameScene) SceneManager.getInstance().getScene(SceneManager.SceneType.SCENE_GAME)).resetScene();
 			return true;
 		}
 		else if (menuItemId == MENU_OPTIONS){

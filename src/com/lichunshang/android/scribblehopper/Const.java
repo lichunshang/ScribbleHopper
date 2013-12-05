@@ -9,7 +9,7 @@ public interface Const{
 	
 	public interface MenuScene{
 		public static final int LOADING_TEXT_ANIME_PERIOD = 500;
-		public static final int LOADING_PERIOD = 10000;
+		public static final int LOADING_PERIOD = 2000;
 	}
 	
 	//general game scene settings
@@ -34,9 +34,9 @@ public interface Const{
 		public static final float FLASH_PERIOD_WHEN_HURT = 90;
 		
 		//control properties
-		public static final float ACCELERATE_MULTIPLY_FACTOR = 8f;
-		public static final float DEACCELERATE_MULTIPLY_FACTOR = 18f;
-		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 6f;
+		public static final float ACCELERATE_MULTIPLY_FACTOR = 9f;
+		public static final float DEACCELERATE_MULTIPLY_FACTOR = 22f;
+		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 5f;
 		
 		//physics properties
 		public static final float DENSITY = 0;
@@ -89,7 +89,7 @@ public interface Const{
 	//general physics settings
 	public interface Physics{
 		public static final int REFRESH_RATE = 60;
-		public static final float GRAVITY = 45;
+		public static final float GRAVITY = 50;
 		public static final float PIXEL_TO_METER_RATIO = 32;
 	}
 	
