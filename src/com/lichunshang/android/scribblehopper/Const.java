@@ -116,13 +116,17 @@ public interface Const{
 			public static final float ELASTICITY = 0.70f;
 			public static final float PLAYER_VELOCITY_NO_BOUNCE = 3.5f; //no player bounce under certain y velocity
 			public static final float PLAYER_VELOCITY_NO_LAND = 4.5f; //no land animation under certain y velocity
+			public static final long[] SHORT_FRAME_DURATION = {10, 10, 10, 25, 25, 25};
+			public static final int[] SHORT_FRAMES = {1, 2, 3, 2, 1, 0};
+			public static final long[] LONG_FRAME_DURATION = {10, 10, 10, 10, 10, 25, 25, 25, 25, 25};
+			public static final int[] LONG_FRAMES = {1, 2, 3, 4, 5, 4, 3, 2, 1, 0};
 			
 			//vertices in pixels
 			public static final Vector2[] bodyVerticesPixels = {
-				new Vector2(160, 23f),
-				new Vector2(-160, 23f),
-				new Vector2(-160, -23f),
-				new Vector2(160, -23f),
+				new Vector2(172, 26f),
+				new Vector2(-172, 26f),
+				new Vector2(-172, 25.5f),
+				new Vector2(172, 25.5f),
 			};
 			
 			//vertices in Meter-Kilogram-Seconds units (Box2D default units)

@@ -6,7 +6,6 @@ import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
-import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
@@ -157,9 +156,9 @@ public class GameScene extends BaseScene {
 	}
 	
 	private void createLayers(){
-		//background = new SpriteBackground(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.gameBackgroundTextureRegion, vertexBufferObjectManager));
-		//setBackground(background);
-		setBackground(new Background(0.1f, 0.1f, 0.1f));
+		background = new SpriteBackground(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.gameBackgroundTextureRegion, vertexBufferObjectManager));
+		setBackground(background);
+		//setBackground(new Background(0.1f, 0.1f, 0.1f));
 		
 		backgroundLayer = new Entity();
 		playerLayer = new Entity();

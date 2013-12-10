@@ -1,7 +1,11 @@
 package com.lichunshang.android.scribblehopper.platforms;
 
+import java.util.Arrays;
+
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
+
+import android.util.Log;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -49,5 +53,19 @@ public class BouncePlatform extends BasePlatform{
 	
 	public void resetElasticity(){
 		physicsBody.getFixtureList().get(0).setRestitution(DEFAULT_RESTITUION);
+	}
+	
+	public void animate(AnimationLength length){
+		sprite.stopAnimation();
+		if (length == AnimationLength.LONG){
+			sprite.animate(Const.Plaform.Bounce.LONG_FRAME_DURATION, Const.Plaform.Bounce.LONG_FRAMES, false);
+		}
+		else if (length == AnimationLength.SHORT){
+			sprite.animate(Const.Plaform.Bounce.SHORT_FRAME_DURATION, Const.Plaform.Bounce.SHORT_FRAMES, false);
+		}
+	}
+	
+	public static enum AnimationLength{
+		LONG, SHORT
 	}
 }

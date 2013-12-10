@@ -26,7 +26,7 @@ public class GameContactListener implements ContactListener{
 			Player player = gameScene.getPlayer();
 			BasePlatform platform = getPlatformObject(contact);
 			
-			if (!platform.isRecycled() && player.getBodyBottomYMKS() < (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
+			if (!platform.isRecycled() && player.isAlive() && player.getBodyBottomYMKS() < platform.getPhyiscsBody().getPosition().y){
 				contact.setEnabled(false);
 			}
 		}
@@ -48,7 +48,7 @@ public class GameContactListener implements ContactListener{
     		BasePlatform.PlatformType platformType = platform.getType();
     		Player player = gameScene.getPlayer();
     		
-    		if (!platform.isRecycled() && player.getBodyBottomYMKS() >= (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
+    		if (!platform.isRecycled() && player.isAlive() && player.getBodyBottomYMKS() >= platform.getPhyiscsBody().getPosition().y){
 	    		
 	    		if (platform.getType() == BasePlatform.PlatformType.REGULAR){
 	    			player.setCurrentPlatform(platform);
@@ -58,8 +58,10 @@ public class GameContactListener implements ContactListener{
 	    			player.setCurrentPlatform(platform);
 	    			if (Math.abs(player.getPhysicsBody().getLinearVelocity().y) < Const.Plaform.Bounce.PLAYER_VELOCITY_NO_BOUNCE){
 	    				((BouncePlatform) platform).disabledElasticity();
+	    				((BouncePlatform) platform).animate(BouncePlatform.AnimationLength.SHORT);
 	    			}
 	    			if (Math.abs(player.getPhysicsBody().getLinearVelocity().y) > Const.Plaform.Bounce.PLAYER_VELOCITY_NO_LAND){
+	    				((BouncePlatform) platform).animate(BouncePlatform.AnimationLength.LONG);
 	    				player.animateLand();
 	    			}
 	    		}
