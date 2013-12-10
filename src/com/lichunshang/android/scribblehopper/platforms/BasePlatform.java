@@ -4,7 +4,7 @@ import java.util.Random;
 
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
-import org.andengine.entity.primitive.Rectangle;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 
@@ -16,7 +16,7 @@ import com.lichunshang.android.scribblehopper.scenes.GameScene;
 public abstract class BasePlatform{
 	
 	protected GameScene scene;
-	protected Rectangle sprite;
+	protected AnimatedSprite sprite;
 	protected PhysicsWorld physicsWorld;
 	protected Body physicsBody;
 	protected Random random = new Random();
@@ -74,7 +74,7 @@ public abstract class BasePlatform{
 		return posX;
 	}
 	
-	public Rectangle getSprite(){
+	public AnimatedSprite getSprite(){
 		return sprite;
 	}
 	

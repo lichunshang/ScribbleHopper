@@ -1,6 +1,6 @@
 package com.lichunshang.android.scribblehopper.platforms;
 
-import org.andengine.entity.primitive.Rectangle;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -19,8 +19,7 @@ public class BouncePlatform extends BasePlatform{
 	
 	@Override
 	public void createPlatform(){
-		this.sprite = new Rectangle(0, 0, 330, 40, scene.getVertexBufferObjectManager());
-		this.sprite.setColor(0, 1, 0);
+		this.sprite = new AnimatedSprite(0, 0, scene.getResourcesManager().bouncePlatformTextureRegion, scene.getVertexBufferObjectManager());
 	}
 	
 	@Override
@@ -31,7 +30,7 @@ public class BouncePlatform extends BasePlatform{
 	@Override
 	public void createPhysicsBody(){
 		FixtureDef fixtureDef = PhysicsFactory.createFixtureDef(Const.Plaform.Bounce.DENSITY, Const.Plaform.Bounce.ELASTICITY, Const.Plaform.Bounce.FRICTION);
-		physicsBody = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.KinematicBody, fixtureDef);
+		physicsBody = PhysicsFactory.createPolygonBody(physicsWorld, sprite, Const.Plaform.Bounce.bodyVerticesMKS, BodyType.KinematicBody, fixtureDef);
 	}
 	
 	@Override

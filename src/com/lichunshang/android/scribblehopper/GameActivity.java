@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.LimitedFPSEngine;
-import org.andengine.engine.camera.BoundCamera;
+import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.engine.options.EngineOptions;
@@ -20,15 +20,16 @@ import android.view.KeyEvent;
 
 public class GameActivity extends BaseGameActivity {
 	
-	private BoundCamera camera;
+	private Camera camera;
 	private ResourcesManager resourcesManager;
 	public final int CAMERA_WIDTH = 768;
 	public final int CAMERA_HEIGHT = 1280;
 
 	@Override
 	public EngineOptions onCreateEngineOptions(){
-		camera = new BoundCamera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
+		camera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
 		EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.PORTRAIT_FIXED, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.camera);
+		//EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.PORTRAIT_FIXED, new FillResolutionPolicy(), this.camera);
 		engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
 		engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);
 		return engineOptions;

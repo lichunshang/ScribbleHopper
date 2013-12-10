@@ -53,7 +53,11 @@ public class ResourcesManager{
 
 	public ITextureRegion gameBackgroundTextureRegion;
 	public ITiledTextureRegion gamePlayerTextureRegion;
-	public ITiledTextureRegion gameRegularPlatformTextureRegion;
+	public ITiledTextureRegion regularPlaformTextureRegion;
+	public ITiledTextureRegion spikePlaformTextureRegion;
+	public ITiledTextureRegion bouncePlatformTextureRegion;
+	public ITiledTextureRegion conveyorPlatformTextureRegion;
+	public ITiledTextureRegion unstablePlatformTextureRegion;
 	
     //---------------------------------------------
     // CLASS LOGIC
@@ -73,11 +77,12 @@ public class ResourcesManager{
 	
 	private void loadMenuGraphics() {
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
-		menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
+		menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
 		
 		menuBackgroundRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_background.png");
 		playRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
 		optionsRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "options.png");
+		gameBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "background.png");
 		
 		try{
 			this.menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
@@ -101,10 +106,16 @@ public class ResourcesManager{
 	
 	private void loadGameGraphic(){
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
-		gameTextureAtlas =  new BuildableBitmapTextureAtlas(activity.getTextureManager(), 4096, 4096, TextureOptions.BILINEAR);
+		gameTextureAtlas =  new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
 		
 		gamePlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 5, 5);
-		gameBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "background.png");
+		
+		
+		regularPlaformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "regularPlatform.png", 1, 1);
+		spikePlaformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "spikePlatform.png", 1, 1);
+		bouncePlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "bouncePlatform.png", 1, 6);
+		conveyorPlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "conveyorPlatform.png", 1, 3);
+		unstablePlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "unstablePlatform.png", 1, 5);
 		
 		try{
 			this.gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));

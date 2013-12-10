@@ -2,7 +2,8 @@ package com.lichunshang.android.scribblehopper.platforms;
 
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
-import org.andengine.entity.primitive.Rectangle;
+import org.andengine.entity.modifier.FadeOutModifier;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -11,6 +12,8 @@ import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.scenes.GameScene;
 
 public class UnstablePlatform extends BasePlatform{
+	
+	public FadeOutModifier collapseFadeOutModifier = new FadeOutModifier(Const.Plaform.Unstable.TOTAL_ANIME_PERIOD / 1000f);
 	
 	public UnstablePlatform(GameScene scene){
 		super(scene);
@@ -23,8 +26,7 @@ public class UnstablePlatform extends BasePlatform{
 	
 	@Override
 	public void createPlatform(){
-		this.sprite = new Rectangle(0, 0, 330, 40, scene.getVertexBufferObjectManager());
-		this.sprite.setColor(0, 0.5f, 0);
+		this.sprite = new AnimatedSprite(0, 0, scene.getResourcesManager().unstablePlatformTextureRegion, scene.getVertexBufferObjectManager());
 	}
 	
 	@Override
@@ -43,6 +45,13 @@ public class UnstablePlatform extends BasePlatform{
 		return physicsBody.getPosition().y + sprite.getHeight() / 2f / Const.Physics.PIXEL_TO_METER_RATIO;
 	}
 	
+	@Override
+	public void reset(){
+		super.reset();
+		sprite.setCurrentTileIndex(0);
+		sprite.setAlpha(1);
+	}
+	
 	public void startCollpseTimer(){
 		scene.registerUpdateHandler(new TimerHandler(Const.Plaform.Unstable.COLLAPSE_TIME / 1000f, new ITimerCallback() {
 			@Override
@@ -55,6 +64,17 @@ public class UnstablePlatform extends BasePlatform{
 	
 	public void collapse(){
 		//TODO play animation then set invisible
-		recyclePlatform();
+		sprite.animate(Const.Plaform.Unstable.ANIME_SPEED, false);
+		setPhysicsBodySensor(true);
+		sprite.registerEntityModifier(collapseFadeOutModifier);
+		scene.registerUpdateHandler(new TimerHandler(Const.Plaform.Unstable.TOTAL_ANIME_PERIOD / 1000f, new ITimerCallback() {
+			@Override
+			public void onTimePassed(TimerHandler pTimerHandler) {
+				scene.unregisterUpdateHandler(pTimerHandler);
+				sprite.unregisterEntityModifier(collapseFadeOutModifier);
+				collapseFadeOutModifier.reset();
+				recyclePlatform();
+			}
+		}));
 	}
 }

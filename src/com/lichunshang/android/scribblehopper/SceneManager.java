@@ -1,13 +1,10 @@
 package com.lichunshang.android.scribblehopper;
 
 import org.andengine.engine.Engine;
-import org.andengine.engine.handler.timer.ITimerCallback;
-import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
 import com.lichunshang.android.scribblehopper.scenes.BaseScene;
 import com.lichunshang.android.scribblehopper.scenes.GameScene;
-import com.lichunshang.android.scribblehopper.scenes.LoadingScene;
 import com.lichunshang.android.scribblehopper.scenes.MainMenuScene;
 import com.lichunshang.android.scribblehopper.scenes.SplashScene;
 

@@ -6,10 +6,12 @@ import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
+import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
+import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -125,8 +127,8 @@ public class GameScene extends BaseScene {
 		physicsWorld.setContactListener(new GameContactListener(this));
 		registerUpdateHandler(physicsWorld);
 		
-//		DebugRenderer debug = new DebugRenderer(physicsWorld, getVertexBufferObjectManager());
-//		this.attachChild(debug);
+		DebugRenderer debug = new DebugRenderer(physicsWorld, getVertexBufferObjectManager());
+		this.attachChild(debug);
 	}
 	
 	private void createUpdateHandlers(){
@@ -155,8 +157,9 @@ public class GameScene extends BaseScene {
 	}
 	
 	private void createLayers(){
-		background = new SpriteBackground(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.gameBackgroundTextureRegion, vertexBufferObjectManager));
-		setBackground(background);
+		//background = new SpriteBackground(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.gameBackgroundTextureRegion, vertexBufferObjectManager));
+		//setBackground(background);
+		setBackground(new Background(0.1f, 0.1f, 0.1f));
 		
 		backgroundLayer = new Entity();
 		playerLayer = new Entity();
@@ -231,25 +234,26 @@ public class GameScene extends BaseScene {
 	// GAME MECHANICS
 	// ----------------------------------------------
 	public BasePlatform.PlatformType getNextPlatformType(){
-		int randomNum = random.nextInt(6);
-		if (randomNum == 0){
-			return BasePlatform.PlatformType.REGULAR;
-		}
-		else if (randomNum == 1){
-			return BasePlatform.PlatformType.UNSTABLE;
-		}
-		else if (randomNum == 2){
-			return BasePlatform.PlatformType.CONVEYOR_LEFT;
-		}
-		else if (randomNum == 3){
-			return BasePlatform.PlatformType.CONVEYOR_RIGHT;
-		}
-		else if (randomNum == 4){
-			return BasePlatform.PlatformType.BOUNCE;
-		}
-		else {
-			return BasePlatform.PlatformType.SPIKE;
-		}
+		return BasePlatform.PlatformType.BOUNCE; 
+//		int randomNum = random.nextInt(6);
+//		if (randomNum == 0){
+//			return BasePlatform.PlatformType.REGULAR;
+//		}
+//		else if (randomNum == 1){
+//			return BasePlatform.PlatformType.UNSTABLE;
+//		}
+//		else if (randomNum == 2){
+//			return BasePlatform.PlatformType.CONVEYOR_LEFT;
+//		}
+//		else if (randomNum == 3){
+//			return BasePlatform.PlatformType.CONVEYOR_RIGHT;
+//		}
+//		else if (randomNum == 4){
+//			return BasePlatform.PlatformType.BOUNCE;
+//		}
+//		else {
+//			return BasePlatform.PlatformType.SPIKE;
+//		}
 	}
 	
 	public void onPlatformSpawnTimerPass(){

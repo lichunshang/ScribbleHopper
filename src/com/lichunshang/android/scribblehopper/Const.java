@@ -1,5 +1,7 @@
 package com.lichunshang.android.scribblehopper;
 
+import android.R.integer;
+
 import com.badlogic.gdx.math.Vector2;
 
 public interface Const{
@@ -34,9 +36,9 @@ public interface Const{
 		public static final float FLASH_PERIOD_WHEN_HURT = 90;
 		
 		//control properties
-		public static final float ACCELERATE_MULTIPLY_FACTOR = 9f;
-		public static final float DEACCELERATE_MULTIPLY_FACTOR = 22f;
-		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 5f;
+		public static final float ACCELERATE_MULTIPLY_FACTOR = 10.5f;
+		public static final float DEACCELERATE_MULTIPLY_FACTOR = 23f;
+		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 4f;
 		
 		//physics properties
 		public static final float DENSITY = 0;
@@ -95,8 +97,8 @@ public interface Const{
 	
 	public interface Plaform{
 		
-		public static final float MIN_SPAWN_TIME = 1000f;
-		public static final float MAX_SPAWN_TIME = 2000f;
+		public static final float MIN_SPAWN_TIME = 1100f;
+		public static final float MAX_SPAWN_TIME = 2700f;
 		public static final float INITIAL_SPAWN_TIME = (MIN_SPAWN_TIME + MAX_SPAWN_TIME) / 2;
 		public static final float INITIAL_SPEED = 5f;
 		public static final int HEALTH_INCREMENT = 1;
@@ -114,18 +116,39 @@ public interface Const{
 			public static final float ELASTICITY = 0.70f;
 			public static final float PLAYER_VELOCITY_NO_BOUNCE = 3.5f; //no player bounce under certain y velocity
 			public static final float PLAYER_VELOCITY_NO_LAND = 4.5f; //no land animation under certain y velocity
+			
+			//vertices in pixels
+			public static final Vector2[] bodyVerticesPixels = {
+				new Vector2(160, 23f),
+				new Vector2(-160, 23f),
+				new Vector2(-160, -23f),
+				new Vector2(160, -23f),
+			};
+			
+			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
+			public static final Vector2[] bodyVerticesMKS = {
+				new Vector2(bodyVerticesPixels[0].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[0].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[1].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[1].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[2].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[3].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+			};
 		}
 		
 		public interface ConveyorLeft extends Regular{
-			public static final float DISPLACEMENT_RATE = 4f;
+			public static final float DISPLACEMENT_RATE = 5.5f;
+			public static final long ANIME_SPEED = 110;
 		}
 		
 		public interface ConveyorRight extends Regular{
-			public static final float DISPLACEMENT_RATE = 4f;
+			public static final float DISPLACEMENT_RATE = 5.5f;
+			public static final long ANIME_SPEED = 110;
 		}
 
 		public interface Unstable extends Regular{
-			public static final float COLLAPSE_TIME = 200f;
+			public static final float COLLAPSE_TIME = 300f;
+			public static final long ANIME_SPEED = 80;
+			public static final int NUM_FRAMES = 5;
+			public static final long TOTAL_ANIME_PERIOD = ANIME_SPEED * NUM_FRAMES;
 		}
 		
 		public interface Spike extends Regular{
