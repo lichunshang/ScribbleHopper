@@ -110,6 +110,22 @@ public interface Const{
 			public static final float DENSITY = 0;
 			public static final float ELASTICITY = 0;
 			public static final float FRICTION = 0;
+			
+			//vertices in pixels
+			public static final Vector2[] bodyVerticesPixels = {
+				new Vector2(172, 20f),
+				new Vector2(-172, 20f),
+				new Vector2(-172, 18f),
+				new Vector2(172, 18f),
+			};
+			
+			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
+			public static final Vector2[] bodyVerticesMKS = {
+				new Vector2(bodyVerticesPixels[0].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[0].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[1].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[1].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[2].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[3].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+			};
 		}
 		
 		public interface Bounce extends Regular{
@@ -125,8 +141,8 @@ public interface Const{
 			public static final Vector2[] bodyVerticesPixels = {
 				new Vector2(172, 26f),
 				new Vector2(-172, 26f),
-				new Vector2(-172, 25.5f),
-				new Vector2(172, 25.5f),
+				new Vector2(-172, 24f),
+				new Vector2(172, 24f),
 			};
 			
 			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
@@ -141,11 +157,30 @@ public interface Const{
 		public interface ConveyorLeft extends Regular{
 			public static final float DISPLACEMENT_RATE = 5.5f;
 			public static final long ANIME_SPEED = 110;
+			
+			public static final Vector2[] bodyVerticesPixels = {
+				new Vector2(168, 21f),
+				new Vector2(-168, 21f),
+				new Vector2(-168, 20.9f),
+				new Vector2(168, 20.9f),
+			};
+			
+			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
+			public static final Vector2[] bodyVerticesMKS = {
+				new Vector2(bodyVerticesPixels[0].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[0].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[1].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[1].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[2].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[3].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+			};
 		}
 		
 		public interface ConveyorRight extends Regular{
 			public static final float DISPLACEMENT_RATE = 5.5f;
 			public static final long ANIME_SPEED = 110;
+			
+			public static final Vector2[] bodyVerticesPixels = ConveyorLeft.bodyVerticesPixels;
+			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
+			public static final Vector2[] bodyVerticesMKS = ConveyorLeft.bodyVerticesMKS;
 		}
 
 		public interface Unstable extends Regular{
@@ -153,10 +188,41 @@ public interface Const{
 			public static final long ANIME_SPEED = 80;
 			public static final int NUM_FRAMES = 5;
 			public static final long TOTAL_ANIME_PERIOD = ANIME_SPEED * NUM_FRAMES;
+			public static final float SPAWN_DISPLACEMENT = 14; //spawn a bit lower because this platform has tall sprites
+			
+			public static final Vector2[] bodyVerticesPixels = {
+				new Vector2(172, 72f),
+				new Vector2(-172, 72f),
+				new Vector2(-172, 70f),
+				new Vector2(172, 70f),
+			};
+			
+			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
+			public static final Vector2[] bodyVerticesMKS = {
+				new Vector2(bodyVerticesPixels[0].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[0].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[1].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[1].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[2].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[3].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+			};
 		}
 		
 		public interface Spike extends Regular{
 			public static final int HEALTH_DECREMENT = 4;
+			
+			public static final Vector2[] bodyVerticesPixels = {
+				new Vector2(172, 3f),
+				new Vector2(-172, 3f),
+				new Vector2(-172, 1f),
+				new Vector2(172, 1f),
+			};
+			
+			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
+			public static final Vector2[] bodyVerticesMKS = {
+				new Vector2(bodyVerticesPixels[0].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[0].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[1].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[1].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[2].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+				new Vector2(bodyVerticesPixels[3].x / Physics.PIXEL_TO_METER_RATIO, bodyVerticesPixels[2].y / Physics.PIXEL_TO_METER_RATIO),
+			};
 		}
 	}
 }

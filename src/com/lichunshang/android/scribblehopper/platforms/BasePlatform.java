@@ -65,7 +65,7 @@ public abstract class BasePlatform{
 		});
 	}
 	
-	private float generatePosX(){
+	public float generatePosX(){
 		final float LEFT_BOUND = Const.GameScene.LEFT_RIGHT_MARGIN + sprite.getWidth() / 2;
 		final float RIGHT_BOUND = scene.getCamera().getWidth() - Const.GameScene.LEFT_RIGHT_MARGIN - sprite.getWidth() / 2;
 		
@@ -86,7 +86,7 @@ public abstract class BasePlatform{
 		recycled = false;
 		physicsBody.setActive(true);
 		setPhysicsBodySensor(false);
-		this.physicsBody.setTransform(generatePosX() / Const.Physics.PIXEL_TO_METER_RATIO, 0, 0);
+		setPosition(generatePosX(),  0 - sprite.getHeight() / 2);
 		this.sprite.setIgnoreUpdate(false);
 		setSpeed(scene.getPlatformSpeed());
 		
@@ -98,11 +98,11 @@ public abstract class BasePlatform{
 			}
 		}));
 	}
-	
+
 	public void disable(){
+		this.sprite.setVisible(false);
 		physicsBody.setActive(false);
 		this.sprite.setIgnoreUpdate(true);
-		this.sprite.setVisible(false);
 		setPhysicsBodySensor(true);
 	}
 	

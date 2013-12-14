@@ -32,7 +32,7 @@ public class UnstablePlatform extends BasePlatform{
 	@Override
 	public void createPhysicsBody(){
 		FixtureDef fixtureDef = PhysicsFactory.createFixtureDef(Const.Plaform.Unstable.DENSITY, Const.Plaform.Unstable.ELASTICITY, Const.Plaform.Unstable.FRICTION);
-		physicsBody = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.KinematicBody, fixtureDef);
+		physicsBody = PhysicsFactory.createPolygonBody(physicsWorld, sprite, Const.Plaform.Unstable.bodyVerticesMKS, BodyType.KinematicBody, fixtureDef);
 	}
 	
 	@Override
@@ -48,6 +48,7 @@ public class UnstablePlatform extends BasePlatform{
 	@Override
 	public void reset(){
 		super.reset();
+		setPosition(generatePosX(),  0 - sprite.getHeight() / 2 - Const.Plaform.Unstable.SPAWN_DISPLACEMENT);
 		sprite.setCurrentTileIndex(0);
 		sprite.setAlpha(1);
 	}
@@ -63,7 +64,6 @@ public class UnstablePlatform extends BasePlatform{
 	}
 	
 	public void collapse(){
-		//TODO play animation then set invisible
 		sprite.animate(Const.Plaform.Unstable.ANIME_SPEED, false);
 		setPhysicsBodySensor(true);
 		sprite.registerEntityModifier(collapseFadeOutModifier);

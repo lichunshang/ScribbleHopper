@@ -10,7 +10,6 @@ import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
-import org.andengine.extension.debugdraw.DebugRenderer;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -43,7 +42,7 @@ public class GameScene extends BaseScene {
 	private float score = 0;
 	
 	private PlatformPool platformPool;
-	private float platformSpeed = Const.Plaform.INITIAL_SPEED;
+	private double platformSpeed = Const.Plaform.INITIAL_SPEED;
 	private BasePlatform lastSpawnedPlatform;
 	private TimerHandler platformSpawnTimer, textUpdateTimer;
 	
@@ -80,6 +79,7 @@ public class GameScene extends BaseScene {
 		if (player.isAlive()){
 			score += platformSpeed * Const.GameScene.SPEED_TO_SCORE_RATIO;
 		}
+
 	}
 	
 	private void createGameElements(){
@@ -100,6 +100,10 @@ public class GameScene extends BaseScene {
 		FixtureDef topBorderFixtureDef = PhysicsFactory.createFixtureDef(Const.GameScene.BORDER_DENSITY, Const.GameScene.TOP_BORDER_ELASTICITY, Const.GameScene.BORDER_FRICTION);
 		Body topBorderPhysicsBody = PhysicsFactory.createBoxBody(physicsWorld, topBorder, BodyType.StaticBody, topBorderFixtureDef);
 		topBorderPhysicsBody.setUserData(new TopBorder()); 
+		
+		Sprite spike = new Sprite(0, 0, resourcesManager.gameSpikeTextureRegion, vertexBufferObjectManager);
+		spike.setPosition(camera.getWidth() / 2, camera.getHeight() - spike.getHeight() / 2);
+		attachChild(spike);
 	}
 	
 	private void createHUD(){
@@ -111,6 +115,10 @@ public class GameScene extends BaseScene {
 		healthText.setAnchorCenter(0, 0);
 		healthText.setText("0");
 		
+		Sprite HUDBar = new Sprite(0, 0, resourcesManager.gameHUDBarTextureRegion, vertexBufferObjectManager);
+		HUDBar.setPosition(camera.getWidth() / 2, HUDBar.getHeight() / 2);
+		
+		HUDLayer.attachChild(HUDBar);
 		HUDLayer.attachChild(scoreText);
 		HUDLayer.attachChild(healthText);
 	}
@@ -126,8 +134,8 @@ public class GameScene extends BaseScene {
 		physicsWorld.setContactListener(new GameContactListener(this));
 		registerUpdateHandler(physicsWorld);
 		
-		DebugRenderer debug = new DebugRenderer(physicsWorld, getVertexBufferObjectManager());
-		this.attachChild(debug);
+//		DebugRenderer debug = new DebugRenderer(physicsWorld, getVertexBufferObjectManager());
+//		this.attachChild(debug);
 	}
 	
 	private void createUpdateHandlers(){
@@ -158,15 +166,14 @@ public class GameScene extends BaseScene {
 	private void createLayers(){
 		background = new SpriteBackground(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.gameBackgroundTextureRegion, vertexBufferObjectManager));
 		setBackground(background);
-		//setBackground(new Background(0.1f, 0.1f, 0.1f));
 		
 		backgroundLayer = new Entity();
 		playerLayer = new Entity();
 		plaformLayer = new Entity();
 		HUDLayer = new Entity();
 		attachChild(backgroundLayer);
-		attachChild(playerLayer);
 		attachChild(plaformLayer);
+		attachChild(playerLayer);
 		attachChild(HUDLayer);
 	}
 	
@@ -233,26 +240,26 @@ public class GameScene extends BaseScene {
 	// GAME MECHANICS
 	// ----------------------------------------------
 	public BasePlatform.PlatformType getNextPlatformType(){
-		return BasePlatform.PlatformType.BOUNCE; 
-//		int randomNum = random.nextInt(6);
-//		if (randomNum == 0){
-//			return BasePlatform.PlatformType.REGULAR;
-//		}
-//		else if (randomNum == 1){
-//			return BasePlatform.PlatformType.UNSTABLE;
-//		}
-//		else if (randomNum == 2){
-//			return BasePlatform.PlatformType.CONVEYOR_LEFT;
-//		}
-//		else if (randomNum == 3){
-//			return BasePlatform.PlatformType.CONVEYOR_RIGHT;
-//		}
-//		else if (randomNum == 4){
-//			return BasePlatform.PlatformType.BOUNCE;
-//		}
-//		else {
-//			return BasePlatform.PlatformType.SPIKE;
-//		}
+
+		int randomNum = random.nextInt(6);
+		if (randomNum == 0){
+			return BasePlatform.PlatformType.REGULAR;
+		}
+		else if (randomNum == 1){
+			return BasePlatform.PlatformType.UNSTABLE;
+		}
+		else if (randomNum == 2){
+			return BasePlatform.PlatformType.CONVEYOR_LEFT;
+		}
+		else if (randomNum == 3){
+			return BasePlatform.PlatformType.CONVEYOR_RIGHT;
+		}
+		else if (randomNum == 4){
+			return BasePlatform.PlatformType.BOUNCE;
+		}
+		else {
+			return BasePlatform.PlatformType.SPIKE;
+		}
 	}
 	
 	public void onPlatformSpawnTimerPass(){
@@ -279,7 +286,7 @@ public class GameScene extends BaseScene {
 	}
 	
 	public float getPlatformSpeed(){
-		return platformSpeed;
+		return (float) platformSpeed;
 	}
 	
 	public float getAccelerometerValue(){

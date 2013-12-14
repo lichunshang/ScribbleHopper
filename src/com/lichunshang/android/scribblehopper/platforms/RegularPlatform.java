@@ -27,7 +27,7 @@ public class RegularPlatform extends BasePlatform{
 	@Override
 	public void createPhysicsBody(){
 		FixtureDef fixtureDef = PhysicsFactory.createFixtureDef(Const.Plaform.Regular.DENSITY, Const.Plaform.Regular.ELASTICITY, Const.Plaform.Regular.FRICTION);
-		physicsBody = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.KinematicBody, fixtureDef);
+		physicsBody = PhysicsFactory.createPolygonBody(physicsWorld, sprite, Const.Plaform.Regular.bodyVerticesMKS, BodyType.KinematicBody, fixtureDef);
 	}
 	
 	@Override

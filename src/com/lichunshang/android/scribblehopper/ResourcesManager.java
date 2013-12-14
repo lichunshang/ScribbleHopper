@@ -52,6 +52,9 @@ public class ResourcesManager{
 	public BuildableBitmapTextureAtlas gameTextureAtlas;
 
 	public ITextureRegion gameBackgroundTextureRegion;
+	public ITextureRegion gameHUDBarTextureRegion;
+	public ITextureRegion gameSpikeTextureRegion;
+	public ITextureRegion gameHeartTextureRegion;
 	public ITiledTextureRegion gamePlayerTextureRegion;
 	public ITiledTextureRegion regularPlaformTextureRegion;
 	public ITiledTextureRegion spikePlaformTextureRegion;
@@ -116,6 +119,9 @@ public class ResourcesManager{
 		bouncePlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "bouncePlatform.png", 1, 6);
 		conveyorPlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "conveyorPlatform.png", 1, 3);
 		unstablePlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "unstablePlatform.png", 1, 5);
+		gameHUDBarTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "HUDBar.png");
+		gameSpikeTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "spike.png");
+		gameHeartTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "heart.png");
 		
 		try{
 			this.gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));

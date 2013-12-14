@@ -27,7 +27,7 @@ public class SpikePlatform extends BasePlatform{
 	@Override
 	public void createPhysicsBody(){
 		FixtureDef fixtureDef = PhysicsFactory.createFixtureDef(Const.Plaform.Spike.DENSITY, Const.Plaform.Spike.ELASTICITY, Const.Plaform.Spike.FRICTION);
-		physicsBody = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.KinematicBody, fixtureDef);
+		physicsBody = PhysicsFactory.createPolygonBody(physicsWorld, sprite, Const.Plaform.Spike.bodyVerticesMKS, BodyType.KinematicBody, fixtureDef);
 	}
 	
 	@Override

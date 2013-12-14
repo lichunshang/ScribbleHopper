@@ -29,7 +29,7 @@ public class ConveyorLeftPlatform extends BasePlatform{
 	@Override
 	public void createPhysicsBody(){
 		FixtureDef fixtureDef = PhysicsFactory.createFixtureDef(Const.Plaform.ConveyorLeft.DENSITY, Const.Plaform.ConveyorLeft.ELASTICITY, Const.Plaform.ConveyorLeft.FRICTION);
-		physicsBody = PhysicsFactory.createBoxBody(physicsWorld, sprite, BodyType.KinematicBody, fixtureDef);
+		physicsBody = PhysicsFactory.createPolygonBody(physicsWorld, sprite, Const.Plaform.ConveyorLeft.bodyVerticesMKS, BodyType.KinematicBody, fixtureDef);
 	}
 	
 	@Override
