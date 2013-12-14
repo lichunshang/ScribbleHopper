@@ -58,11 +58,13 @@ public class GameContactListener implements ContactListener{
 	    			player.setCurrentPlatform(platform);
 	    			if (Math.abs(player.getPhysicsBody().getLinearVelocity().y) < Const.Plaform.Bounce.PLAYER_VELOCITY_NO_BOUNCE){
 	    				((BouncePlatform) platform).disabledElasticity();
-	    				((BouncePlatform) platform).animate(BouncePlatform.AnimationLength.SHORT);
 	    			}
 	    			if (Math.abs(player.getPhysicsBody().getLinearVelocity().y) > Const.Plaform.Bounce.PLAYER_VELOCITY_NO_LAND){
 	    				((BouncePlatform) platform).animate(BouncePlatform.AnimationLength.LONG);
 	    				player.animateLand();
+	    			}
+	    			else{
+	    				((BouncePlatform) platform).animate(BouncePlatform.AnimationLength.SHORT);
 	    			}
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.CONVEYOR_LEFT){

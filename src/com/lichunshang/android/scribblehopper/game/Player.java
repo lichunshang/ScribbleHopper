@@ -207,6 +207,7 @@ public class Player{
 		sprite.clearEntityModifiers();
 		sprite.setRotation(0);
 		health = Const.Player.MAX_HEALTH;
+		scene.onHealthChanged();
 	}
 	
 	// ------------------------------------------
@@ -222,6 +223,7 @@ public class Player{
 		if (health > Const.Player.MAX_HEALTH){
 			health = Const.Player.MAX_HEALTH;
 		}
+		scene.onHealthChanged();
 	}
 	
 	public void decreaseHealth(int decrement){
@@ -245,6 +247,7 @@ public class Player{
 		else{
 			flashTimer.reset();
 		}
+		scene.onHealthChanged();
 	}
 	
 	public boolean isAlive(){

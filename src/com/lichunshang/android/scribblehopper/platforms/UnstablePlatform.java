@@ -48,7 +48,7 @@ public class UnstablePlatform extends BasePlatform{
 	@Override
 	public void reset(){
 		super.reset();
-		setPosition(generatePosX(),  0 - sprite.getHeight() / 2 - Const.Plaform.Unstable.SPAWN_DISPLACEMENT);
+		setPosition(generatePosX(),  0 - sprite.getHeight() / 2 - Const.Plaform.Unstable.UNSTABLE_SPAWN_DISPLACEMENT - Const.Plaform.SPAWN_DISPLACEMENT);
 		sprite.setCurrentTileIndex(0);
 		sprite.setAlpha(1);
 	}

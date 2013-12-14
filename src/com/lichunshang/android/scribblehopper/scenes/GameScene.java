@@ -9,7 +9,6 @@ import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
-import org.andengine.entity.text.Text;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
@@ -26,6 +25,7 @@ import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.SceneManager;
 import com.lichunshang.android.scribblehopper.SensorListener;
 import com.lichunshang.android.scribblehopper.game.GameContactListener;
+import com.lichunshang.android.scribblehopper.game.GameHUD;
 import com.lichunshang.android.scribblehopper.game.Player;
 import com.lichunshang.android.scribblehopper.platforms.BasePlatform;
 import com.lichunshang.android.scribblehopper.platforms.PlatformPool;
@@ -37,7 +37,6 @@ public class GameScene extends BaseScene {
 	private PhysicsWorld physicsWorld;
 	
 	private SpriteBackground background;
-	private Text scoreText, healthText;
 	private Player player;
 	private float score = 0;
 	
@@ -52,6 +51,7 @@ public class GameScene extends BaseScene {
 	private boolean paused = false;
 	
 	private Entity plaformLayer, backgroundLayer, playerLayer, HUDLayer;
+	private GameHUD gameHUD;
 	
 	public void createScene(){
 		createLayers();
@@ -107,20 +107,7 @@ public class GameScene extends BaseScene {
 	}
 	
 	private void createHUD(){
-		scoreText = new Text(20, 0, resourcesManager.font, "0123456789", vertexBufferObjectManager);
-		scoreText.setAnchorCenter(0, 0);
-		scoreText.setText("0");
-		
-		healthText = new Text(500, 0, resourcesManager.font, "0123456789", vertexBufferObjectManager);
-		healthText.setAnchorCenter(0, 0);
-		healthText.setText("0");
-		
-		Sprite HUDBar = new Sprite(0, 0, resourcesManager.gameHUDBarTextureRegion, vertexBufferObjectManager);
-		HUDBar.setPosition(camera.getWidth() / 2, HUDBar.getHeight() / 2);
-		
-		HUDLayer.attachChild(HUDBar);
-		HUDLayer.attachChild(scoreText);
-		HUDLayer.attachChild(healthText);
+		gameHUD = new GameHUD(this, HUDLayer);
 	}
 	
 	private void createPhysics(){
@@ -149,7 +136,7 @@ public class GameScene extends BaseScene {
 		textUpdateTimer = new TimerHandler(Const.GameScene.SCORE_UPDATE_PERIOD / 1000f, true, new ITimerCallback() {
 			@Override
 			public void onTimePassed(TimerHandler pTimerHandler) {
-				updateText();
+				gameHUD.updateScoreText((int) score);
 			}
 		});
 		
@@ -184,25 +171,13 @@ public class GameScene extends BaseScene {
 	
 	public void onBackKeyPressed(){
 		if (currentSubScene == playerDieScene){
-			engine.runOnUpdateThread(new Runnable() {
-				@Override
-				public void run() {
-					playerDieScene.onBackKeyPressed();
-				}
-			});
+			playerDieScene.detachScene();
 		}
 		else if (paused){
-			engine.runOnUpdateThread(new Runnable() {
-				@Override
-				public void run() {
-					pauseScene.onBackKeyPressed();
-					paused = false;
-				}
-			});
+			unPauseGame();
 		}
 		else{
-			pauseScene.attachScene();
-			paused = true;
+			pauseGame();
 		}
 	}
 	
@@ -272,9 +247,22 @@ public class GameScene extends BaseScene {
 		return random.nextFloat() * (Const.Plaform.MAX_SPAWN_TIME - Const.Plaform.MIN_SPAWN_TIME) + Const.Plaform.MIN_SPAWN_TIME;
 	}
 	
-	public void updateText(){
-		scoreText.setText(Integer.toString((int) score));
-		healthText.setText(Integer.toString(player.getHealth()));
+	public void onHealthChanged(){
+		gameHUD.updateHealth(player.getHealth());
+	}
+	
+	public void pauseGame(){
+		if (paused)
+			return;
+		pauseScene.attachScene();
+		paused = true;
+	}
+	
+	public void unPauseGame(){
+		if (!paused)
+			return;
+		pauseScene.detachScene();
+		paused = false;
 	}
 	
 	// -----------------------------------------------
@@ -307,6 +295,14 @@ public class GameScene extends BaseScene {
 	
 	public int getScore(){
 		return (int) score;
+	}
+	
+	public BaseSubScene getCurrentSubScene(){
+		return currentSubScene;
+	}
+	
+	public boolean isPaused(){
+		return paused;
 	}
 
 	// -----------------------------------------------

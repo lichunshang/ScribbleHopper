@@ -36,9 +36,14 @@ public class GamePauseScene extends BaseSubScene{
 
 	@Override
 	public void detachScene() {
-		parentScene.detachChild(this);
-		attached = false;
-		((GameScene) parentScene).setIgnoreUpdate(false);
+		parentScene.getEngine().runOnUpdateThread(new Runnable() {
+			@Override
+			public void run() {
+				parentScene.detachChild(GamePauseScene.this);
+				attached = false;
+				((GameScene) parentScene).setIgnoreUpdate(false);
+			}
+		});
 	}
 
 	@Override

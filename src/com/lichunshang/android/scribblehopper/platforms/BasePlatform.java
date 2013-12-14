@@ -86,7 +86,7 @@ public abstract class BasePlatform{
 		recycled = false;
 		physicsBody.setActive(true);
 		setPhysicsBodySensor(false);
-		setPosition(generatePosX(),  0 - sprite.getHeight() / 2);
+		setPosition(generatePosX(),  0 - sprite.getHeight() / 2 - Const.Plaform.SPAWN_DISPLACEMENT);
 		this.sprite.setIgnoreUpdate(false);
 		setSpeed(scene.getPlatformSpeed());
 		

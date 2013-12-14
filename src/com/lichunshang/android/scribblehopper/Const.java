@@ -1,7 +1,5 @@
 package com.lichunshang.android.scribblehopper;
 
-import android.R.integer;
-
 import com.badlogic.gdx.math.Vector2;
 
 public interface Const{
@@ -25,6 +23,13 @@ public interface Const{
 		public static final int TOP_BORDER_HEALTH_DECREMENT = 4;
 		public static final float SPEED_TO_SCORE_RATIO = 0.01f;
 		public static final int SCORE_UPDATE_PERIOD = 100;
+		
+		public interface HUD{
+			public static final int LEFT_RIGHT_MARGIN = 10;
+			public static final int HEALTH_BOTTOM_MARGIN = 15;
+			public static final int PAUSE_BOTTOM_MARGIN = 10;
+			public static final int SCORE_RIGHT_MARGIN = 35;
+		}
 	}
 	
 	//general player settings
@@ -102,6 +107,8 @@ public interface Const{
 		public static final float INITIAL_SPAWN_TIME = (MIN_SPAWN_TIME + MAX_SPAWN_TIME) / 2;
 		public static final float INITIAL_SPEED = 5f;
 		public static final int HEALTH_INCREMENT = 1;
+		// This is to prevent the user from seeing a disabled platform when setVisible gets out of place with the update thread
+		public static final int SPAWN_DISPLACEMENT = 50; 
 		
 		//since the coordinates of collisions used in comparison might be slightly off
 		public static final float COLLISION_CHECK_TOLERANCE = 0.15f;
@@ -188,7 +195,7 @@ public interface Const{
 			public static final long ANIME_SPEED = 80;
 			public static final int NUM_FRAMES = 5;
 			public static final long TOTAL_ANIME_PERIOD = ANIME_SPEED * NUM_FRAMES;
-			public static final float SPAWN_DISPLACEMENT = 14; //spawn a bit lower because this platform has tall sprites
+			public static final float UNSTABLE_SPAWN_DISPLACEMENT = 14; //spawn a bit lower because this platform has tall sprites
 			
 			public static final Vector2[] bodyVerticesPixels = {
 				new Vector2(172, 72f),

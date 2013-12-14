@@ -33,9 +33,14 @@ public class PlayerDieScene extends BaseSubScene{
 
 	@Override
 	public void detachScene() {
-		parentScene.detachChild(this);
-		((GameScene) parentScene).resetScene();
-		attached = false;
+		parentScene.getEngine().runOnUpdateThread(new Runnable() {
+			@Override
+			public void run() {
+				parentScene.detachChild(PlayerDieScene.this);
+				((GameScene) parentScene).resetScene();
+				attached = false;
+			}
+		});
 	}
 
 	@Override
