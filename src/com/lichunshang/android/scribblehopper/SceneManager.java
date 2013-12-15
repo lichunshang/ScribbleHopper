@@ -28,29 +28,25 @@ public class SceneManager{
 	private BaseScene currentScene;
 	private Engine engine = ResourcesManager.getInstance().engine;
 	
-	public enum SceneType{
-		SCENE_SPLASH,
-		SCENE_MENU,
-		SCENE_GAME,
-		SCENE_LOADING,
-		SCENE_PLAYER_DIE,
-		SCENE_PAUSE,
-	}
+	
 	
 	//---------------------------------------------
     // CLASS LOGIC
     //---------------------------------------------	
 	
 	public void setScene(BaseScene scene){
+		if (currentScene != null)
+			currentScene.setIgnoreUpdate(true);
+		
 		engine.setScene(scene);
 		currentScene = scene;
 		currentSceneType = scene.getSceneType();
+		
+		if (currentScene != null)
+			currentScene.setIgnoreUpdate(false);
 	}
 	
 	public void setScene(SceneType sceneType){
-		if (getCurrentScene() != null){
-			getCurrentScene().setIgnoreUpdate(true);
-		}
 		if (sceneType == SceneType.SCENE_MENU){
 			setScene(menuScene);
 		}
@@ -63,9 +59,17 @@ public class SceneManager{
 		else if (sceneType == SceneType.SCENE_LOADING){
 			setScene(loadingScene);
 		}
-		getCurrentScene().setIgnoreUpdate(false);
 	}
 	
+	public enum SceneType{
+		SCENE_SPLASH,
+		SCENE_MENU,
+		SCENE_GAME,
+		SCENE_LOADING,
+		SCENE_PLAYER_DIE,
+		SCENE_PAUSE,
+	}
+
 	public BaseScene getScene(SceneType sceneType){
 		if (sceneType == SceneType.SCENE_MENU){
 			return menuScene;

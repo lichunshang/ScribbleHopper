@@ -27,7 +27,7 @@ public class MainMenuLoadingScene extends BaseSubScene{
 		backgroundSprite.setColor(0.5f, 0.5f, 0.5f);
 		backgroundSprite.setAlpha(0.65f);
 		attachChild(backgroundSprite);
-		loadingText = new Text(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.font, "Loading.......", new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
+		loadingText = new Text(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.font_50, "Loading.......", new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
 		loadingText.setText("Loading");
 		attachChild(loadingText);
 		

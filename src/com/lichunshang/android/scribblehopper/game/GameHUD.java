@@ -5,10 +5,7 @@ import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 
-import android.util.Log;
-
 import com.lichunshang.android.scribblehopper.Const;
-import com.lichunshang.android.scribblehopper.scenes.GamePauseScene;
 import com.lichunshang.android.scribblehopper.scenes.GameScene;
 
 public class GameHUD{
@@ -27,17 +24,18 @@ public class GameHUD{
 		pauseSprite = new Sprite(0, 0, this.gameScene.getResourcesManager().gamePauseTextureRegion, gameScene.getVertexBufferObjectManager()){
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float floatpTouchAreaLocalX, final float pTouchAreaLocalY){
-				if (GameHUD.this.gameScene.isPaused())
-					return false;
-				GameHUD.this.gameScene.pauseGame();
-				return true;
+				if (GameHUD.this.gameScene.getCurrentSubScene() == null && pSceneTouchEvent.isActionUp()){
+					GameHUD.this.gameScene.pauseGame();
+				}
+				return false;
 			}
 		};
 		pauseSprite.setAnchorCenter(0, 0);
 		pauseSprite.setPosition(gameScene.getCamera().getWidth() - pauseSprite.getWidth() - Const.GameScene.HUD.LEFT_RIGHT_MARGIN, Const.GameScene.HUD.PAUSE_BOTTOM_MARGIN);
+		pauseSprite.setAnchorCenter(0, 0);
 		this.gameScene.registerTouchArea(pauseSprite);
 		
-		scoreText = new Text(0, 0, this.gameScene.getResourcesManager().font, "0123456789", this.gameScene.getVertexBufferObjectManager());
+		scoreText = new Text(0, 0, this.gameScene.getResourcesManager().font_50, "0123456789", this.gameScene.getVertexBufferObjectManager());
 		scoreText.setAnchorCenter(0, 0);
 		scoreText.setText("0");
 		scoreText.setPosition(gameScene.getCamera().getWidth() - scoreText.getWidth() - pauseSprite.getWidth() - Const.GameScene.HUD.SCORE_RIGHT_MARGIN, 0);

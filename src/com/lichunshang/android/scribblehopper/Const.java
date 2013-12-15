@@ -10,6 +10,8 @@ public interface Const{
 	public interface MenuScene{
 		public static final int LOADING_TEXT_ANIME_PERIOD = 500;
 		public static final int LOADING_PERIOD = 2000;
+		public static final float BUTTON_ALPHA = 0.87f;
+		public static final float BUTTON_TEXT_SCALE = 1.4f;
 	}
 	
 	//general game scene settings
@@ -41,9 +43,9 @@ public interface Const{
 		public static final float FLASH_PERIOD_WHEN_HURT = 90;
 		
 		//control properties
-		public static final float ACCELERATE_MULTIPLY_FACTOR = 10.5f;
-		public static final float DEACCELERATE_MULTIPLY_FACTOR = 23f;
-		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 4f;
+		public static final float ACCELERATE_MULTIPLY_FACTOR = 17f;
+		public static final float DEACCELERATE_MULTIPLY_FACTOR = 30f;
+		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 3.75f;
 		
 		//physics properties
 		public static final float DENSITY = 0;
@@ -83,14 +85,14 @@ public interface Const{
 		//Animation speed in milliseconds
 		public static final long[] IDLE_ANIME_SPEED = {160, 160, 160, 160};
 		public static final long[] LAND_ANIME_SPEED = {35, 35, 35, 35};
-		public static final long[] RUN_ANIME_SPEED = {70, 70, 70, 70, 70};
+		public static final long[] RUN_ANIME_SPEED = {68, 68, 68, 68, 68};
 		public static final long[] WALK_ANIME_SPEED = {90, 90, 90, 90, 90, 90};
 		
 		public static final float LAND_SPEED_REDUCE_FACTOR = 1f;
 		
 		//time in milliseconds to disable animation to prevent staggering
-		public static final int ANIME_DISABLE_TIME_SHORT = 25;
-		public static final int ANIME_DISABLE_TIME_LONG = 300;
+		public static final int ANIME_DISABLE_TIME_SHORT = 20;
+		public static final int ANIME_DISABLE_TIME_LONG = 90;
 	}
 	
 	//general physics settings
@@ -109,6 +111,7 @@ public interface Const{
 		public static final int HEALTH_INCREMENT = 1;
 		// This is to prevent the user from seeing a disabled platform when setVisible gets out of place with the update thread
 		public static final int SPAWN_DISPLACEMENT = 50; 
+		public static final float PLAYER_HORIZONTAL_VELOCITY_NO_LAND = Player.WALK_SWITCH_VELOCITY;
 		
 		//since the coordinates of collisions used in comparison might be slightly off
 		public static final float COLLISION_CHECK_TOLERANCE = 0.15f;
@@ -191,8 +194,8 @@ public interface Const{
 		}
 
 		public interface Unstable extends Regular{
-			public static final float COLLAPSE_TIME = 300f;
-			public static final long ANIME_SPEED = 80;
+			public static final float COLLAPSE_TIME = 180;
+			public static final long ANIME_SPEED = 60;
 			public static final int NUM_FRAMES = 5;
 			public static final long TOTAL_ANIME_PERIOD = ANIME_SPEED * NUM_FRAMES;
 			public static final float UNSTABLE_SPAWN_DISPLACEMENT = 14; //spawn a bit lower because this platform has tall sprites

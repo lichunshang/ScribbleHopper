@@ -256,6 +256,7 @@ public class GameScene extends BaseScene {
 			return;
 		pauseScene.attachScene();
 		paused = true;
+		currentSubScene = pauseScene;
 	}
 	
 	public void unPauseGame(){
@@ -263,6 +264,7 @@ public class GameScene extends BaseScene {
 			return;
 		pauseScene.detachScene();
 		paused = false;
+		currentSubScene = null;
 	}
 	
 	// -----------------------------------------------

@@ -12,7 +12,7 @@ public class LoadingScene extends BaseScene{
 	@Override
 	public void createScene(){
 		setBackground(new Background(Color.WHITE));
-		attachChild(new Text(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.font, "Loading", vertexBufferObjectManager));
+		attachChild(new Text(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.font_50, "Loading", vertexBufferObjectManager));
 	}
 	
 	@Override

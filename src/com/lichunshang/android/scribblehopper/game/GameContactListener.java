@@ -47,12 +47,13 @@ public class GameContactListener implements ContactListener{
     		BasePlatform platform = getPlatformObject(contact);
     		BasePlatform.PlatformType platformType = platform.getType();
     		Player player = gameScene.getPlayer();
+    		boolean animatedLand = false;
     		
     		if (!platform.isRecycled() && player.isAlive() && player.getBodyBottomYMKS() >= platform.getPhyiscsBody().getPosition().y){
 	    		
 	    		if (platform.getType() == BasePlatform.PlatformType.REGULAR){
 	    			player.setCurrentPlatform(platform);
-		    		player.animateLand();
+	    			animatedLand = true;
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.BOUNCE){
 	    			player.setCurrentPlatform(platform);
@@ -61,7 +62,7 @@ public class GameContactListener implements ContactListener{
 	    			}
 	    			if (Math.abs(player.getPhysicsBody().getLinearVelocity().y) > Const.Plaform.Bounce.PLAYER_VELOCITY_NO_LAND){
 	    				((BouncePlatform) platform).animate(BouncePlatform.AnimationLength.LONG);
-	    				player.animateLand();
+	    				animatedLand = true;
 	    			}
 	    			else{
 	    				((BouncePlatform) platform).animate(BouncePlatform.AnimationLength.SHORT);
@@ -69,22 +70,25 @@ public class GameContactListener implements ContactListener{
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.CONVEYOR_LEFT){
 	    			player.setCurrentPlatform(platform);
-		    		player.animateLand();
+	    			animatedLand = true;
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.CONVEYOR_RIGHT){
 	    			player.setCurrentPlatform(platform);
-		    		player.animateLand();
+	    			animatedLand = true;
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.UNSTABLE){
 	    			player.setCurrentPlatform(platform);
-		    		player.animateLand();
+	    			animatedLand = true;
 		    		((UnstablePlatform) platform).startCollpseTimer();
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.SPIKE){
 	    			player.setCurrentPlatform(platform);
 	    			player.decreaseHealth(Const.Plaform.Spike.HEALTH_DECREMENT);
-		    		player.animateLand();
+	    			animatedLand = true;
 	    		}
+	    		
+	    		if (animatedLand && Math.abs(player.getPhysicsBody().getLinearVelocity().x) < Const.Plaform.PLAYER_HORIZONTAL_VELOCITY_NO_LAND)
+	    			player.animateLand();
 	    		
 	    		if (platformType != PlatformType.SPIKE && player.isDifferentPlatform()){
 	    			player.increaseHealth(Const.Plaform.HEALTH_INCREMENT);

@@ -50,6 +50,7 @@ public abstract class BasePlatform{
 	private void createPhysics(){
 		createPhysicsBody();
 		physicsBody.setUserData(this);
+		physicsBody.setBullet(true);
 		setSpeed(scene.getPlatformSpeed());
 		
 		physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, physicsBody, true, false){
