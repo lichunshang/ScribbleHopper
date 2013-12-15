@@ -50,6 +50,7 @@ public class ResourcesManager{
 	public Font font_50;
 	public Font font_70;
 	public Font font_100;
+	public Font font_120;
 	
 	//----------------- Game Scene ------------------
 	public BuildableBitmapTextureAtlas gameTextureAtlas;
@@ -106,12 +107,15 @@ public class ResourcesManager{
 		final ITexture font_50_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		final ITexture font_70_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		final ITexture font_100_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		final ITexture font_130_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 	    font_50 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_50_texture, activity.getAssets(), "Sketchy.ttf", 50, true, Color.BLACK, 0, Color.BLACK);
 	    font_70 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_70_texture, activity.getAssets(), "Sketchy.ttf", 70, true, Color.BLACK, 0, Color.BLACK);
 	    font_100 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_100_texture, activity.getAssets(), "Sketchy.ttf", 100, true, Color.BLACK, 0, Color.BLACK);
+	    font_120 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_130_texture, activity.getAssets(), "Sketchy.ttf", 120, true, Color.BLACK, 0, Color.BLACK);
 	    font_50.load();
 	    font_70.load();
 	    font_100.load();
+	    font_120.load();
 	}
 	
 	private void loadMenuAudio(){
@@ -155,7 +159,7 @@ public class ResourcesManager{
 	
 	public void loadSplashScreen(){
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
-		splashTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR);
+		splashTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 512, 512, TextureOptions.BILINEAR);
 		splashRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(splashTextureAtlas, activity, "splash.png", 0, 0);
 		splashTextureAtlas.load();
 	}

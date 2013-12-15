@@ -35,10 +35,10 @@ public class PlayerDieScene extends BaseSubScene implements IOnMenuItemClickList
 		backgroundSprite.setAlpha(0.65f);
 		attachChild(backgroundSprite);
 		
-		scoreText = new Text(camera.getWidth() / 2, camera.getHeight() * 2 / 3, resourcesManager.font_50, parentScene.getGameActivity().getString(R.string.score_text) + ": 0123456879", new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
+		scoreText = new Text(camera.getWidth() / 2, camera.getHeight() * 0.57f, resourcesManager.font_50, parentScene.getGameActivity().getString(R.string.score_text) + ": 0123456879", new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
 		highScoreText = new Text(camera.getWidth() / 2, scoreText.getY() - scoreText.getHeight(), resourcesManager.font_50, parentScene.getGameActivity().getString(R.string.high_score_text) + ": 0123456879", new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
 		
-		gameOverText = new Text(camera.getWidth() / 2, camera.getHeight() * 4 / 5, resourcesManager.font_100, parentScene.getGameActivity().getString(R.string.game_over_text), new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
+		gameOverText = new Text(camera.getWidth() / 2, camera.getHeight() * 0.66f, resourcesManager.font_100, parentScene.getGameActivity().getString(R.string.game_over_text), new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
 		
 		attachChild(gameOverText);
 		attachChild(highScoreText);
@@ -94,7 +94,7 @@ public class PlayerDieScene extends BaseSubScene implements IOnMenuItemClickList
 		menuScene.addMenuItem(menuMenuItem);
 		menuScene.addMenuItem(playAgainMenuItem);
 		
-		menuMenuItem.setPosition(parentScene.getCamera().getWidth() / 3, parentScene.getCamera().getHeight() / 2);
+		menuMenuItem.setPosition(parentScene.getCamera().getWidth() / 3, parentScene.getCamera().getHeight() * 0.33f);
 		playAgainMenuItem.setPosition(parentScene.getCamera().getWidth() * 2 / 3, menuMenuItem.getY() - menuMenuItem.getHeight());
 		
 		playAgainMenuItem.setAlpha(Const.MenuScene.BUTTON_ALPHA);

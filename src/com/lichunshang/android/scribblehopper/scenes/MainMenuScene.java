@@ -1,17 +1,18 @@
 package com.lichunshang.android.scribblehopper.scenes;
 
-import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
+import org.andengine.entity.scene.menu.item.AnimatedSpriteMenuItem;
 import org.andengine.entity.scene.menu.item.IMenuItem;
-import org.andengine.entity.scene.menu.item.SpriteMenuItem;
-import org.andengine.entity.scene.menu.item.decorator.ScaleMenuItemDecorator;
 import org.andengine.entity.sprite.Sprite;
-import org.andengine.opengl.util.GLState;
+import org.andengine.entity.text.Text;
+
+import android.graphics.Camera;
 
 import com.lichunshang.android.scribblehopper.Const;
+import com.lichunshang.android.scribblehopper.R;
 import com.lichunshang.android.scribblehopper.SceneManager;
 
 
@@ -19,7 +20,9 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	
 	private MenuScene menuChildScene;
 	private final int MENU_PLAY = 0;
-	private final int MENU_OPTIONS = 1;
+	private final int MENU_SCORE = 1;
+	private final int MENU_HELP = 2;
+	private final int MENU_OPTIONS = 3;
 	
 	private MainMenuLoadingScene mainMenuLoadingScene;
 	
@@ -42,14 +45,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	}
 	
 	private void createBackground(){
-		attachChild(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.menuBackgroundRegion, vertexBufferObjectManager){
-			@Override
-			protected void preDraw(GLState pGLState, Camera pCamera) 
-	        {
-	            super.preDraw(pGLState, pCamera);
-	            pGLState.enableDither();
-	        }
-		});
+		Text title =  new Text(camera.getWidth() / 2, camera.getHeight() * 0.85f, resourcesManager.font_120, activity.getString(R.string.game_name), vertexBufferObjectManager);
+		title.setRotation(15f);
+		attachChild(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.gameBackgroundTextureRegion, vertexBufferObjectManager));
+		attachChild(title);
 	}
 	
 	private void createLoadingScene(){
@@ -63,6 +62,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 				unregisterUpdateHandler(pTimerHandler);
 				mainMenuLoadingScene.detachScene();
 				createMenuChildScene();
+				setChildScene(menuChildScene);
 			}
 		}));
 	}
@@ -70,21 +70,89 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	private void createMenuChildScene(){
 		menuChildScene = new MenuScene(camera);
 		
-		final IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, resourcesManager.playRegion, vertexBufferObjectManager), 1.2f, 1);
-		final IMenuItem optionsMenuItem  = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_OPTIONS, resourcesManager.optionsRegion, vertexBufferObjectManager), 1.2f, 1);
+		AnimatedSpriteMenuItem playMenuItem = new AnimatedSpriteMenuItem(MENU_PLAY, resourcesManager.menuButtonTextureRegion, vertexBufferObjectManager){
+			@Override
+			public void onSelected(){
+				setCurrentTileIndex(1);
+			}
+			
+			@Override
+			public void onUnselected(){
+				setCurrentTileIndex(0);
+			}
+		};
+		AnimatedSpriteMenuItem helpMenuItem = new AnimatedSpriteMenuItem(MENU_HELP, resourcesManager.menuButtonTextureRegion, vertexBufferObjectManager){
+			@Override
+			public void onSelected(){
+				setCurrentTileIndex(1);
+			}
+			
+			@Override
+			public void onUnselected(){
+				setCurrentTileIndex(0);
+			}
+		};
+		
+		AnimatedSpriteMenuItem scoreMenuItem = new AnimatedSpriteMenuItem(MENU_SCORE, resourcesManager.menuButtonTextureRegion, vertexBufferObjectManager){
+			@Override
+			public void onSelected(){
+				setCurrentTileIndex(1);
+			}
+			
+			@Override
+			public void onUnselected(){
+				setCurrentTileIndex(0);
+			}
+		};
+		AnimatedSpriteMenuItem optionMenuItem = new AnimatedSpriteMenuItem(MENU_OPTIONS, resourcesManager.menuButtonTextureRegion, vertexBufferObjectManager){
+			@Override
+			public void onSelected(){
+				setCurrentTileIndex(1);
+			}
+			
+			@Override
+			public void onUnselected(){
+				setCurrentTileIndex(0);
+			}
+		};
+		
+		final int OFFSET = 38;
 		
 		menuChildScene.addMenuItem(playMenuItem);
-		menuChildScene.addMenuItem(optionsMenuItem);
+		menuChildScene.addMenuItem(helpMenuItem);
+		menuChildScene.addMenuItem(scoreMenuItem);
+		menuChildScene.addMenuItem(optionMenuItem);
 		
-		menuChildScene.buildAnimations();
+		playMenuItem.setPosition(camera.getWidth() * 3 / 10 + OFFSET, camera.getHeight() * 0.45f);
+		helpMenuItem.setPosition(camera.getWidth() * 4 / 10 + OFFSET, playMenuItem.getY() - playMenuItem.getHeight());
+		scoreMenuItem.setPosition(camera.getWidth() * 5 / 10 + OFFSET, helpMenuItem.getY() - helpMenuItem.getHeight());
+		optionMenuItem.setPosition(camera.getWidth() * 6 / 10 + OFFSET, scoreMenuItem.getY() - scoreMenuItem.getHeight());
+		
+		playMenuItem.setAlpha(Const.MenuScene.BUTTON_ALPHA);
+		helpMenuItem.setAlpha(Const.MenuScene.BUTTON_ALPHA);
+		scoreMenuItem.setAlpha(Const.MenuScene.BUTTON_ALPHA);
+		optionMenuItem.setAlpha(Const.MenuScene.BUTTON_ALPHA);
+		
+		Text playMenuItemText = new Text(playMenuItem.getWidth() / 2, playMenuItem.getHeight() / 2, resourcesManager.font_70, activity.getString(R.string.menu_play_text), vertexBufferObjectManager);
+		Text helpMenuItemText = new Text(helpMenuItem.getWidth() / 2, helpMenuItem.getHeight() / 2, resourcesManager.font_70, activity.getString(R.string.menu_help_text), vertexBufferObjectManager);
+		Text scoreMenuItemText = new Text(scoreMenuItem.getWidth() / 2, scoreMenuItem.getHeight() / 2, resourcesManager.font_70, activity.getString(R.string.menu_score_text), vertexBufferObjectManager);
+		Text optionMenuItemText = new Text(optionMenuItem.getWidth() / 2, optionMenuItem.getHeight() / 2, resourcesManager.font_70, activity.getString(R.string.menu_options_text), vertexBufferObjectManager) ;
+		
+		helpMenuItemText.setScale(0.9f);
+		
+		playMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
+		helpMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
+		scoreMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
+		optionMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
+		
+		playMenuItem.attachChild(playMenuItemText);
+		helpMenuItem.attachChild(helpMenuItemText);
+		scoreMenuItem.attachChild(scoreMenuItemText);
+		optionMenuItem.attachChild(optionMenuItemText);
+
 		menuChildScene.setBackgroundEnabled(false);
-		
-		playMenuItem.setPosition(camera.getWidth() / 2, camera.getHeight() / 2);
-		optionsMenuItem.setPosition(camera.getWidth() / 2, camera.getHeight() / 2 - 120);
-		
+
 		menuChildScene.setOnMenuItemClickListener(this);
-		
-		setChildScene(menuChildScene);
 		
 	}
 	
@@ -94,6 +162,12 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		if (menuItemId == MENU_PLAY){
 			SceneManager.getInstance().loadGameScene();
 			((GameScene) SceneManager.getInstance().getScene(SceneManager.SceneType.SCENE_GAME)).resetScene();
+			return true;
+		}
+		else if (menuItemId == MENU_HELP){
+			return true;
+		}
+		else if (menuItemId == MENU_SCORE){
 			return true;
 		}
 		else if (menuItemId == MENU_OPTIONS){

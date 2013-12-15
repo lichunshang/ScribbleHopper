@@ -34,7 +34,7 @@ public class GamePauseScene extends BaseSubScene implements IOnMenuItemClickList
 		backgroundSprite.setColor(0.9f, 0.9f, 0.9f);
 		backgroundSprite.setAlpha(0.65f);
 		attachChild(backgroundSprite);
-		pauseText = new Text(camera.getWidth() / 2, camera.getHeight() * 2 / 3, resourcesManager.font_100, parentScene.getGameActivity().getString(R.string.paused_text), new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
+		pauseText = new Text(camera.getWidth() / 2, camera.getHeight() * 0.66f, resourcesManager.font_100, parentScene.getGameActivity().getString(R.string.paused_text), new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
 		attachChild(pauseText);
 		
 		createMenu();
@@ -88,7 +88,7 @@ public class GamePauseScene extends BaseSubScene implements IOnMenuItemClickList
 		menuScene.addMenuItem(menuMenuItem);
 		menuScene.addMenuItem(resumeMenuItem);
 		
-		menuMenuItem.setPosition(parentScene.getCamera().getWidth() / 3, parentScene.getCamera().getHeight() / 2);
+		menuMenuItem.setPosition(parentScene.getCamera().getWidth() / 3, parentScene.getCamera().getHeight() * 0.33f);
 		resumeMenuItem.setPosition(parentScene.getCamera().getWidth() * 2 / 3, menuMenuItem.getY() - menuMenuItem.getHeight());
 		
 		resumeMenuItem.setAlpha(Const.MenuScene.BUTTON_ALPHA);

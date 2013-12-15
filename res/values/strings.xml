@@ -7,6 +7,12 @@
 
     <string name="loading_text">Loading</string>
     
+    <string name="game_name">Scribble Hopper</string>
+    <string name="menu_play_text">Play</string>
+    <string name="menu_help_text">How to Play</string>
+    <string name="menu_score_text">Scores</string>
+    <string name="menu_options_text">Options</string>
+    
     <string name="paused_text">Game Paused</string>
     <string name="resume_text">Resume</string>
     
