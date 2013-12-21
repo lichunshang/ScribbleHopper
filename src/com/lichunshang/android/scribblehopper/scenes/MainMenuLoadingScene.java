@@ -32,23 +32,14 @@ public class MainMenuLoadingScene extends BaseSubScene{
 		attachChild(loadingText);
 		
 		loadingTextTimer = new TimerHandler(Const.MenuScene.LOADING_TEXT_ANIME_PERIOD / 1000f, true, new ITimerCallback() {
-			private int numDots = 1;
+			private int numDots = 0;
+			private String[] dots = {"", ".", "..", "..."};
 			@Override
 			public void onTimePassed(TimerHandler pTimerHandler) {
-				if (numDots == 0){
-					loadingText.setText(parentScene.getGameActivity().getString(R.string.loading_text));
-				}
-				else if (numDots == 1){
-					loadingText.setText(parentScene.getGameActivity().getString(R.string.loading_text) + ".");
-				}
-				else if (numDots == 2){
-					loadingText.setText(parentScene.getGameActivity().getString(R.string.loading_text) + "..");
-				}
-				else if (numDots == 3){
-					loadingText.setText(parentScene.getGameActivity().getString(R.string.loading_text) + "...");
-					numDots = 0;
-				}
+				loadingText.setText(parentScene.getGameActivity().getString(R.string.loading_text) + dots[numDots]);
 				numDots++;
+				if (numDots == 3)
+					numDots = 0;
 			}
 		});
 		parentScene.registerUpdateHandler(loadingTextTimer);
@@ -66,6 +57,7 @@ public class MainMenuLoadingScene extends BaseSubScene{
 			@Override
 			public void run() {
 				parentScene.detachChild(MainMenuLoadingScene.this);
+				parentScene.unregisterUpdateHandler(loadingTextTimer);
 				attached = false;
 			}
 		});

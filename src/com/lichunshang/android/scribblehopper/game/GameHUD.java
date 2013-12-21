@@ -21,7 +21,7 @@ public class GameHUD{
 		this.gameScene = gameScene;
 		this.HUDLayer = HUDLayer;
 		
-		pauseSprite = new Sprite(0, 0, this.gameScene.getResourcesManager().gamePauseTextureRegion, gameScene.getVertexBufferObjectManager()){
+		pauseSprite = new Sprite(0, 0, this.gameScene.getResourcesManager().pauseTextureRegion, gameScene.getVertexBufferObjectManager()){
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float floatpTouchAreaLocalX, final float pTouchAreaLocalY){
 				if (GameHUD.this.gameScene.getCurrentSubScene() == null && pSceneTouchEvent.isActionUp()){
@@ -40,7 +40,7 @@ public class GameHUD{
 		scoreText.setText("0");
 		scoreText.setPosition(gameScene.getCamera().getWidth() - scoreText.getWidth() - pauseSprite.getWidth() - Const.GameScene.HUD.SCORE_RIGHT_MARGIN, 0);
 		
-		Sprite HUDBar = new Sprite(0, 0, this.gameScene.getResourcesManager().gameHUDBarTextureRegion, this.gameScene.getVertexBufferObjectManager());
+		Sprite HUDBar = new Sprite(0, 0, this.gameScene.getResourcesManager().hudBarTextureRegion, this.gameScene.getVertexBufferObjectManager());
 		HUDBar.setPosition(this.gameScene.getCamera().getWidth() / 2, HUDBar.getHeight() / 2);
 		
 		this.HUDLayer.attachChild(HUDBar);
@@ -50,7 +50,7 @@ public class GameHUD{
 		heartsSprites = new Sprite[Const.Player.MAX_HEALTH];
 		
 		for (int i = 0; i < heartsSprites.length; i++){
-			heartsSprites[i] = new Sprite(0, 0, gameScene.getResourcesManager().gameHeartTextureRegion, gameScene.getVertexBufferObjectManager());
+			heartsSprites[i] = new Sprite(0, 0, gameScene.getResourcesManager().heartTextureRegion, gameScene.getVertexBufferObjectManager());
 			heartsSprites[i].setAnchorCenter(0, 0);
 			heartsSprites[i].setPosition(heartsSprites[i].getWidth() * i + Const.GameScene.HUD.LEFT_RIGHT_MARGIN + i * 2, Const.GameScene.HUD.HEALTH_BOTTOM_MARGIN);
 			HUDLayer.attachChild(heartsSprites[i]);

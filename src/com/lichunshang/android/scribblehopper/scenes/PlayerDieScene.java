@@ -68,7 +68,7 @@ public class PlayerDieScene extends BaseSubScene implements IOnMenuItemClickList
 	public void createMenu(){
 		menuScene = new MenuScene(parentScene.getCamera());
 		
-		AnimatedSpriteMenuItem menuMenuItem = new AnimatedSpriteMenuItem(MENU_MENU, parentScene.getResourcesManager().menuButtonTextureRegion, parentScene.getVertexBufferObjectManager()){
+		AnimatedSpriteMenuItem menuMenuItem = new AnimatedSpriteMenuItem(MENU_MENU, parentScene.getResourcesManager().buttonTextureRegion, parentScene.getVertexBufferObjectManager()){
 			@Override
 			public void onSelected(){
 				setCurrentTileIndex(1);
@@ -79,7 +79,7 @@ public class PlayerDieScene extends BaseSubScene implements IOnMenuItemClickList
 				setCurrentTileIndex(0);
 			}
 		};
-		AnimatedSpriteMenuItem playAgainMenuItem = new AnimatedSpriteMenuItem(MENU_PLAY_AGAIN, parentScene.getResourcesManager().menuButtonTextureRegion, parentScene.getVertexBufferObjectManager()){
+		AnimatedSpriteMenuItem playAgainMenuItem = new AnimatedSpriteMenuItem(MENU_PLAY_AGAIN, parentScene.getResourcesManager().buttonTextureRegion, parentScene.getVertexBufferObjectManager()){
 			@Override
 			public void onSelected(){
 				setCurrentTileIndex(1);
@@ -128,7 +128,7 @@ public class PlayerDieScene extends BaseSubScene implements IOnMenuItemClickList
 		if (menuItemId == MENU_MENU){
 			parentScene.clearChildScene();
 			attached = false;
-			SceneManager.getInstance().loadMenuScene();
+			SceneManager.getInstance().setMenuScene();
 			return true;
 		}
 		else if (menuItemId == MENU_PLAY_AGAIN){

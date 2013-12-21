@@ -116,20 +116,18 @@ public class SceneManager{
 	}
 	
 	public void createMenuScene(){
-		ResourcesManager.getInstance().loadMenuResources();
 		menuScene = new MainMenuScene();
 	}
 	
 	public void createGameScene(){
-		ResourcesManager.getInstance().loadGameResource();
 		gameScene = new GameScene();
 	}
 	
-	public void loadGameScene(){
+	public void setGameScene(){
 		setScene(gameScene);
 	}
 	
-	public void loadMenuScene(){
+	public void setMenuScene(){
 		setScene(menuScene);
 	}
 }

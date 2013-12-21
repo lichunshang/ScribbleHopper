@@ -101,7 +101,7 @@ public class GameScene extends BaseScene {
 		Body topBorderPhysicsBody = PhysicsFactory.createBoxBody(physicsWorld, topBorder, BodyType.StaticBody, topBorderFixtureDef);
 		topBorderPhysicsBody.setUserData(new TopBorder()); 
 		
-		Sprite spike = new Sprite(0, 0, resourcesManager.gameSpikeTextureRegion, vertexBufferObjectManager);
+		Sprite spike = new Sprite(0, 0, resourcesManager.spikeTextureRegion, vertexBufferObjectManager);
 		spike.setPosition(camera.getWidth() / 2, camera.getHeight() - spike.getHeight() / 2);
 		attachChild(spike);
 	}
@@ -151,7 +151,7 @@ public class GameScene extends BaseScene {
 	}
 	
 	private void createLayers(){
-		background = new SpriteBackground(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.gameBackgroundTextureRegion, vertexBufferObjectManager));
+		background = new SpriteBackground(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.backgroundTextureRegion, vertexBufferObjectManager));
 		setBackground(background);
 		
 		backgroundLayer = new Entity();

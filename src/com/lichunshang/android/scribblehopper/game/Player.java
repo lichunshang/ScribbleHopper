@@ -45,7 +45,7 @@ public class Player{
 		
 		this.scene = scene;
 		this.physicsWorld = physicsWorld;
-		this.sprite = new AnimatedSprite(posX, posY, this.scene.getResourcesManager().gamePlayerTextureRegion, this.scene.getVertexBufferObjectManager());
+		this.sprite = new AnimatedSprite(posX, posY, this.scene.getResourcesManager().playerTextureRegion, this.scene.getVertexBufferObjectManager());
 		FlashModifier = new LoopEntityModifier(new SequenceEntityModifier(new FadeInModifier(Const.Player.FLASH_PERIOD_WHEN_HURT / 1000f), new FadeOutModifier(Const.Player.FLASH_PERIOD_WHEN_HURT / 1000f)));
 		dieRotateModifier = new LoopEntityModifier(new RotationModifier(Const.Player.DIE_360_ROTATE_DURATION / 1000f, 0, 360));
 		scene.attachPlayer(this.sprite);

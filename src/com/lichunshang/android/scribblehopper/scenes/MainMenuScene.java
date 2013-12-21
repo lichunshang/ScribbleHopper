@@ -9,8 +9,7 @@ import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 
-import android.graphics.Camera;
-
+import com.lichunshang.android.scribblehopper.AsynchronousTask;
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
 import com.lichunshang.android.scribblehopper.SceneManager;
@@ -47,30 +46,43 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	private void createBackground(){
 		Text title =  new Text(camera.getWidth() / 2, camera.getHeight() * 0.85f, resourcesManager.font_120, activity.getString(R.string.game_name), vertexBufferObjectManager);
 		title.setRotation(15f);
-		attachChild(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.gameBackgroundTextureRegion, vertexBufferObjectManager));
+		attachChild(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.backgroundTextureRegion, vertexBufferObjectManager));
 		attachChild(title);
 	}
 	
 	private void createLoadingScene(){
 		mainMenuLoadingScene = new MainMenuLoadingScene(this);
 		mainMenuLoadingScene.attachScene();
-		SceneManager.getInstance().createGameScene();
 		
-		registerUpdateHandler(new TimerHandler(Const.MenuScene.LOADING_PERIOD / 1000f, new ITimerCallback() {
+		AsynchronousTask asyncTask = new AsynchronousTask() {
+			
 			@Override
-			public void onTimePassed(TimerHandler pTimerHandler) {
-				unregisterUpdateHandler(pTimerHandler);
-				mainMenuLoadingScene.detachScene();
-				createMenuChildScene();
-				setChildScene(menuChildScene);
+			protected void task() {
+				resourcesManager.getInstance().loadRemainingResources();
+				SceneManager.getInstance().createGameScene();
 			}
-		}));
+			
+			@Override
+			protected void onFinished() {
+				registerUpdateHandler(new TimerHandler(Const.MenuScene.LOADING_PERIOD / 1000f, new ITimerCallback() {
+					@Override
+					public void onTimePassed(TimerHandler pTimerHandler) {
+						unregisterUpdateHandler(pTimerHandler);
+						mainMenuLoadingScene.detachScene();
+						createMenuChildScene();
+						setChildScene(menuChildScene);
+					}
+				}));
+			}
+		};
+		
+		asyncTask.execute();
 	}
 	
 	private void createMenuChildScene(){
 		menuChildScene = new MenuScene(camera);
 		
-		AnimatedSpriteMenuItem playMenuItem = new AnimatedSpriteMenuItem(MENU_PLAY, resourcesManager.menuButtonTextureRegion, vertexBufferObjectManager){
+		AnimatedSpriteMenuItem playMenuItem = new AnimatedSpriteMenuItem(MENU_PLAY, resourcesManager.buttonTextureRegion, vertexBufferObjectManager){
 			@Override
 			public void onSelected(){
 				setCurrentTileIndex(1);
@@ -81,7 +93,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 				setCurrentTileIndex(0);
 			}
 		};
-		AnimatedSpriteMenuItem helpMenuItem = new AnimatedSpriteMenuItem(MENU_HELP, resourcesManager.menuButtonTextureRegion, vertexBufferObjectManager){
+		AnimatedSpriteMenuItem helpMenuItem = new AnimatedSpriteMenuItem(MENU_HELP, resourcesManager.buttonTextureRegion, vertexBufferObjectManager){
 			@Override
 			public void onSelected(){
 				setCurrentTileIndex(1);
@@ -93,7 +105,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			}
 		};
 		
-		AnimatedSpriteMenuItem scoreMenuItem = new AnimatedSpriteMenuItem(MENU_SCORE, resourcesManager.menuButtonTextureRegion, vertexBufferObjectManager){
+		AnimatedSpriteMenuItem scoreMenuItem = new AnimatedSpriteMenuItem(MENU_SCORE, resourcesManager.buttonTextureRegion, vertexBufferObjectManager){
 			@Override
 			public void onSelected(){
 				setCurrentTileIndex(1);
@@ -104,7 +116,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 				setCurrentTileIndex(0);
 			}
 		};
-		AnimatedSpriteMenuItem optionMenuItem = new AnimatedSpriteMenuItem(MENU_OPTIONS, resourcesManager.menuButtonTextureRegion, vertexBufferObjectManager){
+		AnimatedSpriteMenuItem optionMenuItem = new AnimatedSpriteMenuItem(MENU_OPTIONS, resourcesManager.buttonTextureRegion, vertexBufferObjectManager){
 			@Override
 			public void onSelected(){
 				setCurrentTileIndex(1);
@@ -160,7 +172,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		int menuItemId = pMenuItem.getID();
 		
 		if (menuItemId == MENU_PLAY){
-			SceneManager.getInstance().loadGameScene();
+			SceneManager.getInstance().setGameScene();
 			((GameScene) SceneManager.getInstance().getScene(SceneManager.SceneType.SCENE_GAME)).resetScene();
 			return true;
 		}

@@ -35,113 +35,93 @@ public class ResourcesManager{
 	// TEXTRUEs & TEXTURE REGIONS
 	//-----------------------------------------
 	
-	//----------------- Splash Scene -----------------
 	public ITextureRegion splashRegion;
 	public BitmapTextureAtlas splashTextureAtlas;
-	
-	//----------------- Menu Scene ------------------
-	private BuildableBitmapTextureAtlas menuTextureAtlas;
-	
-	public ITextureRegion menuBackgroundRegion;
-	public ITextureRegion playRegion;
-	public ITextureRegion optionsRegion;
-	public ITiledTextureRegion menuButtonTextureRegion;
 	
 	public Font font_50;
 	public Font font_70;
 	public Font font_100;
 	public Font font_120;
-	
-	//----------------- Game Scene ------------------
-	public BuildableBitmapTextureAtlas gameTextureAtlas;
 
-	public ITextureRegion gameBackgroundTextureRegion;
-	public ITextureRegion gameHUDBarTextureRegion;
-	public ITextureRegion gameSpikeTextureRegion;
-	public ITextureRegion gameHeartTextureRegion;
-	public ITextureRegion gamePauseTextureRegion;
-	public ITiledTextureRegion gamePlayerTextureRegion;
+	private BuildableBitmapTextureAtlas initialGraphicsTextureAtlas;
+	private BuildableBitmapTextureAtlas graphicsTextureAtlas0;
+	
+	public ITextureRegion backgroundTextureRegion;
+	public ITextureRegion hudBarTextureRegion;
+	public ITextureRegion spikeTextureRegion;
+	public ITextureRegion heartTextureRegion;
+	public ITextureRegion pauseTextureRegion;
+	public ITiledTextureRegion playerTextureRegion;
 	public ITiledTextureRegion regularPlaformTextureRegion;
 	public ITiledTextureRegion spikePlaformTextureRegion;
 	public ITiledTextureRegion bouncePlatformTextureRegion;
 	public ITiledTextureRegion conveyorPlatformTextureRegion;
 	public ITiledTextureRegion unstablePlatformTextureRegion;
+	public ITiledTextureRegion buttonTextureRegion;
 	
     //---------------------------------------------
     // CLASS LOGIC
     //---------------------------------------------
 	
-	public void loadMenuResources(){
-		loadMenuGraphics();
-		loadMenuAudio();
-		loadMenuFonts();
-	}
-	
-	public void loadGameResource(){
-		loadGameGraphic();
-		loadGameFonts();
-		loadGameAudio();
-	}
-	
-	private void loadMenuGraphics() {
-		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
-		menuTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
-		
-		menuBackgroundRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_background.png");
-		playRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "play.png");
-		optionsRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "options.png");
-		gameBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "background.png");
-		menuButtonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(menuTextureAtlas, activity, "button.png", 1, 2);
+	public void loadInitialResources(){
+		FontFactory.setAssetBasePath("font/");
+		final ITexture font_50_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		final ITexture font_120_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		font_50 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_50_texture, activity.getAssets(), "Sketchy.ttf", 50, true, Color.BLACK, 0, Color.BLACK);
+		font_120 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_120_texture, activity.getAssets(), "Sketchy.ttf", 120, true, Color.BLACK, 0, Color.BLACK);
+	    font_50.load();
+	    font_120.load();
+	    
+	    BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+	    initialGraphicsTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 2048, TextureOptions.BILINEAR);
+	    
+		backgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(initialGraphicsTextureAtlas, activity, "background.png");
+		buttonTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(initialGraphicsTextureAtlas, activity, "button.png", 1, 2);
 		
 		try{
-			this.menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
-			this.menuTextureAtlas.load();
+			this.initialGraphicsTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+			this.initialGraphicsTextureAtlas.load();
 		}
 		catch (final TextureAtlasBuilderException e){
 			Debug.e(e);
 		}
 	}
 	
-	private void loadMenuFonts(){
-		FontFactory.setAssetBasePath("font/");
-		final ITexture font_50_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+	public void loadRemainingResources(){
+		loadFonts();
+		loadGraphics();
+		loadAudio();
+	}
+	
+	public void loadFonts(){
 		final ITexture font_70_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		final ITexture font_100_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		final ITexture font_130_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-	    font_50 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_50_texture, activity.getAssets(), "Sketchy.ttf", 50, true, Color.BLACK, 0, Color.BLACK);
 	    font_70 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_70_texture, activity.getAssets(), "Sketchy.ttf", 70, true, Color.BLACK, 0, Color.BLACK);
 	    font_100 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_100_texture, activity.getAssets(), "Sketchy.ttf", 100, true, Color.BLACK, 0, Color.BLACK);
-	    font_120 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_130_texture, activity.getAssets(), "Sketchy.ttf", 120, true, Color.BLACK, 0, Color.BLACK);
-	    font_50.load();
 	    font_70.load();
 	    font_100.load();
-	    font_120.load();
 	}
 	
-	private void loadMenuAudio(){
+	public void loadGraphics(){
+		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+		graphicsTextureAtlas0 =  new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
 		
-	}
-	
-	private void loadGameGraphic(){
-		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
-		gameTextureAtlas =  new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
-		
-		gamePlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 5, 5);
+		playerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(graphicsTextureAtlas0, activity, "player.png", 5, 5);
 		
 		
-		regularPlaformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "regularPlatform.png", 1, 1);
-		spikePlaformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "spikePlatform.png", 1, 1);
-		bouncePlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "bouncePlatform.png", 1, 6);
-		conveyorPlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "conveyorPlatform.png", 1, 3);
-		unstablePlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "unstablePlatform.png", 1, 5);
-		gameHUDBarTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "HUDBar.png");
-		gameSpikeTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "spike.png");
-		gameHeartTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "health.png");
-		gamePauseTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "pause.png");
+		regularPlaformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(graphicsTextureAtlas0, activity, "regularPlatform.png", 1, 1);
+		spikePlaformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(graphicsTextureAtlas0, activity, "spikePlatform.png", 1, 1);
+		bouncePlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(graphicsTextureAtlas0, activity, "bouncePlatform.png", 1, 6);
+		conveyorPlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(graphicsTextureAtlas0, activity, "conveyorPlatform.png", 1, 3);
+		unstablePlatformTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(graphicsTextureAtlas0, activity, "unstablePlatform.png", 1, 5);
+		hudBarTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(graphicsTextureAtlas0, activity, "HUDBar.png");
+		spikeTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(graphicsTextureAtlas0, activity, "spike.png");
+		heartTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(graphicsTextureAtlas0, activity, "health.png");
+		pauseTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(graphicsTextureAtlas0, activity, "pause.png");
 		
 		try{
-			this.gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
-			this.gameTextureAtlas.load();
+			this.graphicsTextureAtlas0.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+			this.graphicsTextureAtlas0.load();
 		}
 		catch(final TextureAtlasBuilderException e){
 			Debug.e(e);
@@ -149,11 +129,7 @@ public class ResourcesManager{
 		
 	}
 	
-	private void loadGameFonts(){
-		
-	}
-	
-	private void loadGameAudio(){
+	public void loadAudio(){
 		
 	}
 	
