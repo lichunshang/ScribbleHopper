@@ -46,8 +46,8 @@ public class GameScene extends BaseScene {
 	private TimerHandler platformSpawnTimer, textUpdateTimer;
 	
 	private BaseSubScene currentSubScene = null;
-	private PlayerDieScene playerDieScene;
-	private GamePauseScene pauseScene;
+	private PlayerDieSubScene playerDieScene;
+	private GamePauseSubScene pauseScene;
 	private boolean paused = false;
 	
 	private Entity plaformLayer, backgroundLayer, playerLayer, HUDLayer;
@@ -165,13 +165,13 @@ public class GameScene extends BaseScene {
 	}
 	
 	private void createSubScenes(){
-		playerDieScene = new PlayerDieScene(this);
-		pauseScene = new GamePauseScene(this);
+		playerDieScene = new PlayerDieSubScene(this);
+		pauseScene = new GamePauseSubScene(this);
 	}
 	
 	public void onBackKeyPressed(){
 		if (currentSubScene == playerDieScene){
-			playerDieScene.detachScene();
+			playAgain();
 		}
 		else if (paused){
 			unPauseGame();
@@ -202,6 +202,11 @@ public class GameScene extends BaseScene {
 		
 		player.reset();
 		score = 0;
+		
+		if (paused){
+			unPauseGame();
+		}
+		
 		this.registerUpdateHandler(new TimerHandler(Const.COMMON_DELAY_SHORT / 1000f, new ITimerCallback() {
 			@Override
 			public void onTimePassed(TimerHandler pTimerHandler) {
@@ -211,9 +216,6 @@ public class GameScene extends BaseScene {
 		}));
 	}
 	
-	// ----------------------------------------------
-	// GAME MECHANICS
-	// ----------------------------------------------
 	public BasePlatform.PlatformType getNextPlatformType(){
 
 		int randomNum = random.nextInt(6);
@@ -252,19 +254,23 @@ public class GameScene extends BaseScene {
 	}
 	
 	public void pauseGame(){
-		if (paused)
-			return;
 		pauseScene.attachScene();
 		paused = true;
 		currentSubScene = pauseScene;
+		setIgnoreUpdate(true);
 	}
 	
 	public void unPauseGame(){
-		if (!paused)
-			return;
+		currentSubScene = null;
 		pauseScene.detachScene();
 		paused = false;
+		setIgnoreUpdate(false);
+	}
+	
+	public void playAgain(){
 		currentSubScene = null;
+		playerDieScene.detachScene();
+		resetScene();
 	}
 	
 	// -----------------------------------------------

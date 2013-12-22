@@ -7,11 +7,20 @@
 
     <string name="loading_text">Loading</string>
     
-    <string name="game_name">Scribble Hopper</string>
+    <string name="game_name">Keep Falling!</string>
+    <string name="game_name_just">just...</string>
     <string name="menu_play_text">Play</string>
     <string name="menu_help_text">How to Play</string>
     <string name="menu_score_text">Scores</string>
     <string name="menu_options_text">Options</string>
+    
+    <string name="help_instruction">Tilt your device left and right to move, \nalways land on platforms and avoid \nanything spiky!</string>
+    <string name="help_instruction_regular">A plain old platform.</string>
+    <string name="help_instruction_spike">Spiky!</string>
+    <string name="help_instruction_bounce">Bouncy bouncy!</string>
+    <string name="help_instruction_conveyor">Better run faster!</string>
+    <string name="help_instruction_unstable">These don\'t last long!</string>
+    <string name="menu_text">Menu</string>
     
     <string name="paused_text">Game Paused</string>
     <string name="resume_text">Resume</string>

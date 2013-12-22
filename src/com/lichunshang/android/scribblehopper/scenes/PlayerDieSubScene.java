@@ -13,7 +13,7 @@ import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
 import com.lichunshang.android.scribblehopper.SceneManager;
 
-public class PlayerDieScene extends BaseSubScene implements IOnMenuItemClickListener{
+public class PlayerDieSubScene extends BaseSubScene implements IOnMenuItemClickListener{
 	
 	private Rectangle backgroundSprite;
 	private Text scoreText;
@@ -23,7 +23,7 @@ public class PlayerDieScene extends BaseSubScene implements IOnMenuItemClickList
 	private final int MENU_MENU = 0;
 	private final int MENU_PLAY_AGAIN = 1;
 	
-	public PlayerDieScene(GameScene gameScene){
+	public PlayerDieSubScene(GameScene gameScene){
 		super(gameScene);
 	}
 
@@ -50,14 +50,11 @@ public class PlayerDieScene extends BaseSubScene implements IOnMenuItemClickList
 	@Override
 	public void attachScene() {
 		parentScene.setChildScene(this);
-		attached = true;
 	}
 
 	@Override
 	public void detachScene() {
 		parentScene.clearChildScene();
-		((GameScene) parentScene).resetScene();
-		attached = false;
 	}
 
 	@Override
@@ -126,13 +123,12 @@ public class PlayerDieScene extends BaseSubScene implements IOnMenuItemClickList
 		int menuItemId = pMenuItem.getID();
 		
 		if (menuItemId == MENU_MENU){
-			parentScene.clearChildScene();
-			attached = false;
+			detachScene();
 			SceneManager.getInstance().setMenuScene();
 			return true;
 		}
 		else if (menuItemId == MENU_PLAY_AGAIN){
-			detachScene();
+			((GameScene) parentScene).playAgain();
 			return true;
 		}
 		

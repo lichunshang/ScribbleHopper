@@ -14,7 +14,6 @@ public abstract class BaseSubScene extends Scene{
 	protected VertexBufferObjectManager vertexBufferObjectManager;
 	protected SpriteBackground background;
 	protected ResourcesManager resourcesManager;
-	protected boolean attached = false;
 	
 	public BaseSubScene(BaseScene parentScene){
 		this.parentScene = parentScene;

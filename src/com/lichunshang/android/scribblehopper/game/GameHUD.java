@@ -26,6 +26,7 @@ public class GameHUD{
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float floatpTouchAreaLocalX, final float pTouchAreaLocalY){
 				if (GameHUD.this.gameScene.getCurrentSubScene() == null && pSceneTouchEvent.isActionUp()){
 					GameHUD.this.gameScene.pauseGame();
+					return true;
 				}
 				return false;
 			}

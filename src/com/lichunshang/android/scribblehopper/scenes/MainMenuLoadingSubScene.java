@@ -10,13 +10,13 @@ import org.andengine.util.adt.align.HorizontalAlign;
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
 
-public class MainMenuLoadingScene extends BaseSubScene{
+public class MainMenuLoadingSubScene extends BaseSubScene{
 	
 	private Rectangle backgroundSprite;
 	private Text loadingText;
 	private TimerHandler loadingTextTimer;
 	
-	public MainMenuLoadingScene(MainMenuScene menuScene){
+	public MainMenuLoadingSubScene(MainMenuScene menuScene){
 		super(menuScene);
 	}
 
@@ -48,7 +48,6 @@ public class MainMenuLoadingScene extends BaseSubScene{
 	@Override
 	public void attachScene() {
 		parentScene.attachChild(this);
-		attached = true;
 	}
 
 	@Override
@@ -56,9 +55,8 @@ public class MainMenuLoadingScene extends BaseSubScene{
 		parentScene.getEngine().runOnUpdateThread(new Runnable() {
 			@Override
 			public void run() {
-				parentScene.detachChild(MainMenuLoadingScene.this);
+				parentScene.detachChild(MainMenuLoadingSubScene.this);
 				parentScene.unregisterUpdateHandler(loadingTextTimer);
-				attached = false;
 			}
 		});
 	}

@@ -15,7 +15,7 @@ import com.lichunshang.android.scribblehopper.R;
 import com.lichunshang.android.scribblehopper.SceneManager;
 
 
-public class GamePauseScene extends BaseSubScene implements IOnMenuItemClickListener{
+public class GamePauseSubScene extends BaseSubScene implements IOnMenuItemClickListener{
 	
 	private Rectangle backgroundSprite;
 	private Text pauseText;
@@ -23,7 +23,7 @@ public class GamePauseScene extends BaseSubScene implements IOnMenuItemClickList
 	private final int MENU_MENU = 0;
 	private final int MENU_RESUME = 1;
 	
-	public GamePauseScene(GameScene gameScene){
+	public GamePauseSubScene(GameScene gameScene){
 		super(gameScene);
 	}
 
@@ -43,15 +43,11 @@ public class GamePauseScene extends BaseSubScene implements IOnMenuItemClickList
 	@Override
 	public void attachScene() {
 		parentScene.setChildScene(this);
-		attached = true;
-		((GameScene) parentScene).setIgnoreUpdate(true);
 	}
 
 	@Override
 	public void detachScene() {
 		parentScene.clearChildScene();
-		attached = false;
-		((GameScene) parentScene).setIgnoreUpdate(false);
 	}
 
 	@Override
@@ -116,8 +112,7 @@ public class GamePauseScene extends BaseSubScene implements IOnMenuItemClickList
 		int menuItemId = pMenuItem.getID();
 		
 		if (menuItemId == MENU_MENU){
-			parentScene.clearChildScene();
-			attached = false;
+			((GameScene) parentScene).unPauseGame();
 			SceneManager.getInstance().setMenuScene();
 			return true;
 		}

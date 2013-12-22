@@ -6,33 +6,42 @@ import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.AnimatedSpriteMenuItem;
 import org.andengine.entity.scene.menu.item.IMenuItem;
+import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
+
+import android.graphics.Camera;
 
 import com.lichunshang.android.scribblehopper.AsynchronousTask;
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
 import com.lichunshang.android.scribblehopper.SceneManager;
+import com.lichunshang.android.scribblehopper.game.Player.AnimationState;
 
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener{
 	
 	private MenuScene menuChildScene;
+	private BaseSubScene currentSubScene = null, helpSubScene, scoresSubScene, optionSubScene;
 	private final int MENU_PLAY = 0;
 	private final int MENU_SCORE = 1;
 	private final int MENU_HELP = 2;
 	private final int MENU_OPTIONS = 3;
 	
-	private MainMenuLoadingScene mainMenuLoadingScene;
+	private MainMenuLoadingSubScene mainMenuLoadingScene;
 	
 	public void createScene(){
 		createBackground();
 		createLoadingScene();
-		
 	}
 	
 	public void onBackKeyPressed(){
-		System.exit(0);
+		if (currentSubScene != null){
+			currentSubScene.onBackKeyPressed();
+		}
+		else{
+			System.exit(0);
+		}
 	}
 	
 	public SceneManager.SceneType getSceneType(){
@@ -44,22 +53,25 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	}
 	
 	private void createBackground(){
-		Text title =  new Text(camera.getWidth() / 2, camera.getHeight() * 0.85f, resourcesManager.font_120, activity.getString(R.string.game_name), vertexBufferObjectManager);
+		Text title =  new Text(camera.getWidth() / 2, camera.getHeight() * 0.82f, resourcesManager.font_120, activity.getString(R.string.game_name), vertexBufferObjectManager);
+		Text titleJust = new Text(camera.getWidth() / 2, camera.getHeight() * 0.9f, resourcesManager.font_50, activity.getString(R.string.game_name_just), vertexBufferObjectManager);
 		title.setRotation(15f);
 		attachChild(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.backgroundTextureRegion, vertexBufferObjectManager));
 		attachChild(title);
+		attachChild(titleJust);
 	}
 	
 	private void createLoadingScene(){
-		mainMenuLoadingScene = new MainMenuLoadingScene(this);
+		mainMenuLoadingScene = new MainMenuLoadingSubScene(this);
 		mainMenuLoadingScene.attachScene();
 		
 		AsynchronousTask asyncTask = new AsynchronousTask() {
 			
 			@Override
 			protected void task() {
-				resourcesManager.getInstance().loadRemainingResources();
+				resourcesManager.loadRemainingResources();
 				SceneManager.getInstance().createGameScene();
+				createSubScenes();
 			}
 			
 			@Override
@@ -70,6 +82,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 						unregisterUpdateHandler(pTimerHandler);
 						mainMenuLoadingScene.detachScene();
 						createMenuChildScene();
+						createBackGroundElements();
 						setChildScene(menuChildScene);
 					}
 				}));
@@ -77,6 +90,35 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		};
 		
 		asyncTask.execute();
+	}
+	
+	private void createBackGroundElements(){
+		AnimatedSprite playerSprite = new AnimatedSprite(camera.getWidth() * 0.3f, camera.getHeight() * 0.71f, resourcesManager.playerTextureRegion, vertexBufferObjectManager);
+		AnimatedSprite conveyorPlatform = new AnimatedSprite(playerSprite.getX(), playerSprite.getY() - 83, resourcesManager.conveyorPlatformTextureRegion, vertexBufferObjectManager);
+		Sprite unstablePlatform = new AnimatedSprite(0, camera.getHeight() * 0.1f, resourcesManager.unstablePlatformTextureRegion, vertexBufferObjectManager);  
+		Sprite bouncePlatfrom = new AnimatedSprite(camera.getWidth() * 0.85f, camera.getHeight() * 0.55f, resourcesManager.bouncePlatformTextureRegion, vertexBufferObjectManager);
+		Sprite spikePlatform = new AnimatedSprite(camera.getWidth(), camera.getHeight() * 0.4f, resourcesManager.spikePlaformTextureRegion, vertexBufferObjectManager);
+		Sprite hudBarSprite = new Sprite(0, 0, resourcesManager.hudBarTextureRegion, vertexBufferObjectManager);
+		hudBarSprite.setAnchorCenter(0, 0);
+		Sprite spike = new Sprite(0, 0, resourcesManager.spikeTextureRegion, vertexBufferObjectManager);
+		spike.setPosition(0, camera.getHeight() - spike.getHeight());
+		spike.setAnchorCenter(0, 0);
+		
+		playerSprite.animate(Const.Player.RUN_ANIME_SPEED, Const.Player.RUN_INDEX_START, Const.Player.RUN_INDEX_END, true);
+		conveyorPlatform.animate(Const.Plaform.ConveyorRight.ANIME_SPEED);
+		
+		menuChildScene.attachChild(bouncePlatfrom);
+		menuChildScene.attachChild(unstablePlatform);
+		menuChildScene.attachChild(spikePlatform);
+		
+		attachChild(playerSprite);
+		attachChild(conveyorPlatform);
+		attachChild(spike);
+		attachChild(hudBarSprite);
+	}
+	
+	public void createSubScenes(){
+		helpSubScene = new MainMenuHelpSubScene(this);
 	}
 	
 	private void createMenuChildScene(){
@@ -168,6 +210,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		
 	}
 	
+	public void loadMainMenu(){
+		setChildScene(menuChildScene);
+	}
+	
 	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY){
 		int menuItemId = pMenuItem.getID();
 		
@@ -177,6 +223,8 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			return true;
 		}
 		else if (menuItemId == MENU_HELP){
+			currentSubScene = helpSubScene;
+			helpSubScene.attachScene();
 			return true;
 		}
 		else if (menuItemId == MENU_SCORE){

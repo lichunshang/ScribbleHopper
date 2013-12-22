@@ -38,6 +38,7 @@ public class ResourcesManager{
 	public ITextureRegion splashRegion;
 	public BitmapTextureAtlas splashTextureAtlas;
 	
+	public Font font_40;
 	public Font font_50;
 	public Font font_70;
 	public Font font_100;
@@ -94,10 +95,13 @@ public class ResourcesManager{
 	}
 	
 	public void loadFonts(){
+		final ITexture font_40_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		final ITexture font_70_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		final ITexture font_100_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		font_40 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_40_texture, activity.getAssets(), "Sketchy.ttf", 40, true, Color.BLACK, 0, Color.BLACK);
 	    font_70 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_70_texture, activity.getAssets(), "Sketchy.ttf", 70, true, Color.BLACK, 0, Color.BLACK);
 	    font_100 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_100_texture, activity.getAssets(), "Sketchy.ttf", 100, true, Color.BLACK, 0, Color.BLACK);
+	    font_40.load();
 	    font_70.load();
 	    font_100.load();
 	}
