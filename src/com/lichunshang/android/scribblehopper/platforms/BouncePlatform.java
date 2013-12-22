@@ -1,11 +1,7 @@
 package com.lichunshang.android.scribblehopper.platforms;
 
-import java.util.Arrays;
-
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
-
-import android.util.Log;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;

@@ -12,6 +12,9 @@ public interface Const{
 		public static final int LOADING_PERIOD = 1900;
 		public static final float BUTTON_ALPHA = 0.87f;
 		public static final float BUTTON_TEXT_SCALE = 1.4f;
+		public static final int BOUNCE_ANIME_PERIOD = 500;
+		public static final int UNSTABLE_ANIME_PERIOD = 1500;
+		public static final int UNSTABLE_ANIME_DELAY = 800;
 	}
 	
 	//general game scene settings

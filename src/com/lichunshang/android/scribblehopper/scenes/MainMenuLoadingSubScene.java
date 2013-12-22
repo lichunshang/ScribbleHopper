@@ -42,7 +42,7 @@ public class MainMenuLoadingSubScene extends BaseSubScene{
 					numDots = 0;
 			}
 		});
-		parentScene.registerUpdateHandler(loadingTextTimer);
+		registerUpdateHandler(loadingTextTimer);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class MainMenuLoadingSubScene extends BaseSubScene{
 			@Override
 			public void run() {
 				parentScene.detachChild(MainMenuLoadingSubScene.this);
-				parentScene.unregisterUpdateHandler(loadingTextTimer);
+				unregisterUpdateHandler(loadingTextTimer);
 			}
 		});
 	}
