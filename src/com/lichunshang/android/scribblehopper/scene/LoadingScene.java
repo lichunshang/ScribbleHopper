@@ -1,10 +1,10 @@
-package com.lichunshang.android.scribblehopper.scenes;
+package com.lichunshang.android.scribblehopper.scene;
 
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.text.Text;
 import org.andengine.util.adt.color.Color;
 
-import com.lichunshang.android.scribblehopper.SceneManager;
+import com.lichunshang.android.scribblehopper.manager.SceneManager;
 
 
 public class LoadingScene extends BaseScene{

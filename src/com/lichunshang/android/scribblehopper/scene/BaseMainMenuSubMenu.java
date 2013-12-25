@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper.scenes;
+package com.lichunshang.android.scribblehopper.scene;
 
 import org.andengine.entity.scene.menu.MenuScene;
 import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;

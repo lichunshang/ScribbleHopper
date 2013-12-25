@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper.platforms;
+package com.lichunshang.android.scribblehopper.platform;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import org.andengine.util.adt.pool.GenericPool;
 import org.andengine.util.adt.pool.MultiPool;
 
-import com.lichunshang.android.scribblehopper.scenes.GameScene;
+import com.lichunshang.android.scribblehopper.scene.GameScene;
 
 
 public class PlatformPool extends MultiPool<BasePlatform>{

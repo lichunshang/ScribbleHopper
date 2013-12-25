@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper.scenes;
+package com.lichunshang.android.scribblehopper.scene;
 
 import java.util.Random;
 
@@ -22,16 +22,16 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.lichunshang.android.scribblehopper.Const;
-import com.lichunshang.android.scribblehopper.DataManager;
+import com.lichunshang.android.scribblehopper.GameContactListener;
+import com.lichunshang.android.scribblehopper.GameHUD;
 import com.lichunshang.android.scribblehopper.GameRecord;
-import com.lichunshang.android.scribblehopper.SceneManager;
+import com.lichunshang.android.scribblehopper.Player;
 import com.lichunshang.android.scribblehopper.SensorListener;
-import com.lichunshang.android.scribblehopper.StopWatch;
-import com.lichunshang.android.scribblehopper.game.GameContactListener;
-import com.lichunshang.android.scribblehopper.game.GameHUD;
-import com.lichunshang.android.scribblehopper.game.Player;
-import com.lichunshang.android.scribblehopper.platforms.BasePlatform;
-import com.lichunshang.android.scribblehopper.platforms.PlatformPool;
+import com.lichunshang.android.scribblehopper.manager.DataManager;
+import com.lichunshang.android.scribblehopper.manager.SceneManager;
+import com.lichunshang.android.scribblehopper.platform.BasePlatform;
+import com.lichunshang.android.scribblehopper.platform.PlatformPool;
+import com.lichunshang.android.scribblehopper.util.StopWatch;
 
 public class GameScene extends BaseScene {
 	
@@ -196,6 +196,7 @@ public class GameScene extends BaseScene {
 		record.numRegularPlatformLanded = contactListener.getPlatformLandCounter().get(BasePlatform.PlatformType.REGULAR);
 		record.numUnstablePlatformLanded = contactListener.getPlatformLandCounter().get(BasePlatform.PlatformType.UNSTABLE);
 		record.elapsedTime = stopWatch.getElapsedTimeMilli();
+		record.score = (int) score;
 		
 		if (player.isDeathByFalling()){
 			record.reasonDied = GameRecord.DeathReason.FALL;
@@ -224,7 +225,7 @@ public class GameScene extends BaseScene {
 		stopWatch.stop();
 		
 		saveGameRecord();
-		DataManager.getInstance().debugRecords();
+		//DataManager.getInstance().debugRecords();
 	}
 	
 	public void onBackKeyPressed(){

@@ -1,12 +1,11 @@
-package com.lichunshang.android.scribblehopper.game;
+package com.lichunshang.android.scribblehopper;
 
 import org.andengine.entity.Entity;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
 
-import com.lichunshang.android.scribblehopper.Const;
-import com.lichunshang.android.scribblehopper.scenes.GameScene;
+import com.lichunshang.android.scribblehopper.scene.GameScene;
 
 public class GameHUD{
 	

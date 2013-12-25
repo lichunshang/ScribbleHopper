@@ -17,6 +17,10 @@ import org.andengine.ui.activity.BaseGameActivity;
 
 import android.view.KeyEvent;
 
+import com.lichunshang.android.scribblehopper.manager.DataManager;
+import com.lichunshang.android.scribblehopper.manager.ResourcesManager;
+import com.lichunshang.android.scribblehopper.manager.SceneManager;
+
 
 public class GameActivity extends BaseGameActivity {
 	

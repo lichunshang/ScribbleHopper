@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper.platforms;
+package com.lichunshang.android.scribblehopper.platform;
 
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
@@ -6,7 +6,7 @@ import org.andengine.extension.physics.box2d.PhysicsFactory;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.lichunshang.android.scribblehopper.Const;
-import com.lichunshang.android.scribblehopper.scenes.GameScene;
+import com.lichunshang.android.scribblehopper.scene.GameScene;
 
 public class ConveyorLeftPlatform extends BasePlatform{
 	

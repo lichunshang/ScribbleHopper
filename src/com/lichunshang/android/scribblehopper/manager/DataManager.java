@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper;
+package com.lichunshang.android.scribblehopper.manager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.andengine.util.debug.Debug;
+
+import com.lichunshang.android.scribblehopper.GameActivity;
+import com.lichunshang.android.scribblehopper.GameRecord;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -29,7 +32,9 @@ public class DataManager{
 	private File gameRecordFile;
 	private ArrayList<GameRecord> gameRecordsList = new ArrayList<GameRecord>();
 
-	// ---------------- High Scores ----------------
+	// ----------------------------------------------
+	// HIGH SCORES
+	// ----------------------------------------------
 	public void saveHighScore(int score){
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putInt(HIGH_SCORE_KEY, score);
@@ -46,8 +51,9 @@ public class DataManager{
 		editor.commit();
 	}
 	
-	// ---------------- Game Records ----------------
-	
+	// ----------------------------------------------
+	// GAME RECORDS
+	// ----------------------------------------------
 	/**
 	 * You should load previous records before doing anything else with records
 	 * in this class
@@ -105,6 +111,60 @@ public class DataManager{
 		for (GameRecord records : gameRecordsList){
 			Log.w("checkstuff", "Record Debug:" + records.getRecordLine().replaceAll(GameRecord.DELIMITOR, ","));
 		}
+	}
+	
+	// -------- Getters of Processed Information ---------
+	
+	public int getTotalGamesPlayed(){
+		return gameRecordsList.size();
+	}
+
+	public int getAverageGameScore(){
+		
+		if (getTotalGamesPlayed() == 0){
+			return 0;
+		}
+		
+		int totalScore = 0;
+		
+		for (GameRecord record : gameRecordsList){
+			totalScore += record.score;
+		}
+		
+		return totalScore / getTotalGamesPlayed();
+	}
+	
+	/**
+	 * 
+	 * @return Total play time in milliseconds
+	 */
+	public long getTotalPlayTime(){
+		long playTime = 0;
+		for (GameRecord record : gameRecordsList){
+			playTime += record.elapsedTime;
+		}
+		return playTime;
+	}
+	
+	public int getLastScore(){
+		if (gameRecordsList.isEmpty())
+			return 0;
+		return gameRecordsList.get(gameRecordsList.size() - 1).score;
+	}
+	
+	
+	public int getTotalPlatformsLanded(){
+		int totalNum = 0;
+		
+		for (GameRecord record : gameRecordsList){
+			totalNum += record.numBouncePlatformLanded;
+			totalNum += record.numConveyorLeftPlatformLanded;
+			totalNum += record.numConveyorRightPlatformLanded;
+			totalNum += record.numRegularPlatformLanded;
+			totalNum += record.numSpikePlatformLanded;
+			totalNum += record.numUnstablePlatformLanded;
+		}
+		return totalNum;
 	}
 	
 	// --------------------------------------------------------------

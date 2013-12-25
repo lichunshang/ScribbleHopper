@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper.platforms;
+package com.lichunshang.android.scribblehopper.platform;
 
 import java.util.Random;
 
@@ -10,7 +10,7 @@ import org.andengine.extension.physics.box2d.PhysicsWorld;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.lichunshang.android.scribblehopper.Const;
-import com.lichunshang.android.scribblehopper.scenes.GameScene;
+import com.lichunshang.android.scribblehopper.scene.GameScene;
 
 
 public abstract class BasePlatform{

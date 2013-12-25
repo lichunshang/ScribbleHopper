@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper.game;
+package com.lichunshang.android.scribblehopper;
 
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -16,9 +16,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.lichunshang.android.scribblehopper.Const;
-import com.lichunshang.android.scribblehopper.platforms.BasePlatform;
-import com.lichunshang.android.scribblehopper.scenes.GameScene;
+import com.lichunshang.android.scribblehopper.platform.BasePlatform;
+import com.lichunshang.android.scribblehopper.scene.GameScene;
 
 public class Player{
 	

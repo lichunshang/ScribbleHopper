@@ -22,6 +22,12 @@
     <string name="help_instruction_unstable">These don\'t last long!</string>
     <string name="menu_text">Menu</string>
     
+    <string name="scores_last_score">Last Score</string>
+    <string name="scores_total_games_played">Games Played</string>
+    <string name="scores_average_game_score">Average Score</string>
+    <string name="scores_total_play_time">Time Played</string>
+    <string name="scores_total_platforms_landed">Platforms Landed</string>
+    
     <string name="paused_text">Game Paused</string>
     <string name="resume_text">Resume</string>
     

@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper.game;
+package com.lichunshang.android.scribblehopper;
 
 import java.util.Hashtable;
 
@@ -6,12 +6,11 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.lichunshang.android.scribblehopper.Const;
-import com.lichunshang.android.scribblehopper.platforms.BasePlatform;
-import com.lichunshang.android.scribblehopper.platforms.BasePlatform.PlatformType;
-import com.lichunshang.android.scribblehopper.platforms.BouncePlatform;
-import com.lichunshang.android.scribblehopper.platforms.UnstablePlatform;
-import com.lichunshang.android.scribblehopper.scenes.GameScene;
+import com.lichunshang.android.scribblehopper.platform.BasePlatform;
+import com.lichunshang.android.scribblehopper.platform.BasePlatform.PlatformType;
+import com.lichunshang.android.scribblehopper.platform.BouncePlatform;
+import com.lichunshang.android.scribblehopper.platform.UnstablePlatform;
+import com.lichunshang.android.scribblehopper.scene.GameScene;
 
 public class GameContactListener implements ContactListener{
 	

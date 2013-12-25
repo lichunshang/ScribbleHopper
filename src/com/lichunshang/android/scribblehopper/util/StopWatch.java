@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper;
+package com.lichunshang.android.scribblehopper.util;
 
 public class StopWatch {
 

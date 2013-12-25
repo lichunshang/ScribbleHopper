@@ -9,7 +9,7 @@ public interface Const{
 	
 	public interface MenuScene{
 		public static final int LOADING_TEXT_ANIME_PERIOD = 500;
-		public static final int LOADING_PERIOD = 1900;
+		public static final int LOADING_PERIOD = 2500;
 		public static final float BUTTON_ALPHA = 0.87f;
 		public static final float BUTTON_TEXT_SCALE = 1.4f;
 		public static final int BOUNCE_ANIME_PERIOD = 500;

@@ -16,7 +16,7 @@ public class GameRecord {
 	public int numTopSpikeContact = 0, numSpikePlatformLanded = 0,
 			numBouncePlatformLanded = 0, numConveyorLeftPlatformLanded = 0,
 			numConveyorRightPlatformLanded = 0, numRegularPlatformLanded = 0,
-			numUnstablePlatformLanded = 0;
+			numUnstablePlatformLanded = 0, score = 0;
 
 	public GameRecord() {
 		
@@ -42,6 +42,7 @@ public class GameRecord {
 	 * 9.  Number of Times Landed on Regular Platform (numRegularPlatformLanded)
 	 * 10. Number of Times Landed on Unstable Platform (numUnstablePlatformLanded)
 	 * 11. The amount of time the game elapsed in milliseconds
+	 * 12. Score of the game
 	 * 
 	 * New columns can be added in the end and be backwards compatible as 
 	 * the old order is kept and the record lines without the new columns
@@ -71,6 +72,7 @@ public class GameRecord {
 		numRegularPlatformLanded = Integer.parseInt(splitStr[8]);
 		numUnstablePlatformLanded = Integer.parseInt(splitStr[9]);
 		elapsedTime = Long.parseLong(splitStr[10]);
+		score = Integer.parseInt(splitStr[11]);
 		
 	}
 	
@@ -95,6 +97,7 @@ public class GameRecord {
 		str += String.valueOf(numRegularPlatformLanded) + DELIMITOR;
 		str += String.valueOf(numUnstablePlatformLanded) + DELIMITOR;
 		str += String.valueOf(elapsedTime) + DELIMITOR;
+		str += String.valueOf(score) + DELIMITOR;
 		
 		return str;
 	}

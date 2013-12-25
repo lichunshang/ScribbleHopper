@@ -1,5 +1,5 @@
 
-package com.lichunshang.android.scribblehopper.scenes;
+package com.lichunshang.android.scribblehopper.scene;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -12,7 +12,7 @@ import org.andengine.util.adt.align.HorizontalAlign;
 
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
-import com.lichunshang.android.scribblehopper.SceneManager;
+import com.lichunshang.android.scribblehopper.manager.SceneManager;
 
 
 public class GamePauseSubScene extends BaseSubScene implements IOnMenuItemClickListener{

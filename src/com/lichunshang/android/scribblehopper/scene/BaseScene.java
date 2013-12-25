@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper.scenes;
+package com.lichunshang.android.scribblehopper.scene;
 
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.Camera;
@@ -6,8 +6,8 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 
 import com.lichunshang.android.scribblehopper.GameActivity;
-import com.lichunshang.android.scribblehopper.ResourcesManager;
-import com.lichunshang.android.scribblehopper.SceneManager;
+import com.lichunshang.android.scribblehopper.manager.ResourcesManager;
+import com.lichunshang.android.scribblehopper.manager.SceneManager;
 
 
 public abstract class BaseScene extends Scene{

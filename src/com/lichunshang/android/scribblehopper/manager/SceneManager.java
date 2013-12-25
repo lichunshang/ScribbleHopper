@@ -1,12 +1,12 @@
-package com.lichunshang.android.scribblehopper;
+package com.lichunshang.android.scribblehopper.manager;
 
 import org.andengine.engine.Engine;
 import org.andengine.ui.IGameInterface.OnCreateSceneCallback;
 
-import com.lichunshang.android.scribblehopper.scenes.BaseScene;
-import com.lichunshang.android.scribblehopper.scenes.GameScene;
-import com.lichunshang.android.scribblehopper.scenes.MainMenuScene;
-import com.lichunshang.android.scribblehopper.scenes.SplashScene;
+import com.lichunshang.android.scribblehopper.scene.BaseScene;
+import com.lichunshang.android.scribblehopper.scene.GameScene;
+import com.lichunshang.android.scribblehopper.scene.MainMenuScene;
+import com.lichunshang.android.scribblehopper.scene.SplashScene;
 
 public class SceneManager{
 	

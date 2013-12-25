@@ -1,4 +1,4 @@
-package com.lichunshang.android.scribblehopper.scenes;
+package com.lichunshang.android.scribblehopper.scene;
 
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
@@ -86,11 +86,8 @@ public class MainMenuHelpSubMenu extends BaseMainMenuSubMenu{
 		Text instructionBounce = new Text(0, 0, resourcesManager.font_40, parentScene.getGameActivity().getString(R.string.help_instruction_bounce), vertexBufferObjectManager);
 		Text instructionConveyor = new Text(0, 0, resourcesManager.font_40, parentScene.getGameActivity().getString(R.string.help_instruction_conveyor), vertexBufferObjectManager);
 		Text instructionUnstable = new Text(0, 0, resourcesManager.font_40, parentScene.getGameActivity().getString(R.string.help_instruction_unstable), vertexBufferObjectManager);
-		Text menuName = new Text(0, 0, resourcesManager.font_50, parentScene.getGameActivity().getString(R.string.menu_help_text), vertexBufferObjectManager);
 		
 		instruction.setPosition(camera.getWidth() / 2, camera.getHeight() * 0.55f);
-		menuName.setPosition(camera.getWidth() * 0.75f, camera.getHeight() * 0.685f);
-		menuName.setRotation(15f);
 		
 		instructionRegular.setAnchorCenter(0, 0);
 		instructionSpike.setAnchorCenter(0, 0);
@@ -110,7 +107,6 @@ public class MainMenuHelpSubMenu extends BaseMainMenuSubMenu{
 		attachChild(instructionBounce);
 		attachChild(instructionConveyor);
 		attachChild(instructionUnstable);
-		attachChild(menuName);
 		attachChild(regularPlatform);
 		attachChild(spikePlatform);
 		attachChild(bouncePlatform);
