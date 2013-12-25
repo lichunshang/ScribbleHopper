@@ -10,19 +10,17 @@ import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 
-import android.graphics.Camera;
-
 import com.lichunshang.android.scribblehopper.AsynchronousTask;
 import com.lichunshang.android.scribblehopper.Const;
+import com.lichunshang.android.scribblehopper.DataManager;
 import com.lichunshang.android.scribblehopper.R;
 import com.lichunshang.android.scribblehopper.SceneManager;
-import com.lichunshang.android.scribblehopper.game.Player.AnimationState;
 
 
 public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener{
 	
 	private MenuScene menuChildScene;
-	private BaseSubScene currentSubScene = null, helpSubScene, scoresSubScene, optionSubScene;
+	private BaseSubScene currentSubMenu = null, helpSubScene, scoresSubScene, optionSubScene;
 	private final int MENU_PLAY = 0;
 	private final int MENU_SCORE = 1;
 	private final int MENU_HELP = 2;
@@ -36,8 +34,8 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	}
 	
 	public void onBackKeyPressed(){
-		if (currentSubScene != null){
-			currentSubScene.onBackKeyPressed();
+		if (currentSubMenu != null){
+			currentSubMenu.onBackKeyPressed();
 		}
 		else{
 			System.exit(0);
@@ -54,7 +52,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	
 	private void createBackground(){
 		Text title =  new Text(camera.getWidth() / 2, camera.getHeight() * 0.82f, resourcesManager.font_120, activity.getString(R.string.game_name), vertexBufferObjectManager);
-		Text titleJust = new Text(camera.getWidth() / 2, camera.getHeight() * 0.9f, resourcesManager.font_50, activity.getString(R.string.game_name_just), vertexBufferObjectManager);
+		Text titleJust = new Text(camera.getWidth() / 2, camera.getHeight() * 0.92f, resourcesManager.font_70, activity.getString(R.string.game_name_just), vertexBufferObjectManager);
 		title.setRotation(15f);
 		attachChild(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.backgroundTextureRegion, vertexBufferObjectManager));
 		attachChild(title);
@@ -72,6 +70,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 				resourcesManager.loadRemainingResources();
 				SceneManager.getInstance().createGameScene();
 				createSubScenes();
+				DataManager.getInstance().loadRecord();
 			}
 			
 			@Override
@@ -118,7 +117,8 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	}
 	
 	public void createSubScenes(){
-		helpSubScene = new MainMenuHelpSubScene(this);
+		helpSubScene = new MainMenuHelpSubMenu(this);
+		scoresSubScene = new MainMenuScoreSubMenu(this);
 	}
 	
 	private void createMenuChildScene(){
@@ -212,6 +212,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	
 	public void loadMainMenu(){
 		setChildScene(menuChildScene);
+		currentSubMenu = null;
 	}
 	
 	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY){
@@ -223,11 +224,13 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			return true;
 		}
 		else if (menuItemId == MENU_HELP){
-			currentSubScene = helpSubScene;
+			currentSubMenu = helpSubScene;
 			helpSubScene.attachScene();
 			return true;
 		}
 		else if (menuItemId == MENU_SCORE){
+			currentSubMenu = scoresSubScene;
+			scoresSubScene.attachScene();
 			return true;
 		}
 		else if (menuItemId == MENU_OPTIONS){

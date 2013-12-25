@@ -67,10 +67,13 @@ public class ResourcesManager{
 	public void loadInitialResources(){
 		FontFactory.setAssetBasePath("font/");
 		final ITexture font_50_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+		final ITexture font_70_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		final ITexture font_120_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		font_50 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_50_texture, activity.getAssets(), "Sketchy.ttf", 50, true, Color.BLACK, 0, Color.BLACK);
+	    font_70 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_70_texture, activity.getAssets(), "Sketchy.ttf", 70, true, Color.BLACK, 0, Color.BLACK);
 		font_120 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_120_texture, activity.getAssets(), "Sketchy.ttf", 120, true, Color.BLACK, 0, Color.BLACK);
 	    font_50.load();
+	    font_70.load();
 	    font_120.load();
 	    
 	    BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
@@ -95,14 +98,13 @@ public class ResourcesManager{
 	}
 	
 	public void loadFonts(){
+		FontFactory.setAssetBasePath("font/");
 		final ITexture font_40_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-		final ITexture font_70_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		final ITexture font_100_texture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		font_40 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_40_texture, activity.getAssets(), "Sketchy.ttf", 40, true, Color.BLACK, 0, Color.BLACK);
-	    font_70 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_70_texture, activity.getAssets(), "Sketchy.ttf", 70, true, Color.BLACK, 0, Color.BLACK);
 	    font_100 = FontFactory.createStrokeFromAsset(activity.getFontManager(), font_100_texture, activity.getAssets(), "Sketchy.ttf", 100, true, Color.BLACK, 0, Color.BLACK);
+	    
 	    font_40.load();
-	    font_70.load();
 	    font_100.load();
 	}
 	

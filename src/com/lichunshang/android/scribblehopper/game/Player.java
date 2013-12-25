@@ -208,6 +208,7 @@ public class Player{
 		sprite.setRotation(0);
 		health = Const.Player.MAX_HEALTH;
 		scene.onHealthChanged();
+		lastStayedPlatform = null;
 	}
 	
 	// ------------------------------------------
@@ -290,5 +291,13 @@ public class Player{
 	
 	public void setPhysicsBodySensor(boolean isSensor){
 		physicsBody.getFixtureList().get(0).setSensor(isSensor);
+	}
+	
+	public boolean isDeathBySpike(){
+		return getHealth() <= 0;
+	}
+	
+	public boolean isDeathByFalling(){
+		return !isDeathBySpike() && (sprite.getY() <= -sprite.getHeight() / 2);
 	}
 }

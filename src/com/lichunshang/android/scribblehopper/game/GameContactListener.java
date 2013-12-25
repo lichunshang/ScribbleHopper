@@ -1,5 +1,7 @@
 package com.lichunshang.android.scribblehopper.game;
 
+import java.util.Hashtable;
+
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -14,9 +16,34 @@ import com.lichunshang.android.scribblehopper.scenes.GameScene;
 public class GameContactListener implements ContactListener{
 	
 	private GameScene gameScene;
+	private Hashtable<BasePlatform.PlatformType, Integer> platformLandCounter = new Hashtable<BasePlatform.PlatformType, Integer>();
+	private int numTopSpikeContact;
 	
 	public GameContactListener(GameScene gameScene){
 		this.gameScene = gameScene;
+		initCounters();
+	}
+	
+	private void initCounters(){
+		platformLandCounter.put(BasePlatform.PlatformType.BOUNCE, 0);
+		platformLandCounter.put(BasePlatform.PlatformType.CONVEYOR_LEFT, 0);
+		platformLandCounter.put(BasePlatform.PlatformType.CONVEYOR_RIGHT, 0);
+		platformLandCounter.put(BasePlatform.PlatformType.REGULAR, 0);
+		platformLandCounter.put(BasePlatform.PlatformType.SPIKE, 0);
+		platformLandCounter.put(BasePlatform.PlatformType.UNSTABLE, 0);
+		numTopSpikeContact = 0;
+	}
+	
+	public void resetCounters(){
+		initCounters();
+	}
+	
+	public Hashtable<BasePlatform.PlatformType, Integer> getPlatformLandCounter(){
+		return platformLandCounter;
+	}
+	
+	public int getNumTopSpikeContact(){
+		return numTopSpikeContact;
 	}
 	
 	@Override
@@ -41,6 +68,7 @@ public class GameContactListener implements ContactListener{
 				player.getCurrentPlaform().setPhysicsBodySensor(true);
 			}
 			player.decreaseHealth(Const.GameScene.TOP_BORDER_HEALTH_DECREMENT);
+			numTopSpikeContact++;
 		}
 		
     	if (checkContact(BasePlatform.class, Player.class, contact)){
@@ -92,6 +120,11 @@ public class GameContactListener implements ContactListener{
 	    		
 	    		if (platformType != PlatformType.SPIKE && player.isDifferentPlatform()){
 	    			player.increaseHealth(Const.Plaform.HEALTH_INCREMENT);
+	    		}
+	    		
+	    		//increase the counters of platform land
+	    		if (player.isDifferentPlatform()){
+	    			platformLandCounter.put(platformType, platformLandCounter.get(platformType) + 1);
 	    		}
     		}
     		else{

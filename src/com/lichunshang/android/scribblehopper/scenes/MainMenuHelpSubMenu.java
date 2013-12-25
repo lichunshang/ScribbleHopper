@@ -3,10 +3,6 @@ package com.lichunshang.android.scribblehopper.scenes;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.modifier.FadeOutModifier;
-import org.andengine.entity.scene.menu.MenuScene;
-import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
-import org.andengine.entity.scene.menu.item.AnimatedSpriteMenuItem;
-import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
@@ -14,39 +10,19 @@ import org.andengine.entity.text.Text;
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
 
-public class MainMenuHelpSubScene extends BaseSubScene implements IOnMenuItemClickListener{
+public class MainMenuHelpSubMenu extends BaseMainMenuSubMenu{
 
-	private MenuScene menuScene;
-	private final int MENU_MENU = 0;
 	private Sprite regularPlatform, spikePlatform, bouncePlatform, conveyorPlatform, unstablePlatform;
 	private TimerHandler bouncePlatformAnimeTimer, unstablePlatformAnimeTimer;
 	public FadeOutModifier collapseFadeOutModifier;
 
-	public MainMenuHelpSubScene(MainMenuScene menuScene) {
+	public MainMenuHelpSubMenu(MainMenuScene menuScene) {
 		super(menuScene);
 	}
-
+	
 	@Override
-	public void createScene() {
-		setBackgroundEnabled(false);
+	public void onCreateSubMenu() {
 		createHelp();
-		createMenu();
-	}
-
-	@Override
-	public void attachScene() {
-		parentScene.setChildScene(this);
-	}
-
-	@Override
-	public void detachScene() {
-		parentScene.clearChildScene();
-		((MainMenuScene) parentScene).loadMainMenu();
-	}
-
-	@Override
-	public void onBackKeyPressed() {
-		detachScene();
 	}
 	
 	public void createHelp(){
@@ -110,8 +86,11 @@ public class MainMenuHelpSubScene extends BaseSubScene implements IOnMenuItemCli
 		Text instructionBounce = new Text(0, 0, resourcesManager.font_40, parentScene.getGameActivity().getString(R.string.help_instruction_bounce), vertexBufferObjectManager);
 		Text instructionConveyor = new Text(0, 0, resourcesManager.font_40, parentScene.getGameActivity().getString(R.string.help_instruction_conveyor), vertexBufferObjectManager);
 		Text instructionUnstable = new Text(0, 0, resourcesManager.font_40, parentScene.getGameActivity().getString(R.string.help_instruction_unstable), vertexBufferObjectManager);
+		Text menuName = new Text(0, 0, resourcesManager.font_50, parentScene.getGameActivity().getString(R.string.menu_help_text), vertexBufferObjectManager);
 		
 		instruction.setPosition(camera.getWidth() / 2, camera.getHeight() * 0.55f);
+		menuName.setPosition(camera.getWidth() * 0.75f, camera.getHeight() * 0.685f);
+		menuName.setRotation(15f);
 		
 		instructionRegular.setAnchorCenter(0, 0);
 		instructionSpike.setAnchorCenter(0, 0);
@@ -131,53 +110,11 @@ public class MainMenuHelpSubScene extends BaseSubScene implements IOnMenuItemCli
 		attachChild(instructionBounce);
 		attachChild(instructionConveyor);
 		attachChild(instructionUnstable);
+		attachChild(menuName);
 		attachChild(regularPlatform);
 		attachChild(spikePlatform);
 		attachChild(bouncePlatform);
 		attachChild(conveyorPlatform);
 		attachChild(unstablePlatform);
-	}
-	
-	public void createMenu(){
-		menuScene = new MenuScene(parentScene.getCamera());
-		
-		AnimatedSpriteMenuItem menuMenuItem = new AnimatedSpriteMenuItem(MENU_MENU, parentScene.getResourcesManager().buttonTextureRegion, parentScene.getVertexBufferObjectManager()){
-			@Override
-			public void onSelected(){
-				setCurrentTileIndex(1);
-			}
-			
-			@Override
-			public void onUnselected(){
-				setCurrentTileIndex(0);
-			}
-		};
-		
-		menuScene.addMenuItem(menuMenuItem);
-		
-		menuMenuItem.setPosition(parentScene.getCamera().getWidth() * 0.69f, parentScene.getCamera().getHeight() * 0.117f);
-		menuMenuItem.setAlpha(Const.MenuScene.BUTTON_ALPHA);
-		
-		Text menuMenuItemText = new Text(0, 0, parentScene.getResourcesManager().font_70, parentScene.getGameActivity().getString(R.string.menu_text), parentScene.getVertexBufferObjectManager()) ;
-		menuMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
-		menuMenuItemText.setPosition(menuMenuItem.getWidth() / 2, menuMenuItem.getHeight() / 2);
-		menuMenuItem.attachChild(menuMenuItemText);
-
-		menuScene.setBackgroundEnabled(false);
-
-		menuScene.setOnMenuItemClickListener(this);
-		
-		setChildScene(menuScene);
-	}
-
-	@Override
-	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem, float pMenuItemLocalX, float pMenuItemLocalY) {
-		int menuItemId = pMenuItem.getID();
-		
-		if (menuItemId == MENU_MENU){
-			detachScene();
-			return true;
-		}
-		return false;
 	}
 }

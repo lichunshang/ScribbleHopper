@@ -113,6 +113,8 @@ public class GamePauseSubScene extends BaseSubScene implements IOnMenuItemClickL
 		
 		if (menuItemId == MENU_MENU){
 			((GameScene) parentScene).unPauseGame();
+			((GameScene) parentScene).onGameEnd();
+			
 			SceneManager.getInstance().setMenuScene();
 			return true;
 		}

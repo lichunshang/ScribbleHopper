@@ -115,7 +115,11 @@ public class PlayerDieSubScene extends BaseSubScene implements IOnMenuItemClickL
 	}
 	
 	public void setScoreText(int score){
-		scoreText.setText("Score: " + Integer.toString(score));
+		scoreText.setText(parentScene.getGameActivity().getString(R.string.score_text) + ": " + Integer.toString(score));
+	}
+	
+	public void setHighScore(int highScore){
+		highScoreText.setText(parentScene.getGameActivity().getString(R.string.high_score_text) + ": " + Integer.toString(highScore));
 	}
 
 	@Override

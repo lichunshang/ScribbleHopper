@@ -21,7 +21,7 @@ import android.view.KeyEvent;
 public class GameActivity extends BaseGameActivity {
 	
 	private Camera camera;
-	private ResourcesManager resourcesManager;
+	//private ResourcesManager resourcesManager;
 	public final int CAMERA_WIDTH = 768;
 	public final int CAMERA_HEIGHT = 1280;
 
@@ -42,8 +42,9 @@ public class GameActivity extends BaseGameActivity {
 	
 	@Override
 	public void onCreateResources(OnCreateResourcesCallback pOnCreateResourcesCallback) throws IOException{
-		resourcesManager.prepareManager(mEngine, this, camera, getVertexBufferObjectManager());
-		resourcesManager = ResourcesManager.getInstance();
+		ResourcesManager.prepareManager(mEngine, this, camera, getVertexBufferObjectManager());
+		DataManager.prepareManager(this);
+		//resourcesManager = ResourcesManager.getInstance();
 		pOnCreateResourcesCallback.onCreateResourcesFinished();
 	}
 	

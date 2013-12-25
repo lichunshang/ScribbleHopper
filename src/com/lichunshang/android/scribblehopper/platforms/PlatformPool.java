@@ -36,10 +36,8 @@ public class PlatformPool extends MultiPool<BasePlatform>{
 	public void recyclePlatform(BasePlatform platform){
 		//this is to accommodate the recycleAllActivePlaform method. When the platform 
 		//is removed from the queue in recycleAllActivePlaform, it won't be removed again
-		int counter = 0;
 		Iterator<BasePlatform> iterator = activePlaforms.iterator();
 		while (iterator.hasNext()){
-			counter++;
 			if (iterator.next() == platform){
 				iterator.remove();
 				break;

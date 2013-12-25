@@ -22,8 +22,11 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.lichunshang.android.scribblehopper.Const;
+import com.lichunshang.android.scribblehopper.DataManager;
+import com.lichunshang.android.scribblehopper.GameRecord;
 import com.lichunshang.android.scribblehopper.SceneManager;
 import com.lichunshang.android.scribblehopper.SensorListener;
+import com.lichunshang.android.scribblehopper.StopWatch;
 import com.lichunshang.android.scribblehopper.game.GameContactListener;
 import com.lichunshang.android.scribblehopper.game.GameHUD;
 import com.lichunshang.android.scribblehopper.game.Player;
@@ -35,6 +38,7 @@ public class GameScene extends BaseScene {
 	private SensorListener sensorListener;
 	private Random random = new Random();
 	private PhysicsWorld physicsWorld;
+	private GameContactListener contactListener;
 	
 	private SpriteBackground background;
 	private Player player;
@@ -53,6 +57,9 @@ public class GameScene extends BaseScene {
 	private Entity plaformLayer, backgroundLayer, playerLayer, HUDLayer;
 	private GameHUD gameHUD;
 	
+	private long gameStartTime = -1, gameEndTime = -1;
+	private StopWatch stopWatch = new StopWatch(true);
+	
 	public void createScene(){
 		createLayers();
 		createHUD();
@@ -70,11 +77,7 @@ public class GameScene extends BaseScene {
 		
 		//check if the player is alive
 		if (!player.isAlive() && currentSubScene == null){
-			player.setPhysicsBodySensor(true);
-			player.animateDie();
-			currentSubScene = playerDieScene;
-			playerDieScene.attachScene();
-			playerDieScene.setScoreText((int) score);
+			onPlayerDie();
 		}
 		if (player.isAlive()){
 			score += platformSpeed * Const.GameScene.SPEED_TO_SCORE_RATIO;
@@ -118,7 +121,8 @@ public class GameScene extends BaseScene {
 				GameScene.this.onUpdate();
 			}
 		};
-		physicsWorld.setContactListener(new GameContactListener(this));
+		contactListener = new GameContactListener(this);
+		physicsWorld.setContactListener(contactListener);
 		registerUpdateHandler(physicsWorld);
 		
 //		DebugRenderer debug = new DebugRenderer(physicsWorld, getVertexBufferObjectManager());
@@ -169,6 +173,60 @@ public class GameScene extends BaseScene {
 		pauseScene = new GamePauseSubScene(this);
 	}
 	
+	private void onPlayerDie(){
+		player.setPhysicsBodySensor(true);
+		player.animateDie();
+		currentSubScene = playerDieScene;
+		playerDieScene.attachScene();
+		
+		onGameEnd();
+	}
+	
+	private void saveGameRecord(){
+		GameRecord record = new GameRecord();
+		
+		record.timeStarted = getGameStartTime();
+		record.timeEnded = getGameEndTime();
+		record.numTopSpikeContact = contactListener.getNumTopSpikeContact();
+		
+		record.numSpikePlatformLanded = contactListener.getPlatformLandCounter().get(BasePlatform.PlatformType.SPIKE);
+		record.numBouncePlatformLanded = contactListener.getPlatformLandCounter().get(BasePlatform.PlatformType.BOUNCE);
+		record.numConveyorLeftPlatformLanded = contactListener.getPlatformLandCounter().get(BasePlatform.PlatformType.CONVEYOR_LEFT);
+		record.numConveyorRightPlatformLanded = contactListener.getPlatformLandCounter().get(BasePlatform.PlatformType.CONVEYOR_RIGHT);
+		record.numRegularPlatformLanded = contactListener.getPlatformLandCounter().get(BasePlatform.PlatformType.REGULAR);
+		record.numUnstablePlatformLanded = contactListener.getPlatformLandCounter().get(BasePlatform.PlatformType.UNSTABLE);
+		record.elapsedTime = stopWatch.getElapsedTimeMilli();
+		
+		if (player.isDeathByFalling()){
+			record.reasonDied = GameRecord.DeathReason.FALL;
+		}
+		else if (player.isDeathBySpike()){
+			record.reasonDied = GameRecord.DeathReason.SPIKE;
+		}
+		
+		DataManager.getInstance().saveRecord(record);
+	}
+	
+	private void saveHighScore(){
+		int highScore = DataManager.getInstance().getHighScore();
+		
+		if (score > highScore){
+			DataManager.getInstance().saveHighScore((int) score);
+		}
+	}
+	
+	public void onGameEnd(){
+		saveHighScore();
+		playerDieScene.setScoreText((int) score);
+		playerDieScene.setHighScore(DataManager.getInstance().getHighScore());
+		
+		setGameEndTime();
+		stopWatch.stop();
+		
+		saveGameRecord();
+		DataManager.getInstance().debugRecords();
+	}
+	
 	public void onBackKeyPressed(){
 		if (currentSubScene == playerDieScene){
 			playAgain();
@@ -214,6 +272,12 @@ public class GameScene extends BaseScene {
 				currentSubScene = null;
 			}
 		}));
+		
+		setGameStartTime();
+		stopWatch.reset();
+		stopWatch.start();
+		
+		contactListener.resetCounters();
 	}
 	
 	public BasePlatform.PlatformType getNextPlatformType(){
@@ -258,6 +322,7 @@ public class GameScene extends BaseScene {
 		paused = true;
 		currentSubScene = pauseScene;
 		setIgnoreUpdate(true);
+		stopWatch.stop();
 	}
 	
 	public void unPauseGame(){
@@ -265,6 +330,7 @@ public class GameScene extends BaseScene {
 		pauseScene.detachScene();
 		paused = false;
 		setIgnoreUpdate(false);
+		stopWatch.start();
 	}
 	
 	public void playAgain(){
@@ -272,7 +338,6 @@ public class GameScene extends BaseScene {
 		playerDieScene.detachScene();
 		resetScene();
 	}
-	
 	// -----------------------------------------------
 	// Getter and Setters
 	// -----------------------------------------------
@@ -311,6 +376,22 @@ public class GameScene extends BaseScene {
 	
 	public boolean isPaused(){
 		return paused;
+	}
+	
+	public void setGameStartTime(){
+		gameStartTime = System.currentTimeMillis();
+	}
+	
+	public void setGameEndTime(){
+		gameEndTime = System.currentTimeMillis();
+	}
+	
+	public long getGameStartTime(){
+		return gameStartTime;
+	}
+	
+	public long getGameEndTime(){
+		return gameEndTime;
 	}
 
 	// -----------------------------------------------

@@ -128,8 +128,8 @@ public interface Const{
 			public static final Vector2[] bodyVerticesPixels = {
 				new Vector2(172, 20f),
 				new Vector2(-172, 20f),
-				new Vector2(-172, 18f),
-				new Vector2(172, 18f),
+				new Vector2(-172, 19.9f),
+				new Vector2(172, 19.9f),
 			};
 			
 			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
@@ -154,8 +154,8 @@ public interface Const{
 			public static final Vector2[] bodyVerticesPixels = {
 				new Vector2(172, 26f),
 				new Vector2(-172, 26f),
-				new Vector2(-172, 24f),
-				new Vector2(172, 24f),
+				new Vector2(-172, 25.9f),
+				new Vector2(172, 25.9f),
 			};
 			
 			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
@@ -206,8 +206,8 @@ public interface Const{
 			public static final Vector2[] bodyVerticesPixels = {
 				new Vector2(172, 72f),
 				new Vector2(-172, 72f),
-				new Vector2(-172, 70f),
-				new Vector2(172, 70f),
+				new Vector2(-172, 71.9f),
+				new Vector2(172, 71.9f),
 			};
 			
 			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
@@ -225,8 +225,8 @@ public interface Const{
 			public static final Vector2[] bodyVerticesPixels = {
 				new Vector2(172, 3f),
 				new Vector2(-172, 3f),
-				new Vector2(-172, 1f),
-				new Vector2(172, 1f),
+				new Vector2(-172, 2.9f),
+				new Vector2(172, 2.9f),
 			};
 			
 			//vertices in Meter-Kilogram-Seconds units (Box2D default units)
