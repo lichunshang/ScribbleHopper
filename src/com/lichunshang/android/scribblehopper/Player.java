@@ -88,7 +88,7 @@ public class Player{
 		
 		if (Math.abs(velocityX) > Const.Player.IDLE_SWITCH_VELOCITY){
 			
-			if (currentSoundEffectHandler == null && currentPlatform != null){
+			if (active && currentSoundEffectHandler == null && currentPlatform != null){
 				currentSoundEffectHandler = moveSoundEffectTimer;
 				scene.registerUpdateHandler(moveSoundEffectTimer);
 			}

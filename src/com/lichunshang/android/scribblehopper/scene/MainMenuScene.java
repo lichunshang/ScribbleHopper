@@ -81,6 +81,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			protected void task() {
 				resourcesManager.loadRemainingResources();
 				AudioManager.getInstance().initResources();
+				AudioManager.getInstance().loadAudioSettings();
 				SceneManager.getInstance().createGameScene();
 				createSubScenes();
 				DataManager.getInstance().loadRecord();

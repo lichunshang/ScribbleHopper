@@ -20,14 +20,15 @@ public class AudioManager{
 	private Engine engine;
 	private Hashtable<SoundEffect, Sound> soundEffects = new Hashtable<AudioManager.SoundEffect, Sound>();
 	private Hashtable<MusicEffect, Music> musicEffects = new Hashtable<MusicEffect, Music>();
-	private boolean muted = false;
+	private boolean soundEffectEnabled = true;
 	
-	public void setMute(boolean mute){
-		muted = mute;
+	public void setSoundEffectEnabled(boolean enabled){
+		soundEffectEnabled = enabled;
+		DataManager.getInstance().saveSoundEffectEnabled(soundEffectEnabled);
 	}
 	
-	public boolean isMuted(){
-		return muted;
+	public boolean isSoundEffectEnabled(){
+		return soundEffectEnabled;
 	}
 	
 	public void playSoundEffect(SoundEffect soundEffect){
@@ -35,16 +36,10 @@ public class AudioManager{
 	}
 	
 	public void playSoundEffect(SoundEffect soundEffect, boolean loop){
-		soundEffects.get(soundEffect).setLooping(loop);
-		soundEffects.get(soundEffect).play();
-	}
-	
-	public void pauseSoundEffect(SoundEffect soundEffect){
-		soundEffects.get(soundEffect).pause();
-	}
-	
-	public void resumeSoundEffect(SoundEffect soundEffect){
-		soundEffects.get(soundEffect).resume();
+		if (soundEffectEnabled){
+			soundEffects.get(soundEffect).setLooping(loop);
+			soundEffects.get(soundEffect).play();
+		}
 	}
 	
 	public void stopSoundEffect(SoundEffect soundEffect){
@@ -91,6 +86,7 @@ public class AudioManager{
 		musicEffects.get(musicEffect).play();
 	}
 	
+	//must be called before using this class
 	public void initResources(){
 		ResourcesManager resourcesManager = ResourcesManager.getInstance();
 		soundEffects.put(SoundEffect.PLATFORM_LAND, resourcesManager.platformLandSound);
@@ -100,6 +96,11 @@ public class AudioManager{
 		soundEffects.put(SoundEffect.PLAYER_DIE, resourcesManager.playerDieSound);
 		soundEffects.put(SoundEffect.PLAYER_WALK0, resourcesManager.playerWalkSound0);
 		soundEffects.put(SoundEffect.PLAYER_WALK1, resourcesManager.playerWalkSound1);
+	}
+	
+	//must be called before using this class
+	public void loadAudioSettings(){
+		soundEffectEnabled = DataManager.getInstance().getSoundEffectEnabled();
 	}
 	
 	public static enum SoundEffect{

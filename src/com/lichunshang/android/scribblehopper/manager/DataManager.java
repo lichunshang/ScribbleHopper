@@ -10,12 +10,12 @@ import java.util.ArrayList;
 
 import org.andengine.util.debug.Debug;
 
-import com.lichunshang.android.scribblehopper.GameActivity;
-import com.lichunshang.android.scribblehopper.GameRecord;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.lichunshang.android.scribblehopper.GameActivity;
+import com.lichunshang.android.scribblehopper.GameRecord;
 
 public class DataManager{
 	
@@ -25,6 +25,9 @@ public class DataManager{
 	// ---------------- Constants ----------------
 	private static final String HIGH_SCORE_KEY = "HIGH_SCORE_KEY";
 	private static final int DEFAULT_HIGH_SCORE = 0;
+	private static final String SOUND_EFFECT_ENABLED_KEY = "SOUND_EFFECT_ENABLED_KEY";
+	private static final boolean DEFAULT_SOUND_EFFECT_ENABLED = true;
+	
 	private static final String GAME_RECORDS_FILE_NAME = "RECORDS.shdata";
 	
 	// ---------------- Fields ----------------
@@ -50,6 +53,20 @@ public class DataManager{
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putInt(HIGH_SCORE_KEY, DEFAULT_HIGH_SCORE);
 		editor.commit();
+	}
+	
+	// ----------------------------------------------
+	// GAME SETTINGS
+	// ----------------------------------------------
+	
+	public void saveSoundEffectEnabled(boolean enabled){
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(SOUND_EFFECT_ENABLED_KEY, enabled);
+		editor.commit();
+	}
+	
+	public boolean getSoundEffectEnabled(){
+		return sharedPreferences.getBoolean(SOUND_EFFECT_ENABLED_KEY, DEFAULT_SOUND_EFFECT_ENABLED);
 	}
 	
 	// ----------------------------------------------

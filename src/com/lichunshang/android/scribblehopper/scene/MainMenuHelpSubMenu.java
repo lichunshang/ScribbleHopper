@@ -34,11 +34,11 @@ public class MainMenuHelpSubMenu extends BaseMainMenuSubMenu{
 		conveyorPlatform = new AnimatedSprite(0, 0, resourcesManager.conveyorPlatformTextureRegion, vertexBufferObjectManager);
 		unstablePlatform = new AnimatedSprite(0, 0, resourcesManager.unstablePlatformTextureRegion, vertexBufferObjectManager);
 		
-		regularPlatform.setColor(Color.BLACK);
-		spikePlatform.setColor(Color.BLACK);
-		bouncePlatform.setColor(Color.BLACK);
-		conveyorPlatform.setColor(Color.BLACK);
-		unstablePlatform.setColor(Color.BLACK);
+        regularPlatform.setAnchorCenter(0, 0);
+        spikePlatform.setAnchorCenter(0, 0);
+        bouncePlatform.setAnchorCenter(0, 0);
+        conveyorPlatform.setAnchorCenter(0, 0);
+        unstablePlatform.setAnchorCenter(0, 0);
 		
 		regularPlatform.setPosition(camera.getWidth() * 0.03f, camera.getHeight() * 0.445f);
 		spikePlatform.setPosition(regularPlatform.getX(), regularPlatform.getY() - 81);
@@ -89,12 +89,13 @@ public class MainMenuHelpSubMenu extends BaseMainMenuSubMenu{
 		Text instructionUnstable = new Text(0, 0, resourcesManager.font_40, parentScene.getGameActivity().getString(R.string.help_instruction_unstable), vertexBufferObjectManager);
 		
 		instruction.setPosition(camera.getWidth() / 2, camera.getHeight() * 0.55f);
+		instruction.setColor(Color.BLACK);
 		
-		instructionRegular.setColor(Color.BLACK);
-		instructionSpike.setColor(Color.BLACK);
-		instructionBounce.setColor(Color.BLACK);
-		instructionConveyor.setColor(Color.BLACK);
-		instructionUnstable.setColor(Color.BLACK);
+        instructionRegular.setAnchorCenter(0, 0);
+        instructionSpike.setAnchorCenter(0, 0);
+        instructionBounce.setAnchorCenter(0, 0);
+        instructionConveyor.setAnchorCenter(0, 0);
+        instructionUnstable.setAnchorCenter(0, 0);
 		
 		instructionRegular.setPosition(regularPlatform.getX() + regularPlatform.getWidth() + 20, regularPlatform.getY());
 		instructionSpike.setPosition(instructionRegular.getX(), instructionRegular.getY() - 85);
@@ -102,6 +103,7 @@ public class MainMenuHelpSubMenu extends BaseMainMenuSubMenu{
 		instructionConveyor.setPosition(instructionRegular.getX(), instructionBounce.getY() - 85);
 		instructionUnstable.setPosition(instructionRegular.getX(), instructionConveyor.getY() - 85);
 		
+		instructionRegular.setColor(Color.BLACK);
 		instructionSpike.setColor(Color.BLACK);
 		instructionBounce.setColor(Color.BLACK);
 		instructionConveyor.setColor(Color.BLACK);

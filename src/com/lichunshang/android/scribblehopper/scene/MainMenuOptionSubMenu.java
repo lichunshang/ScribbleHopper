@@ -10,10 +10,15 @@ import android.content.DialogInterface;
 
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
+import com.lichunshang.android.scribblehopper.manager.AudioManager;
 import com.lichunshang.android.scribblehopper.manager.DataManager;
+import com.lichunshang.android.scribblehopper.util.OnOffRadioButton;
+import com.lichunshang.android.scribblehopper.util.OnOffRadioButton.State;
 
 
 public class MainMenuOptionSubMenu extends BaseMainMenuSubMenu{
+	
+	OnOffRadioButton musicOnOffRadioButton;
 	
 	public MainMenuOptionSubMenu(MainMenuScene menuScene) {
 		super(menuScene);
@@ -23,7 +28,37 @@ public class MainMenuOptionSubMenu extends BaseMainMenuSubMenu{
 	public void onCreateSubMenu() {
 		setTouchAreaBindingOnActionDownEnabled(true);
 		setTouchAreaBindingOnActionMoveEnabled(true);
-
+		
+		//---------------------- ON / OFF Settings ---------------------
+		
+		Text muteSoundEffectText = new Text(camera.getWidth() * 0.1f, camera.getHeight() * 0.5f, resourcesManager.font_50, parentScene.getGameActivity().getString(R.string.sound_effect), vertexBufferObjectManager);
+		muteSoundEffectText.setAnchorCenter(0, 0);
+		muteSoundEffectText.setColor(Color.BLACK);
+		attachChild(muteSoundEffectText);
+		
+		musicOnOffRadioButton = new OnOffRadioButton(camera.getWidth() * 0.665f, muteSoundEffectText.getY(), resourcesManager.font_50, State.ON_SELECTED, vertexBufferObjectManager){
+			@Override
+			public void onOnSelected(){
+				AudioManager.getInstance().setSoundEffectEnabled(true);
+			}
+			
+			@Override
+			public void onOffSelected(){
+				AudioManager.getInstance().setSoundEffectEnabled(false);
+			}
+		};
+		
+		if (AudioManager.getInstance().isSoundEffectEnabled()){
+			musicOnOffRadioButton.setState(State.ON_SELECTED);
+		}
+		else{
+			musicOnOffRadioButton.setState(State.OFF_SELECTED);
+		}
+		
+		musicOnOffRadioButton.registerTouchArea(this);
+		musicOnOffRadioButton.attach(this);
+		
+		//------------------ clear history button -----------------------
 		AnimatedSprite clearHistoryButton = new AnimatedSprite(0, 0, resourcesManager.buttonTextureRegion, vertexBufferObjectManager){
 			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX,final float pTouchAreaLocalY){
@@ -41,7 +76,7 @@ public class MainMenuOptionSubMenu extends BaseMainMenuSubMenu{
 			}
 		};
 		registerTouchArea(clearHistoryButton);
-		
+
 		clearHistoryButton.setPosition(parentScene.getCamera().getWidth() * 0.69f, parentScene.getCamera().getHeight() * 0.30f);
 		clearHistoryButton.setAlpha(Const.MenuScene.BUTTON_ALPHA);
 		
