@@ -7,6 +7,11 @@ public interface Const{
 	public static final int COMMON_DELAY_SHORT = 100;
 	public static final int COMMON_DELAY_LONG = 400;
 	
+	public interface Manager{
+		public static final int AUDIO_FADE_CALC_RATE = 50;
+		public static final float AUDIO_FADE_OUT_VOLUME_STOP_THRESHOLD = 0.005f;
+	}
+	
 	public interface MenuScene{
 		public static final int LOADING_TEXT_ANIME_PERIOD = 500;
 		public static final int LOADING_PERIOD = 2500;
@@ -49,6 +54,7 @@ public interface Const{
 		public static final float ACCELERATE_MULTIPLY_FACTOR = 17f;
 		public static final float DEACCELERATE_MULTIPLY_FACTOR = 30f;
 		public static final float ACCELEROMETER_MULTIPLY_FACTOR = 3.75f;
+		public static final float ACCELEROMETER_MULTIPLY_FACTOR_LINEAR_VELOCITY = 4.5f;
 		
 		//physics properties
 		public static final float DENSITY = 0;
@@ -90,6 +96,9 @@ public interface Const{
 		public static final long[] LAND_ANIME_SPEED = {35, 35, 35, 35};
 		public static final long[] RUN_ANIME_SPEED = {68, 68, 68, 68, 68};
 		public static final long[] WALK_ANIME_SPEED = {90, 90, 90, 90, 90, 90};
+		
+		public static final int RUN_SOUND_EFFECT_SPEED = 360;
+		public static final int WALK_SOUND_EFFECT_SPEED = 485;
 		
 		public static final float LAND_SPEED_REDUCE_FACTOR = 1f;
 		

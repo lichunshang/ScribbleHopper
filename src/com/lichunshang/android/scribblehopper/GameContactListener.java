@@ -6,6 +6,8 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.lichunshang.android.scribblehopper.manager.AudioManager;
+import com.lichunshang.android.scribblehopper.manager.AudioManager.SoundEffect;
 import com.lichunshang.android.scribblehopper.platform.BasePlatform;
 import com.lichunshang.android.scribblehopper.platform.BasePlatform.PlatformType;
 import com.lichunshang.android.scribblehopper.platform.BouncePlatform;
@@ -52,7 +54,7 @@ public class GameContactListener implements ContactListener{
 			Player player = gameScene.getPlayer();
 			BasePlatform platform = getPlatformObject(contact);
 			
-			if (!platform.isRecycled() && player.isAlive() && player.getBodyBottomYMKS() < platform.getPhyiscsBody().getPosition().y){
+			if (!platform.isRecycled() && player.isAlive() && player.getBodyBottomYMKS() < (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
 				contact.setEnabled(false);
 			}
 		}
@@ -61,12 +63,17 @@ public class GameContactListener implements ContactListener{
 	@Override
     public void beginContact (Contact contact){
 		
+		if (!contact.isEnabled()){
+			return;
+		}
+		
 		if (checkContact(GameScene.TopBorder.class, Player.class, contact)){
 			Player player = gameScene.getPlayer();
 			if (player.getCurrentPlaform() != null){
 				player.getCurrentPlaform().setPhysicsBodySensor(true);
 			}
 			player.decreaseHealth(Const.GameScene.TOP_BORDER_HEALTH_DECREMENT);
+			AudioManager.getInstance().playSoundEffect(SoundEffect.PLAYER_HURT);
 			numTopSpikeContact++;
 		}
 		
@@ -75,8 +82,9 @@ public class GameContactListener implements ContactListener{
     		BasePlatform.PlatformType platformType = platform.getType();
     		Player player = gameScene.getPlayer();
     		boolean animatedLand = false;
+    		boolean playLandSoundEffect = true;
     		
-    		if (!platform.isRecycled() && player.isAlive() && player.getBodyBottomYMKS() >= platform.getPhyiscsBody().getPosition().y){
+    		if (!platform.isRecycled() && player.isAlive() && player.getBodyBottomYMKS() >= (platform.getBodyTopYMKS() - Const.Plaform.COLLISION_CHECK_TOLERANCE)){
 	    		
 	    		if (platform.getType() == BasePlatform.PlatformType.REGULAR){
 	    			player.setCurrentPlatform(platform);
@@ -89,11 +97,14 @@ public class GameContactListener implements ContactListener{
 	    			}
 	    			if (Math.abs(player.getPhysicsBody().getLinearVelocity().y) > Const.Plaform.Bounce.PLAYER_VELOCITY_NO_LAND){
 	    				((BouncePlatform) platform).animate(BouncePlatform.AnimationLength.LONG);
+	    				AudioManager.getInstance().playSoundEffect(SoundEffect.PLATFORM_BOUNCE);
 	    				animatedLand = true;
 	    			}
 	    			else{
 	    				((BouncePlatform) platform).animate(BouncePlatform.AnimationLength.SHORT);
+	    				AudioManager.getInstance().playSoundEffect(SoundEffect.PLATFORM_BOUNCE);
 	    			}
+	    			playLandSoundEffect = false;
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.CONVEYOR_LEFT){
 	    			player.setCurrentPlatform(platform);
@@ -112,17 +123,25 @@ public class GameContactListener implements ContactListener{
 	    			player.setCurrentPlatform(platform);
 	    			player.decreaseHealth(Const.Plaform.Spike.HEALTH_DECREMENT);
 	    			animatedLand = true;
+	    			playLandSoundEffect = false;
+	    			AudioManager.getInstance().playSoundEffect(SoundEffect.PLAYER_HURT);
 	    		}
 	    		
 	    		if (animatedLand && Math.abs(player.getPhysicsBody().getLinearVelocity().x) < Const.Plaform.PLAYER_HORIZONTAL_VELOCITY_NO_LAND)
 	    			player.animateLand();
 	    		
-	    		if (platformType != PlatformType.SPIKE && player.isDifferentPlatform()){
+        		boolean isDifferentPlatform = player.isDifferentPlatform();
+	    		
+	    		if (platformType != PlatformType.SPIKE && isDifferentPlatform){
 	    			player.increaseHealth(Const.Plaform.HEALTH_INCREMENT);
 	    		}
 	    		
+	    		if (playLandSoundEffect && isDifferentPlatform){
+	    			AudioManager.getInstance().playSoundEffect(SoundEffect.PLATFORM_LAND);
+	    		}
+	    		
 	    		//increase the counters of platform land
-	    		if (player.isDifferentPlatform()){
+	    		if (isDifferentPlatform){
 	    			platformLandCounter.put(platformType, platformLandCounter.get(platformType) + 1);
 	    		}
     		}

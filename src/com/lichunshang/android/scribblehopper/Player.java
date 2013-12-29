@@ -12,10 +12,14 @@ import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 
+import android.util.Log;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.lichunshang.android.scribblehopper.manager.AudioManager;
+import com.lichunshang.android.scribblehopper.manager.AudioManager.SoundEffect;
 import com.lichunshang.android.scribblehopper.platform.BasePlatform;
 import com.lichunshang.android.scribblehopper.scene.GameScene;
 
@@ -31,6 +35,8 @@ public class Player{
 	
 	private AnimationState animationState = AnimationState.IDLE;
 	private boolean canSwitchAnimation = true;
+	private TimerHandler moveSoundEffectTimer;
+	private TimerHandler currentSoundEffectHandler = null;
 	
 	private BasePlatform currentPlatform = null;
 	private BasePlatform lastStayedPlatform = null;
@@ -50,6 +56,22 @@ public class Player{
 		scene.attachPlayer(this.sprite);
 		createPhysics();
 		animateIdle();
+		
+		//sound effects
+		moveSoundEffectTimer = new TimerHandler(Const.Player.RUN_SOUND_EFFECT_SPEED / 1000f, true, new ITimerCallback() {
+			boolean i = true;
+			@Override
+			public void onTimePassed(TimerHandler pTimerHandler) {
+				if (i){
+					i = !i;
+					AudioManager.getInstance().playSoundEffect(SoundEffect.PLAYER_WALK0);
+				}
+				else{
+					i = !i;
+					AudioManager.getInstance().playSoundEffect(SoundEffect.PLAYER_WALK1);
+				}
+			}
+		});
 	}
 	
 	// ------------------------------------------------
@@ -57,25 +79,46 @@ public class Player{
 	// ------------------------------------------------
 	private void onUpdate(){
 		float velocityX = physicsBody.getLinearVelocity().x;
-		move(scene.getAccelerometerValue());
+		moveWithAppliedForce(scene.getAccelerometerValue());
 		
 		updatePlatformEffect();
 		
-			if (Math.abs(velocityX) > Const.Player.IDLE_SWITCH_VELOCITY){
-				
-				sprite.setFlippedHorizontal(velocityX < 0); 
-				if (canSwitchAnimation && Math.abs(velocityX) < Const.Player.WALK_SWITCH_VELOCITY && animationState != AnimationState.WALK){
-					animateWalk();
-				}
-				else if (canSwitchAnimation && Math.abs(velocityX) > Const.Player.WALK_SWITCH_VELOCITY && animationState != AnimationState.RUN){
-					animateRun();
-				}
+		if (currentSoundEffectHandler != null && currentPlatform == null){
+			currentSoundEffectHandler = null;
+			scene.unregisterUpdateHandler(moveSoundEffectTimer);
+		}
+		
+		if (Math.abs(velocityX) > Const.Player.IDLE_SWITCH_VELOCITY){
+			
+			if (currentSoundEffectHandler == null && currentPlatform != null){
+				currentSoundEffectHandler = moveSoundEffectTimer;
+				scene.registerUpdateHandler(moveSoundEffectTimer);
 			}
-			else {
-				if (canSwitchAnimation && animationState != AnimationState.IDLE){
-					animateIdle();
-				}
+			
+			sprite.setFlippedHorizontal(velocityX < 0); 
+			if (canSwitchAnimation && Math.abs(velocityX) < Const.Player.WALK_SWITCH_VELOCITY && animationState != AnimationState.WALK){
+				animateWalk();
+				AudioManager.getInstance().setVolume(SoundEffect.PLAYER_WALK0, 0.06f);
+				AudioManager.getInstance().setVolume(SoundEffect.PLAYER_WALK1, 0.06f);
+				moveSoundEffectTimer.setTimerSeconds(Const.Player.WALK_SOUND_EFFECT_SPEED / 1000f);
 			}
+			else if (canSwitchAnimation && Math.abs(velocityX) > Const.Player.WALK_SWITCH_VELOCITY && animationState != AnimationState.RUN){
+				animateRun();
+				AudioManager.getInstance().setVolume(SoundEffect.PLAYER_WALK0, 0.3f);
+				AudioManager.getInstance().setVolume(SoundEffect.PLAYER_WALK1, 0.3f);
+				moveSoundEffectTimer.setTimerSeconds(Const.Player.RUN_SOUND_EFFECT_SPEED / 1000f);
+			}
+		}
+		else {
+			if (canSwitchAnimation && animationState != AnimationState.IDLE){
+				animateIdle();
+			}
+			
+			if (currentSoundEffectHandler != null){
+				currentSoundEffectHandler = null;
+				scene.unregisterUpdateHandler(moveSoundEffectTimer);
+			}
+		}
 	}
 	
 	private void createPhysics(){
@@ -99,7 +142,7 @@ public class Player{
 		});
 	}
 
-	private void move(float accelerometerVal){
+	public void moveWithAppliedForce(float accelerometerVal){
 		
 		//check if the acceleration and velocity are the same sign
 		if ((accelerometerVal < 0) != (physicsBody.getLinearVelocity().x < 0)){ // different sign
@@ -114,6 +157,10 @@ public class Player{
 				this.physicsBody.applyForce(new Vector2(accelerometerVal * Const.Player.ACCELERATE_MULTIPLY_FACTOR, 0),  new Vector2(0, 0));
 			}
 		}
+	}
+	
+	public void moveWithLinearVelocity(float accelerometerVal){
+		physicsBody.setLinearVelocity(accelerometerVal * Const.Player.ACCELEROMETER_MULTIPLY_FACTOR_LINEAR_VELOCITY, physicsBody.getLinearVelocity().y);
 	}
 	
 	// ------------------------------------------
@@ -208,6 +255,7 @@ public class Player{
 		health = Const.Player.MAX_HEALTH;
 		scene.onHealthChanged();
 		lastStayedPlatform = null;
+		scene.unregisterUpdateHandler(moveSoundEffectTimer);
 	}
 	
 	// ------------------------------------------
@@ -285,7 +333,7 @@ public class Player{
 	
 	//should be called after the current platform has just been set
 	public boolean isDifferentPlatform(){
-		return currentPlatform != lastStayedPlatform;
+		return lastStayedPlatform == null || currentPlatform != lastStayedPlatform;
 	}
 	
 	public void setPhysicsBodySensor(boolean isSensor){

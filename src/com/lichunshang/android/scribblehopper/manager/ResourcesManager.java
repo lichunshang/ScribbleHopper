@@ -1,5 +1,9 @@
 package com.lichunshang.android.scribblehopper.manager;
 
+import java.io.IOException;
+
+import org.andengine.audio.sound.Sound;
+import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.Engine;
 import org.andengine.engine.camera.Camera;
 import org.andengine.opengl.font.Font;
@@ -17,9 +21,9 @@ import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 
-import com.lichunshang.android.scribblehopper.GameActivity;
-
 import android.graphics.Color;
+
+import com.lichunshang.android.scribblehopper.GameActivity;
 
 public class ResourcesManager{
 	
@@ -61,6 +65,14 @@ public class ResourcesManager{
 	public ITiledTextureRegion conveyorPlatformTextureRegion;
 	public ITiledTextureRegion unstablePlatformTextureRegion;
 	public ITiledTextureRegion buttonTextureRegion;
+	
+	public Sound platformLandSound;
+	public Sound platformBounceSound;
+	public Sound platformCrackSound;
+	public Sound playerDieSound;
+	public Sound playerHurtSound;
+	public Sound playerWalkSound0;
+	public Sound playerWalkSound1;
 	
     //---------------------------------------------
     // CLASS LOGIC
@@ -138,7 +150,22 @@ public class ResourcesManager{
 	}
 	
 	public void loadAudio(){
-		
+		try{
+			platformLandSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/platformLand.wav");
+			platformBounceSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/platformBounce.wav");
+			playerHurtSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/playerHurt.wav");
+			platformCrackSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/platformCrack.wav");
+			playerDieSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/playerDie.wav");
+			playerWalkSound0 = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/playerWalk0.wav");
+			playerWalkSound1 = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/playerWalk0.wav");
+			
+			platformBounceSound.setVolume(0.3f);
+			platformLandSound.setVolume(3f);
+			playerDieSound.setVolume(0.2f);
+		}
+		catch(IOException e){
+			Debug.e(e);
+		}
 	}
 	
 	public void loadSplashScreen(){

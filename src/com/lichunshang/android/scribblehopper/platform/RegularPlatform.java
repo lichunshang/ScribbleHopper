@@ -37,6 +37,6 @@ public class RegularPlatform extends BasePlatform{
 	
 	@Override
 	public float getBodyTopYMKS(){
-		return physicsBody.getPosition().y + sprite.getHeight() / 2f / Const.Physics.PIXEL_TO_METER_RATIO;
+		return sprite.getY() / Const.Physics.PIXEL_TO_METER_RATIO + Const.Plaform.Regular.bodyVerticesMKS[0].y; 
 	}
 }

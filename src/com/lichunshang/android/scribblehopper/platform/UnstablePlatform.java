@@ -9,6 +9,8 @@ import org.andengine.extension.physics.box2d.PhysicsFactory;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.lichunshang.android.scribblehopper.Const;
+import com.lichunshang.android.scribblehopper.manager.AudioManager;
+import com.lichunshang.android.scribblehopper.manager.AudioManager.SoundEffect;
 import com.lichunshang.android.scribblehopper.scene.GameScene;
 
 public class UnstablePlatform extends BasePlatform{
@@ -42,7 +44,7 @@ public class UnstablePlatform extends BasePlatform{
 	
 	@Override
 	public float getBodyTopYMKS(){
-		return physicsBody.getPosition().y + sprite.getHeight() / 2f / Const.Physics.PIXEL_TO_METER_RATIO;
+		return sprite.getY() / Const.Physics.PIXEL_TO_METER_RATIO + Const.Plaform.Unstable.bodyVerticesMKS[0].y; 
 	}
 	
 	@Override
@@ -67,6 +69,7 @@ public class UnstablePlatform extends BasePlatform{
 		sprite.animate(Const.Plaform.Unstable.ANIME_SPEED, false);
 		setPhysicsBodySensor(true);
 		sprite.registerEntityModifier(collapseFadeOutModifier);
+		AudioManager.getInstance().playSoundEffect(SoundEffect.PLATFORM_CRACK);
 		scene.registerUpdateHandler(new TimerHandler(Const.Plaform.Unstable.TOTAL_ANIME_PERIOD / 1000f, new ITimerCallback() {
 			@Override
 			public void onTimePassed(TimerHandler pTimerHandler) {

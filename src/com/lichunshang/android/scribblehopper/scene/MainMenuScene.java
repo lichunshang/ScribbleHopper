@@ -12,6 +12,7 @@ import org.andengine.entity.text.Text;
 
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
+import com.lichunshang.android.scribblehopper.manager.AudioManager;
 import com.lichunshang.android.scribblehopper.manager.DataManager;
 import com.lichunshang.android.scribblehopper.manager.SceneManager;
 import com.lichunshang.android.scribblehopper.util.AsynchronousTask;
@@ -74,6 +75,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			@Override
 			protected void task() {
 				resourcesManager.loadRemainingResources();
+				AudioManager.getInstance().initResources();
 				SceneManager.getInstance().createGameScene();
 				createSubScenes();
 				DataManager.getInstance().loadRecord();
@@ -125,6 +127,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	public void createSubScenes(){
 		helpSubScene = new MainMenuHelpSubMenu(this);
 		scoresSubScene = new MainMenuScoreSubMenu(this);
+		optionSubScene = new MainMenuOptionSubMenu(this);
 	}
 	
 	private void createMenuChildScene(){
@@ -244,6 +247,9 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			return true;
 		}
 		else if (menuItemId == MENU_OPTIONS){
+			currentSubMenu = optionSubScene;
+			optionSubScene.attachScene();
+			subMenuNameText.setText(activity.getString(R.string.menu_options_text));
 			return true;
 		}
 		return false;

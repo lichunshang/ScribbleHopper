@@ -17,6 +17,7 @@ import org.andengine.ui.activity.BaseGameActivity;
 
 import android.view.KeyEvent;
 
+import com.lichunshang.android.scribblehopper.manager.AudioManager;
 import com.lichunshang.android.scribblehopper.manager.DataManager;
 import com.lichunshang.android.scribblehopper.manager.ResourcesManager;
 import com.lichunshang.android.scribblehopper.manager.SceneManager;
@@ -48,6 +49,7 @@ public class GameActivity extends BaseGameActivity {
 	public void onCreateResources(OnCreateResourcesCallback pOnCreateResourcesCallback) throws IOException{
 		ResourcesManager.prepareManager(mEngine, this, camera, getVertexBufferObjectManager());
 		DataManager.prepareManager(this);
+		AudioManager.prepareManager(mEngine);
 		//resourcesManager = ResourcesManager.getInstance();
 		pOnCreateResourcesCallback.onCreateResourcesFinished();
 	}

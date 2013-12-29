@@ -27,6 +27,7 @@ public class DataManager{
 	private static final int DEFAULT_HIGH_SCORE = 0;
 	private static final String GAME_RECORDS_FILE_NAME = "RECORDS.shdata";
 	
+	// ---------------- Fields ----------------
 	public GameActivity activity;
 	private SharedPreferences sharedPreferences; 
 	private File gameRecordFile;

@@ -11,6 +11,8 @@ import org.andengine.util.adt.align.HorizontalAlign;
 
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
+import com.lichunshang.android.scribblehopper.manager.AudioManager;
+import com.lichunshang.android.scribblehopper.manager.AudioManager.SoundEffect;
 import com.lichunshang.android.scribblehopper.manager.SceneManager;
 
 public class PlayerDieSubScene extends BaseSubScene implements IOnMenuItemClickListener{
@@ -50,11 +52,13 @@ public class PlayerDieSubScene extends BaseSubScene implements IOnMenuItemClickL
 	@Override
 	public void attachScene() {
 		parentScene.setChildScene(this);
+		AudioManager.getInstance().playSoundEffect(SoundEffect.PLAYER_DIE);
 	}
 
 	@Override
 	public void detachScene() {
 		parentScene.clearChildScene();
+		AudioManager.getInstance().fadeOutSoundEffect(SoundEffect.PLAYER_DIE, 0.35f);
 	}
 
 	@Override
