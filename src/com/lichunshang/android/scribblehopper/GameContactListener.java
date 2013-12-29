@@ -121,10 +121,12 @@ public class GameContactListener implements ContactListener{
 	    		}
 	    		else if (platform.getType() == BasePlatform.PlatformType.SPIKE){
 	    			player.setCurrentPlatform(platform);
-	    			player.decreaseHealth(Const.Plaform.Spike.HEALTH_DECREMENT);
 	    			animatedLand = true;
 	    			playLandSoundEffect = false;
-	    			AudioManager.getInstance().playSoundEffect(SoundEffect.PLAYER_HURT);
+	    			if (player.isDifferentPlatform()){
+	    				player.decreaseHealth(Const.Plaform.Spike.HEALTH_DECREMENT);
+	    				AudioManager.getInstance().playSoundEffect(SoundEffect.PLAYER_HURT);
+	    			}
 	    		}
 	    		
 	    		if (animatedLand && Math.abs(player.getPhysicsBody().getLinearVelocity().x) < Const.Plaform.PLAYER_HORIZONTAL_VELOCITY_NO_LAND)

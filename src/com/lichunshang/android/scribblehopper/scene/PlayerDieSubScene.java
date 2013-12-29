@@ -8,6 +8,7 @@ import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.util.adt.align.HorizontalAlign;
+import org.andengine.util.adt.color.Color;
 
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
@@ -41,6 +42,10 @@ public class PlayerDieSubScene extends BaseSubScene implements IOnMenuItemClickL
 		highScoreText = new Text(camera.getWidth() / 2, scoreText.getY() - scoreText.getHeight(), resourcesManager.font_50, parentScene.getGameActivity().getString(R.string.high_score_text) + ": 0123456879", new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
 		
 		gameOverText = new Text(camera.getWidth() / 2, camera.getHeight() * 0.66f, resourcesManager.font_100, parentScene.getGameActivity().getString(R.string.game_over_text), new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
+		
+		scoreText.setColor(Color.BLACK);
+		highScoreText.setColor(Color.BLACK);
+		gameOverText.setColor(Color.BLACK);
 		
 		attachChild(gameOverText);
 		attachChild(highScoreText);
@@ -105,6 +110,8 @@ public class PlayerDieSubScene extends BaseSubScene implements IOnMenuItemClickL
 		Text menuMenuItemText = new Text(0, 0, parentScene.getResourcesManager().font_70, parentScene.getGameActivity().getString(R.string.exit_to_menu_text), parentScene.getVertexBufferObjectManager()) ;
 		resumeMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
 		menuMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
+		resumeMenuItemText.setColor(Color.BLACK);
+		menuMenuItemText.setColor(Color.BLACK);
 		menuMenuItemText.setScale(0.9f);
 		resumeMenuItemText.setPosition(playAgainMenuItem.getWidth() / 2, playAgainMenuItem.getHeight() / 2);
 		menuMenuItemText.setPosition(menuMenuItem.getWidth() / 2, menuMenuItem.getHeight() / 2);

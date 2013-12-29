@@ -9,6 +9,7 @@ import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.util.adt.align.HorizontalAlign;
+import org.andengine.util.adt.color.Color;
 
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
@@ -35,6 +36,7 @@ public class GamePauseSubScene extends BaseSubScene implements IOnMenuItemClickL
 		backgroundSprite.setAlpha(0.65f);
 		attachChild(backgroundSprite);
 		pauseText = new Text(camera.getWidth() / 2, camera.getHeight() * 0.66f, resourcesManager.font_100, parentScene.getGameActivity().getString(R.string.paused_text), new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
+		pauseText.setColor(Color.BLACK);
 		attachChild(pauseText);
 		
 		createMenu();
@@ -97,8 +99,11 @@ public class GamePauseSubScene extends BaseSubScene implements IOnMenuItemClickL
 		menuMenuItemText.setScale(0.9f);
 		resumeMenuItemText.setPosition(resumeMenuItem.getWidth() / 2, resumeMenuItem.getHeight() / 2);
 		menuMenuItemText.setPosition(menuMenuItem.getWidth() / 2, menuMenuItem.getHeight() / 2);
+		resumeMenuItemText.setColor(Color.BLACK);
+		menuMenuItemText.setColor(Color.BLACK);
 		resumeMenuItem.attachChild(resumeMenuItemText);
 		menuMenuItem.attachChild(menuMenuItemText);
+		
 
 		menuScene.setBackgroundEnabled(false);
 

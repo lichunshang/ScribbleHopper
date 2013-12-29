@@ -9,6 +9,7 @@ import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
+import org.andengine.util.adt.color.Color;
 
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
@@ -56,13 +57,17 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	private void createBackground(){
 		Text title =  new Text(camera.getWidth() / 2, camera.getHeight() * 0.82f, resourcesManager.font_120, activity.getString(R.string.game_name), vertexBufferObjectManager);
 		Text titleJust = new Text(camera.getWidth() / 2, camera.getHeight() * 0.92f, resourcesManager.font_70, activity.getString(R.string.game_name_just), vertexBufferObjectManager);
-		this.subMenuNameText = new Text(camera.getWidth() * 0.75f, camera.getHeight() * 0.685f, resourcesManager.font_50, "abcdefghijklmnopqrstuvwxyz0123456879", vertexBufferObjectManager);
-		this.subMenuNameText.setText("");
-		this.subMenuNameText.setRotation(15f);
 		title.setRotation(15f);
+		title.setColor(Color.BLACK);
+		titleJust.setColor(Color.BLACK);
 		attachChild(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.backgroundTextureRegion, vertexBufferObjectManager));
 		attachChild(title);
 		attachChild(titleJust);
+		
+		this.subMenuNameText = new Text(camera.getWidth() * 0.75f, camera.getHeight() * 0.685f, resourcesManager.font_50, "abcdefghijklmnopqrstuvwxyz0123456879", vertexBufferObjectManager);
+		this.subMenuNameText.setText("");
+		this.subMenuNameText.setRotation(15f);
+		this.subMenuNameText.setColor(Color.BLACK);
 		attachChild(subMenuNameText);
 	}
 	
@@ -207,6 +212,11 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		helpMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
 		scoreMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
 		optionMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
+		
+		playMenuItemText.setColor(Color.BLACK);
+		helpMenuItemText.setColor(Color.BLACK);
+		scoreMenuItemText.setColor(Color.BLACK);
+		optionMenuItemText.setColor(Color.BLACK);
 		
 		playMenuItem.attachChild(playMenuItemText);
 		helpMenuItem.attachChild(helpMenuItemText);

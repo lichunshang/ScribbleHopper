@@ -1,6 +1,7 @@
 package com.lichunshang.android.scribblehopper.scene;
 
 import org.andengine.entity.text.Text;
+import org.andengine.util.adt.color.Color;
 
 import com.lichunshang.android.scribblehopper.R;
 import com.lichunshang.android.scribblehopper.manager.DataManager;
@@ -45,6 +46,20 @@ public class MainMenuScoreSubMenu extends BaseMainMenuSubMenu{
 		averageGameScoreVal.setAnchorCenter(0, 0);
 		totalPlayTimeVal.setAnchorCenter(0, 0);
 		totalPlatformsLandedVal.setAnchorCenter(0, 0);
+		
+		highScore.setColor(Color.BLACK);
+		lastScore.setColor(Color.BLACK);
+		totalGamesPlayed.setColor(Color.BLACK);
+		averageGameScore.setColor(Color.BLACK);
+		totalPlayTime.setColor(Color.BLACK);
+		totalPlatformsLanded.setColor(Color.BLACK);
+		
+		highScoreVal.setColor(Color.BLACK);
+		lastScoreVal.setColor(Color.BLACK);
+		totalGamesPlayedVal.setColor(Color.BLACK);
+		averageGameScoreVal.setColor(Color.BLACK);
+		totalPlayTimeVal.setColor(Color.BLACK);
+		totalPlatformsLandedVal.setColor(Color.BLACK);
 		
 		final int OFFSET = 30;
 		highScore.setPosition(camera.getWidth() * 0.1f, camera.getHeight() * 0.5f);

@@ -4,6 +4,7 @@ import org.andengine.entity.Entity;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.util.adt.color.Color;
 
 import com.lichunshang.android.scribblehopper.scene.GameScene;
 
@@ -36,6 +37,7 @@ public class GameHUD{
 		this.gameScene.registerTouchArea(pauseSprite);
 		
 		scoreText = new Text(0, 0, this.gameScene.getResourcesManager().font_50, "0123456789", this.gameScene.getVertexBufferObjectManager());
+		scoreText.setColor(Color.BLACK);
 		scoreText.setAnchorCenter(0, 0);
 		scoreText.setText("0");
 		scoreText.setPosition(gameScene.getCamera().getWidth() - scoreText.getWidth() - pauseSprite.getWidth() - Const.GameScene.HUD.SCORE_RIGHT_MARGIN, 0);

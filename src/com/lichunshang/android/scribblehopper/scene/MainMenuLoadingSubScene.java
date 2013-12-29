@@ -6,6 +6,7 @@ import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.text.Text;
 import org.andengine.entity.text.TextOptions;
 import org.andengine.util.adt.align.HorizontalAlign;
+import org.andengine.util.adt.color.Color;
 
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
@@ -29,6 +30,7 @@ public class MainMenuLoadingSubScene extends BaseSubScene{
 		attachChild(backgroundSprite);
 		loadingText = new Text(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.font_50, "Loading.......", new TextOptions(HorizontalAlign.CENTER), vertexBufferObjectManager);
 		loadingText.setText("Loading");
+		loadingText.setColor(Color.BLACK);
 		attachChild(loadingText);
 		
 		loadingTextTimer = new TimerHandler(Const.MenuScene.LOADING_TEXT_ANIME_PERIOD / 1000f, true, new ITimerCallback() {
@@ -38,7 +40,7 @@ public class MainMenuLoadingSubScene extends BaseSubScene{
 			public void onTimePassed(TimerHandler pTimerHandler) {
 				loadingText.setText(parentScene.getGameActivity().getString(R.string.loading_text) + dots[numDots]);
 				numDots++;
-				if (numDots == 3)
+				if (numDots == 4)
 					numDots = 0;
 			}
 		});

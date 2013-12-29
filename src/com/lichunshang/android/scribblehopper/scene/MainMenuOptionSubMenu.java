@@ -3,6 +3,7 @@ package com.lichunshang.android.scribblehopper.scene;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.text.Text;
 import org.andengine.input.touch.TouchEvent;
+import org.andengine.util.adt.color.Color;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -29,6 +30,9 @@ public class MainMenuOptionSubMenu extends BaseMainMenuSubMenu{
 				if (pSceneTouchEvent.isActionDown()){
 					setCurrentTileIndex(1);
 				}
+				else if (pSceneTouchEvent.isActionCancel() || !this.contains(pSceneTouchEvent.getX(), pSceneTouchEvent.getY())) {
+					setCurrentTileIndex(0);
+				}
 				else if (pSceneTouchEvent.isActionUp()){
 					setCurrentTileIndex(0);
 					clearHistoryClicked();
@@ -45,6 +49,7 @@ public class MainMenuOptionSubMenu extends BaseMainMenuSubMenu{
 		clearHistoryMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
 		clearHistoryMenuItemText.setScale(0.93f);
 		clearHistoryMenuItemText.setPosition(clearHistoryButton.getWidth() / 2, clearHistoryButton.getHeight() / 2);
+		clearHistoryMenuItemText.setColor(Color.BLACK);
 		clearHistoryButton.attachChild(clearHistoryMenuItemText);
 		
 		attachChild(clearHistoryButton);

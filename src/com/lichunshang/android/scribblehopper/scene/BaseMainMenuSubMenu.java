@@ -5,6 +5,7 @@ import org.andengine.entity.scene.menu.MenuScene.IOnMenuItemClickListener;
 import org.andengine.entity.scene.menu.item.AnimatedSpriteMenuItem;
 import org.andengine.entity.scene.menu.item.IMenuItem;
 import org.andengine.entity.text.Text;
+import org.andengine.util.adt.color.Color;
 
 import com.lichunshang.android.scribblehopper.Const;
 import com.lichunshang.android.scribblehopper.R;
@@ -67,6 +68,7 @@ public abstract class BaseMainMenuSubMenu extends BaseSubScene implements IOnMen
 		menuMenuItemText.setAlpha(Const.MenuScene.BUTTON_ALPHA);
 		menuMenuItemText.setPosition(menuMenuItem.getWidth() / 2, menuMenuItem.getHeight() / 2);
 		menuMenuItem.attachChild(menuMenuItemText);
+		menuMenuItemText.setColor(Color.BLACK);
 
 		menuScene.setBackgroundEnabled(false);
 

@@ -238,6 +238,7 @@ public class Player{
 		physicsBody.setActive(false);
 		sprite.setIgnoreUpdate(true);
 		sprite.setVisible(false);
+		scene.unregisterUpdateHandler(moveSoundEffectTimer);
 	}
 	
 	public void reset(){
