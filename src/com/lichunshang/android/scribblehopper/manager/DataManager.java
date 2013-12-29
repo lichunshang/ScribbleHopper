@@ -97,7 +97,7 @@ public class DataManager{
 	
 	public void clearGameRecords(){
 		try{
-			FileWriter fileWriter = new FileWriter(gameRecordFile, true);
+			FileWriter fileWriter = new FileWriter(gameRecordFile, false);
 			fileWriter.write("");
 			fileWriter.close();
 			
@@ -112,6 +112,11 @@ public class DataManager{
 		for (GameRecord records : gameRecordsList){
 			Log.w("checkstuff", "Record Debug:" + records.getRecordLine().replaceAll(GameRecord.DELIMITOR, ","));
 		}
+	}
+	
+	public void clearGameHistory(){
+		clearGameRecords();
+		clearHighScore();
 	}
 	
 	// -------- Getters of Processed Information ---------

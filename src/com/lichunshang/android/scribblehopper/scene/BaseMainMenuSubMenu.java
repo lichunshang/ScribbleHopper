@@ -11,8 +11,8 @@ import com.lichunshang.android.scribblehopper.R;
 
 public abstract class BaseMainMenuSubMenu extends BaseSubScene implements IOnMenuItemClickListener{
 
-	private MenuScene menuScene;
-	private final int MENU_MENU = 0;
+	protected MenuScene menuScene;
+	protected final int MENU_MENU = 99;
 
 	public BaseMainMenuSubMenu(MainMenuScene menuScene) {
 		super(menuScene);

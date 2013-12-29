@@ -27,6 +27,8 @@
     <string name="scores_average_game_score">Average Score</string>
     <string name="scores_total_play_time">Time Played</string>
     <string name="scores_total_platforms_landed">Platforms Landed</string>
+   
+    <string name="clear_history">Clear Game History</string>
     
     <string name="paused_text">Game Paused</string>
     <string name="resume_text">Resume</string>
