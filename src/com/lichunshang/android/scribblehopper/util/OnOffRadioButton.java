@@ -102,7 +102,7 @@ public class OnOffRadioButton{
 		offButtonText.setPosition(textSeparator.getX() + textSeparator.getWidth(), onButtonText.getY());
 	}
 	
-	public boolean attach(Entity entity){
+	public boolean attachTo(Entity entity){
 		if (attached)
 			return false;
 		entity.attachChild(onButtonText);
@@ -111,7 +111,7 @@ public class OnOffRadioButton{
 		return true;
 	}
 	
-	public boolean detach(Entity entity){
+	public boolean detachFrom(Entity entity){
 		if (!attached)
 			return false;
 		entity.detachChild(onButtonText);

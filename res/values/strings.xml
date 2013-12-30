@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Scribble Hopper</string>
+    <string name="app_name">Drop Shaft</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
     <string name="loading_text">Loading</string>
     
-    <string name="game_name">Keep Falling!</string>
-    <string name="game_name_just">just...</string>
+    <string name="game_name">Drop Shaft</string>
     <string name="menu_play_text">Play</string>
     <string name="menu_help_text">How to Play</string>
     <string name="menu_score_text">Scores</string>

@@ -56,13 +56,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	
 	private void createBackground(){
 		Text title =  new Text(camera.getWidth() / 2, camera.getHeight() * 0.82f, resourcesManager.font_120, activity.getString(R.string.game_name), vertexBufferObjectManager);
-		Text titleJust = new Text(camera.getWidth() / 2, camera.getHeight() * 0.92f, resourcesManager.font_70, activity.getString(R.string.game_name_just), vertexBufferObjectManager);
 		title.setRotation(15f);
 		title.setColor(Color.BLACK);
-		titleJust.setColor(Color.BLACK);
 		attachChild(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.backgroundTextureRegion, vertexBufferObjectManager));
 		attachChild(title);
-		attachChild(titleJust);
 		
 		this.subMenuNameText = new Text(camera.getWidth() * 0.75f, camera.getHeight() * 0.685f, resourcesManager.font_50, "abcdefghijklmnopqrstuvwxyz0123456879", vertexBufferObjectManager);
 		this.subMenuNameText.setText("");

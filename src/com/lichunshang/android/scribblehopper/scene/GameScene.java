@@ -6,7 +6,6 @@ import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
 import org.andengine.entity.primitive.Rectangle;
-import org.andengine.entity.scene.background.SpriteBackground;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
@@ -22,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.lichunshang.android.scribblehopper.Const;
+import com.lichunshang.android.scribblehopper.GameBackground;
 import com.lichunshang.android.scribblehopper.GameContactListener;
 import com.lichunshang.android.scribblehopper.GameHUD;
 import com.lichunshang.android.scribblehopper.GameRecord;
@@ -40,12 +40,12 @@ public class GameScene extends BaseScene {
 	private PhysicsWorld physicsWorld;
 	private GameContactListener contactListener;
 	
-	private SpriteBackground background;
+	private GameBackground gameBackground;
 	private Player player;
 	private float score = 0;
 	
 	private PlatformPool platformPool;
-	private double platformSpeed = Const.Plaform.INITIAL_SPEED;
+	private float platformSpeed = Const.Plaform.INITIAL_SPEED;
 	private BasePlatform lastSpawnedPlatform;
 	private TimerHandler platformSpawnTimer, textUpdateTimer;
 	
@@ -74,6 +74,8 @@ public class GameScene extends BaseScene {
 	// GAME LOOP METHOD
 	// ==============================================
 	public void onUpdate(){
+		
+		gameBackground.onUpdate(platformSpeed);
 		
 		//check if the player is alive
 		if (!player.isAlive() && currentSubScene == null){
@@ -155,13 +157,14 @@ public class GameScene extends BaseScene {
 	}
 	
 	private void createLayers(){
-		background = new SpriteBackground(new Sprite(camera.getWidth() / 2, camera.getHeight() / 2, resourcesManager.backgroundTextureRegion, vertexBufferObjectManager));
-		setBackground(background);
-		
 		backgroundLayer = new Entity();
 		playerLayer = new Entity();
 		plaformLayer = new Entity();
 		HUDLayer = new Entity();
+		
+		gameBackground = new GameBackground(camera, vertexBufferObjectManager);
+		gameBackground.attachTo(backgroundLayer);
+		
 		attachChild(backgroundLayer);
 		attachChild(plaformLayer);
 		attachChild(playerLayer);
@@ -348,7 +351,7 @@ public class GameScene extends BaseScene {
 	}
 	
 	public float getPlatformSpeed(){
-		return (float) platformSpeed;
+		return platformSpeed;
 	}
 	
 	public float getAccelerometerValue(){

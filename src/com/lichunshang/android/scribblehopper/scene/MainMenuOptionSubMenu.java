@@ -56,7 +56,7 @@ public class MainMenuOptionSubMenu extends BaseMainMenuSubMenu{
 		}
 		
 		musicOnOffRadioButton.registerTouchArea(this);
-		musicOnOffRadioButton.attach(this);
+		musicOnOffRadioButton.attachTo(this);
 		
 		//------------------ clear history button -----------------------
 		AnimatedSprite clearHistoryButton = new AnimatedSprite(0, 0, resourcesManager.buttonTextureRegion, vertexBufferObjectManager){

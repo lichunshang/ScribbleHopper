@@ -21,6 +21,9 @@ import com.lichunshang.android.scribblehopper.manager.AudioManager;
 import com.lichunshang.android.scribblehopper.manager.DataManager;
 import com.lichunshang.android.scribblehopper.manager.ResourcesManager;
 import com.lichunshang.android.scribblehopper.manager.SceneManager;
+import com.lichunshang.android.scribblehopper.manager.SceneManager.SceneType;
+import com.lichunshang.android.scribblehopper.scene.BaseScene;
+import com.lichunshang.android.scribblehopper.scene.GameScene;
 
 
 public class GameActivity extends BaseGameActivity {
@@ -81,6 +84,17 @@ public class GameActivity extends BaseGameActivity {
 	{
 		super.onDestroy();
 	        System.exit(0);	
+	}
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		BaseScene currentScene = SceneManager.getInstance().getCurrentScene();
+		if (currentScene.getSceneType() == SceneType.SCENE_GAME){
+			if (!((GameScene) currentScene).isPaused() && ((GameScene) currentScene).getPlayer().isAlive()){
+				((GameScene) currentScene).pauseGame();
+			}
+		}
 	}
 	
 	@Override
