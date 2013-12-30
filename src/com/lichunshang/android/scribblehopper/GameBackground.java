@@ -29,9 +29,8 @@ public class GameBackground{
 		this.camera = camera;
 	}
 	
-	//note speed is in MKS
-	public void onUpdate(float speed){
-		float amountToMove = (speed / Const.Physics.REFRESH_RATE) * Const.Physics.PIXEL_TO_METER_RATIO; 
+	//note amountToMove is in pixels
+	public void onUpdate(float amountToMove){
 		
 		background1.setPosition(0, background1.getY() + amountToMove);
 		background2.setPosition(0, background2.getY() + amountToMove);

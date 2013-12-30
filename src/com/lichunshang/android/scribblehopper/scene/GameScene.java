@@ -5,10 +5,12 @@ import java.util.Random;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.entity.Entity;
+import org.andengine.entity.IEntity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.sprite.AnimatedSprite;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.FixedStepPhysicsWorld;
+import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.ui.activity.BaseGameActivity;
@@ -48,6 +50,7 @@ public class GameScene extends BaseScene {
 	private float platformSpeed = Const.Plaform.INITIAL_SPEED;
 	private BasePlatform lastSpawnedPlatform;
 	private TimerHandler platformSpawnTimer, textUpdateTimer;
+	private PlatformMovementReference platformMovementReference;
 	
 	private BaseSubScene currentSubScene = null;
 	private PlayerDieSubScene playerDieScene;
@@ -75,8 +78,7 @@ public class GameScene extends BaseScene {
 	// ==============================================
 	public void onUpdate(){
 		
-		gameBackground.onUpdate(platformSpeed);
-		
+		gameBackground.onUpdate(platformMovementReference.getPosYDelta());
 		//check if the player is alive
 		if (!player.isAlive() && currentSubScene == null){
 			onPlayerDie();
@@ -92,6 +94,13 @@ public class GameScene extends BaseScene {
 		platformPool = new PlatformPool(this);
 		lastSpawnedPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
 		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, 0);
+		
+		Rectangle platformMovementReferenceSprite = new Rectangle(0, 0, 1, 1, vertexBufferObjectManager);
+		platformMovementReferenceSprite.setVisible(false);
+		final Body platformMovementReferenceBody = PhysicsFactory.createBoxBody(physicsWorld, platformMovementReferenceSprite, BodyType.KinematicBody, PhysicsFactory.createFixtureDef(0, 0, 0, true));
+		
+		platformMovementReference = new PlatformMovementReference(platformMovementReferenceSprite, platformMovementReferenceBody);
+		physicsWorld.registerPhysicsConnector(platformMovementReference);
 		
 		//create left and right border so the player does not get out
 		Rectangle leftBorder = new Rectangle(-1, camera.getHeight() / 2, 2, camera.getHeight(), vertexBufferObjectManager);
@@ -403,4 +412,29 @@ public class GameScene extends BaseScene {
 	// -----------------------------------------------
 
 	public class TopBorder{}
+	
+	public class PlatformMovementReference extends PhysicsConnector{
+		private float posYDelta = 0; 
+		
+		public PlatformMovementReference(final IEntity pEntity, final Body pBody){
+			super(pEntity, pBody);
+		}
+		
+		@Override
+		public void onUpdate(float pSecondsElapsed){
+			
+			float lastPosY = getEntity().getY();
+			
+			super.onUpdate(pSecondsElapsed);
+			
+			posYDelta += getEntity().getY() - lastPosY;
+			getBody().setLinearVelocity(0, getPlatformSpeed());
+		}
+		
+		public float getPosYDelta(){
+			float val = posYDelta;
+			posYDelta = 0;
+			return val;
+		}
+	}
 }
