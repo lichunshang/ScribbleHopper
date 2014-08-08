@@ -116,15 +116,15 @@ public interface Const{
 	
 	public interface Plaform{
 		
-		public static final float MIN_SPAWN_TIME = 300f;
-		public static final float MAX_SPAWN_TIME = 1000f;
+		public static final float MIN_SPAWN_TIME = 400f;
+		public static final float MAX_SPAWN_TIME = 1200f;
 		public static final float INITIAL_SPAWN_TIME = (MIN_SPAWN_TIME + MAX_SPAWN_TIME) / 2;
 		public static final float INITIAL_SPEED = 10f;
 		public static final int HEALTH_INCREMENT = 1;
 		// This is to prevent the user from seeing a disabled platform when setVisible gets out of place with the update thread
 		public static final int SPAWN_DISPLACEMENT = 50; 
 		public static final float PLAYER_HORIZONTAL_VELOCITY_NO_LAND = Player.WALK_SWITCH_VELOCITY;
-		public static final int MAX_NUM_CONSECUTIVE_PLATFORM_SPAWN = 3;
+		public static final int MAX_NUM_CONSECUTIVE_PLATFORM_SPAWN = 4;
 		
 		//since the coordinates of collisions used in comparison might be slightly off
 		public static final float COLLISION_CHECK_TOLERANCE = 0.15f;
@@ -152,7 +152,7 @@ public interface Const{
 		}
 		
 		public interface Bounce extends Regular{
-			public static final float ELASTICITY = 0.70f;
+			public static final float ELASTICITY = 0.65f;
 			public static final float PLAYER_VELOCITY_NO_BOUNCE = 3.5f; //no player bounce under certain y velocity
 			public static final float PLAYER_VELOCITY_NO_LAND = 4.5f; //no land animation under certain y velocity
 			public static final long[] SHORT_FRAME_DURATION = {10, 10, 10, 25, 25, 25};

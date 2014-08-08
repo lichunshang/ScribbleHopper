@@ -69,12 +69,15 @@ public class GameContactListener implements ContactListener{
 		
 		if (checkContact(GameScene.TopBorder.class, Player.class, contact)){
 			Player player = gameScene.getPlayer();
-			if (player.getCurrentPlaform() != null){
-				player.getCurrentPlaform().setPhysicsBodySensor(true);
+			
+			if (player.isAlive()){
+				if (player.getCurrentPlaform() != null){
+					player.getCurrentPlaform().setPhysicsBodySensor(true);
+				}
+				player.decreaseHealth(Const.GameScene.TOP_BORDER_HEALTH_DECREMENT);
+				AudioManager.getInstance().playSoundEffect(SoundEffect.PLAYER_HURT);
+				numTopSpikeContact++;
 			}
-			player.decreaseHealth(Const.GameScene.TOP_BORDER_HEALTH_DECREMENT);
-			AudioManager.getInstance().playSoundEffect(SoundEffect.PLAYER_HURT);
-			numTopSpikeContact++;
 		}
 		
     	if (checkContact(BasePlatform.class, Player.class, contact)){

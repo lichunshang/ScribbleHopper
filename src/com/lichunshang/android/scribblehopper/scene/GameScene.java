@@ -96,7 +96,7 @@ public class GameScene extends BaseScene {
 	private void createGameElements(){
 		player = new Player(camera.getWidth() / 2, camera.getHeight() / 3, this, physicsWorld);
 		platformPool = new PlatformPool(this);
-		numSamePlatformTypeInARow = 0;
+		numSamePlatformTypeInARow = 1;
 		lastSpawnedPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
 		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, 0);
 		
@@ -332,7 +332,7 @@ public class GameScene extends BaseScene {
 			numSamePlatformTypeInARow++;
 		}
 		else{
-			numSamePlatformTypeInARow = 0;
+			numSamePlatformTypeInARow = 1;
 		}
 		
 		return nextPlatformType;
