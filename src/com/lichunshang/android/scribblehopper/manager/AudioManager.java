@@ -8,6 +8,8 @@ import org.andengine.engine.Engine;
 import org.andengine.engine.handler.timer.ITimerCallback;
 import org.andengine.engine.handler.timer.TimerHandler;
 
+import android.util.Log;
+
 import com.lichunshang.android.scribblehopper.Const;
 
 
@@ -65,9 +67,11 @@ public class AudioManager{
 		engine.registerUpdateHandler(new TimerHandler(Const.Manager.AUDIO_FADE_CALC_RATE / 1000f, true, new ITimerCallback() {
 			@Override
 			public void onTimePassed(TimerHandler pTimerHandler) {
+				Log.w("checkstuff", Float.toString(sound.getVolume() ));
 				if (soundEffects.get(soundEffect).getVolume() < Const.Manager.AUDIO_FADE_OUT_VOLUME_STOP_THRESHOLD){
-					sound.stop();
+					Log.w("checkstuff", "SoundStopped" );
 					sound.setVolume(ORIGINAL_VOLUME);
+					sound.stop();
 					engine.unregisterUpdateHandler(pTimerHandler);
 				}
 				else{

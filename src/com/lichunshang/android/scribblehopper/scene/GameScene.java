@@ -1,5 +1,6 @@
 package com.lichunshang.android.scribblehopper.scene;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 import org.andengine.engine.handler.timer.ITimerCallback;
@@ -15,6 +16,8 @@ import org.andengine.extension.physics.box2d.PhysicsFactory;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.ui.activity.BaseGameActivity;
 
+import android.R.bool;
+import android.R.integer;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 
@@ -49,6 +52,7 @@ public class GameScene extends BaseScene {
 	private PlatformPool platformPool;
 	private float platformSpeed = Const.Plaform.INITIAL_SPEED;
 	private BasePlatform lastSpawnedPlatform;
+	private int numSamePlatformTypeInARow;
 	private TimerHandler platformSpawnTimer, textUpdateTimer;
 	private PlatformMovementReference platformMovementReference;
 	
@@ -92,6 +96,7 @@ public class GameScene extends BaseScene {
 	private void createGameElements(){
 		player = new Player(camera.getWidth() / 2, camera.getHeight() / 3, this, physicsWorld);
 		platformPool = new PlatformPool(this);
+		numSamePlatformTypeInARow = 0;
 		lastSpawnedPlatform = platformPool.initPlatform(BasePlatform.PlatformType.REGULAR);
 		lastSpawnedPlatform.setPosition(camera.getWidth() / 2, 0);
 		
@@ -294,26 +299,43 @@ public class GameScene extends BaseScene {
 	}
 	
 	public BasePlatform.PlatformType getNextPlatformType(){
-
-		int randomNum = random.nextInt(6);
-		if (randomNum == 0){
-			return BasePlatform.PlatformType.REGULAR;
+		
+		BasePlatform.PlatformType nextPlatformType;
+		
+		//if the same platform have been generated consecutively, try again
+		//until a different platform is generated
+		do{
+			int randomNum = random.nextInt(6);
+			if (randomNum == 0){
+				nextPlatformType =  BasePlatform.PlatformType.REGULAR;
+			}
+			else if (randomNum == 1){
+				nextPlatformType = BasePlatform.PlatformType.UNSTABLE;
+			}
+			else if (randomNum == 2){
+				nextPlatformType = BasePlatform.PlatformType.CONVEYOR_LEFT;
+			}
+			else if (randomNum == 3){
+				nextPlatformType = BasePlatform.PlatformType.CONVEYOR_RIGHT;
+			}
+			else if (randomNum == 4){
+				nextPlatformType = BasePlatform.PlatformType.BOUNCE;
+			}
+			else {
+				nextPlatformType = BasePlatform.PlatformType.SPIKE;
+			}
+			
+		} while(numSamePlatformTypeInARow >= Const.Plaform.MAX_NUM_CONSECUTIVE_PLATFORM_SPAWN && nextPlatformType == lastSpawnedPlatform.getType());
+		
+		//reset the counter when a different platform is generated
+		if (nextPlatformType == lastSpawnedPlatform.getType()){
+			numSamePlatformTypeInARow++;
 		}
-		else if (randomNum == 1){
-			return BasePlatform.PlatformType.UNSTABLE;
+		else{
+			numSamePlatformTypeInARow = 0;
 		}
-		else if (randomNum == 2){
-			return BasePlatform.PlatformType.CONVEYOR_LEFT;
-		}
-		else if (randomNum == 3){
-			return BasePlatform.PlatformType.CONVEYOR_RIGHT;
-		}
-		else if (randomNum == 4){
-			return BasePlatform.PlatformType.BOUNCE;
-		}
-		else {
-			return BasePlatform.PlatformType.SPIKE;
-		}
+		
+		return nextPlatformType;
 	}
 	
 	public void onPlatformSpawnTimerPass(){

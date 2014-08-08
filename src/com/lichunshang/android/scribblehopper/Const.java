@@ -116,14 +116,15 @@ public interface Const{
 	
 	public interface Plaform{
 		
-		public static final float MIN_SPAWN_TIME = 1100f;
-		public static final float MAX_SPAWN_TIME = 2700f;
+		public static final float MIN_SPAWN_TIME = 300f;
+		public static final float MAX_SPAWN_TIME = 1000f;
 		public static final float INITIAL_SPAWN_TIME = (MIN_SPAWN_TIME + MAX_SPAWN_TIME) / 2;
-		public static final float INITIAL_SPEED = 5f;
+		public static final float INITIAL_SPEED = 10f;
 		public static final int HEALTH_INCREMENT = 1;
 		// This is to prevent the user from seeing a disabled platform when setVisible gets out of place with the update thread
 		public static final int SPAWN_DISPLACEMENT = 50; 
 		public static final float PLAYER_HORIZONTAL_VELOCITY_NO_LAND = Player.WALK_SWITCH_VELOCITY;
+		public static final int MAX_NUM_CONSECUTIVE_PLATFORM_SPAWN = 3;
 		
 		//since the coordinates of collisions used in comparison might be slightly off
 		public static final float COLLISION_CHECK_TOLERANCE = 0.15f;
