@@ -2,6 +2,8 @@ package com.lichunshang.android.scribblehopper.manager;
 
 import java.io.IOException;
 
+import org.andengine.audio.music.Music;
+import org.andengine.audio.music.MusicFactory;
 import org.andengine.audio.sound.Sound;
 import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.Engine;
@@ -66,6 +68,7 @@ public class ResourcesManager{
 	public ITiledTextureRegion unstablePlatformTextureRegion;
 	public ITiledTextureRegion buttonTextureRegion;
 	
+	public Music backgroundMusic;
 	public Sound platformLandSound;
 	public Sound platformBounceSound;
 	public Sound platformCrackSound;
@@ -151,6 +154,7 @@ public class ResourcesManager{
 	
 	public void loadAudio(){
 		try{
+			backgroundMusic = MusicFactory.createMusicFromAsset(engine.getMusicManager(), activity, "mfx/background.mp3");
 			platformLandSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/platformLand.wav");
 			platformBounceSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/platformBounce.wav");
 			playerHurtSound = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/playerHurt.wav");
@@ -159,9 +163,11 @@ public class ResourcesManager{
 			playerWalkSound0 = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/playerWalk0.wav");
 			playerWalkSound1 = SoundFactory.createSoundFromAsset(engine.getSoundManager(), activity, "mfx/playerWalk0.wav");
 			
+			backgroundMusic.setVolume(0.3f);
 			platformBounceSound.setVolume(0.3f);
 			platformLandSound.setVolume(3f);
 			playerDieSound.setVolume(0.2f);
+			
 		}
 		catch(IOException e){
 			Debug.e(e);

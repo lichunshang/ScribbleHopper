@@ -95,6 +95,20 @@ public class GameActivity extends BaseGameActivity {
 				((GameScene) currentScene).pauseGame();
 			}
 		}
+		
+		AudioManager.getInstance().pauseMusic(AudioManager.MusicEffect.BACKGROUND);
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		try{
+			AudioManager.getInstance().playMusic(AudioManager.MusicEffect.BACKGROUND, true);
+		}
+		catch( NullPointerException e ){
+			
+		}
+		
 	}
 	
 	@Override

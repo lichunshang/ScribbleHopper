@@ -26,7 +26,10 @@ public class DataManager{
 	private static final String HIGH_SCORE_KEY = "HIGH_SCORE_KEY";
 	private static final int DEFAULT_HIGH_SCORE = 0;
 	private static final String SOUND_EFFECT_ENABLED_KEY = "SOUND_EFFECT_ENABLED_KEY";
+	private static final String MUSIC_ENABLE_KEY = "MUSIC_ENABLE_KEY";
 	private static final boolean DEFAULT_SOUND_EFFECT_ENABLED = true;
+	private static final boolean DEFAULT_MUSIC_ENABLED = false;
+	
 	
 	private static final String GAME_RECORDS_FILE_NAME = "RECORDS.shdata";
 	
@@ -67,6 +70,16 @@ public class DataManager{
 	
 	public boolean getSoundEffectEnabled(){
 		return sharedPreferences.getBoolean(SOUND_EFFECT_ENABLED_KEY, DEFAULT_SOUND_EFFECT_ENABLED);
+	}
+	
+	public void saveMusicEnabled(boolean enabled){
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(MUSIC_ENABLE_KEY, enabled);
+		editor.commit();
+	}
+	
+	public boolean getMusicEnabled(){
+		return sharedPreferences.getBoolean(MUSIC_ENABLE_KEY, DEFAULT_MUSIC_ENABLED);
 	}
 	
 	// ----------------------------------------------

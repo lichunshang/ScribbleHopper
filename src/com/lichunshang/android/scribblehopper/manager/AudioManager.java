@@ -20,6 +20,7 @@ public class AudioManager{
 	private Hashtable<SoundEffect, Sound> soundEffects = new Hashtable<AudioManager.SoundEffect, Sound>();
 	private Hashtable<MusicEffect, Music> musicEffects = new Hashtable<MusicEffect, Music>();
 	private boolean soundEffectEnabled = true;
+	private boolean musicEnabled = true;
 	
 	public void setSoundEffectEnabled(boolean enabled){
 		soundEffectEnabled = enabled;
@@ -81,8 +82,23 @@ public class AudioManager{
 	}
 	
 	public void playMusic(MusicEffect musicEffect, boolean loop){
-		musicEffects.get(musicEffect).setLooping(loop);
-		musicEffects.get(musicEffect).play();
+		if (musicEnabled){
+			musicEffects.get(musicEffect).setLooping(loop);
+			musicEffects.get(musicEffect).play();
+		}
+	}
+	
+	public void pauseMusic(MusicEffect musicEffect){
+		musicEffects.get(musicEffect).pause();
+	}
+	
+	public void setMusicEnabled(boolean enabled){
+		musicEnabled = enabled;
+		DataManager.getInstance().saveMusicEnabled(musicEnabled);
+	}
+	
+	public boolean isMusicEnabled(){
+		return musicEnabled;
 	}
 	
 	//must be called before using this class
@@ -95,11 +111,14 @@ public class AudioManager{
 		soundEffects.put(SoundEffect.PLAYER_DIE, resourcesManager.playerDieSound);
 		soundEffects.put(SoundEffect.PLAYER_WALK0, resourcesManager.playerWalkSound0);
 		soundEffects.put(SoundEffect.PLAYER_WALK1, resourcesManager.playerWalkSound1);
+		
+		musicEffects.put(MusicEffect.BACKGROUND, resourcesManager.backgroundMusic);
 	}
 	
 	//must be called before using this class
 	public void loadAudioSettings(){
 		soundEffectEnabled = DataManager.getInstance().getSoundEffectEnabled();
+		musicEnabled = DataManager.getInstance().getMusicEnabled();
 	}
 	
 	public static enum SoundEffect{
@@ -113,7 +132,7 @@ public class AudioManager{
 	}
 	
 	public static enum MusicEffect{
-		
+		BACKGROUND
 	}
 	
 	// --------------------------------------------------------------

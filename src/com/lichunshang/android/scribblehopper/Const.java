@@ -63,8 +63,8 @@ public interface Const{
 		
 		//vertices in pixels
 		public static final Vector2[] bodyVerticesPixels = {
-			new Vector2(1, 60f),
-			new Vector2(-1, 60f),
+			new Vector2(1, 30f),
+			new Vector2(-1, 30f),
 			new Vector2(-1, -62.5f),
 			new Vector2(1, -62.5f),
 		};
@@ -116,8 +116,8 @@ public interface Const{
 	
 	public interface Plaform{
 		
-		public static final float MIN_SPAWN_TIME = 400f;
-		public static final float MAX_SPAWN_TIME = 1200f;
+		public static final float MIN_SPAWN_TIME = 460f;
+		public static final float MAX_SPAWN_TIME = 850f;
 		public static final float INITIAL_SPAWN_TIME = (MIN_SPAWN_TIME + MAX_SPAWN_TIME) / 2;
 		public static final float INITIAL_SPEED = 10f;
 		public static final int HEALTH_INCREMENT = 1;

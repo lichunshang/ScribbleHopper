@@ -94,6 +94,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 						createMenuChildScene();
 						createBackGroundElements();
 						setChildScene(menuChildScene);
+						AudioManager.getInstance().playMusic(AudioManager.MusicEffect.BACKGROUND, true);
 					}
 				}));
 			}

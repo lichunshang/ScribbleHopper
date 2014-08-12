@@ -18,6 +18,7 @@ import com.lichunshang.android.scribblehopper.util.OnOffRadioButton.State;
 
 public class MainMenuOptionSubMenu extends BaseMainMenuSubMenu{
 	
+	OnOffRadioButton soundEffectOnOffRadioButton;
 	OnOffRadioButton musicOnOffRadioButton;
 	
 	public MainMenuOptionSubMenu(MainMenuScene menuScene) {
@@ -32,11 +33,15 @@ public class MainMenuOptionSubMenu extends BaseMainMenuSubMenu{
 		//---------------------- ON / OFF Settings ---------------------
 		
 		Text muteSoundEffectText = new Text(camera.getWidth() * 0.1f, camera.getHeight() * 0.5f, resourcesManager.font_50, parentScene.getGameActivity().getString(R.string.sound_effect), vertexBufferObjectManager);
+		Text muteMusicText = new Text(camera.getWidth() * 0.1f, muteSoundEffectText.getY() - 100, resourcesManager.font_50, parentScene.getGameActivity().getString(R.string.music), vertexBufferObjectManager);
 		muteSoundEffectText.setAnchorCenter(0, 0);
+		muteMusicText.setAnchorCenter(0, 0);
 		muteSoundEffectText.setColor(Color.BLACK);
+		muteMusicText.setColor(Color.BLACK);
 		attachChild(muteSoundEffectText);
+		attachChild(muteMusicText);
 		
-		musicOnOffRadioButton = new OnOffRadioButton(camera.getWidth() * 0.665f, muteSoundEffectText.getY(), resourcesManager.font_50, State.ON_SELECTED, vertexBufferObjectManager){
+		soundEffectOnOffRadioButton = new OnOffRadioButton(camera.getWidth() * 0.665f, muteSoundEffectText.getY(), resourcesManager.font_50, State.ON_SELECTED, vertexBufferObjectManager){
 			@Override
 			public void onOnSelected(){
 				AudioManager.getInstance().setSoundEffectEnabled(true);
@@ -48,13 +53,36 @@ public class MainMenuOptionSubMenu extends BaseMainMenuSubMenu{
 			}
 		};
 		
+		musicOnOffRadioButton = new OnOffRadioButton(camera.getWidth() * 0.665f, muteMusicText.getY(), resourcesManager.font_50, State.ON_SELECTED, vertexBufferObjectManager){
+			@Override
+			public void onOnSelected(){
+				AudioManager.getInstance().setMusicEnabled(true);
+				AudioManager.getInstance().playMusic(AudioManager.MusicEffect.BACKGROUND, true);
+			}
+			
+			@Override
+			public void onOffSelected(){
+				AudioManager.getInstance().setMusicEnabled(false);
+				AudioManager.getInstance().pauseMusic(AudioManager.MusicEffect.BACKGROUND);
+			}
+		};
+		
 		if (AudioManager.getInstance().isSoundEffectEnabled()){
+			soundEffectOnOffRadioButton.setState(State.ON_SELECTED);
+		}
+		else{
+			soundEffectOnOffRadioButton.setState(State.OFF_SELECTED);
+		}
+		
+		if (AudioManager.getInstance().isMusicEnabled()){
 			musicOnOffRadioButton.setState(State.ON_SELECTED);
 		}
 		else{
 			musicOnOffRadioButton.setState(State.OFF_SELECTED);
 		}
 		
+		soundEffectOnOffRadioButton.registerTouchArea(this);
+		soundEffectOnOffRadioButton.attachTo(this);
 		musicOnOffRadioButton.registerTouchArea(this);
 		musicOnOffRadioButton.attachTo(this);
 		
